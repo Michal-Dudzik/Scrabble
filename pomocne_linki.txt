@@ -1,0 +1,11 @@
+Przykłady scrabble:
+-Scrabble w npm (brzydkie jak noc): https://www.npmjs.com/package/html-scrabble
+-Zliczanie wartości punktowej danych liczb: https://www.youtube.com/watch?v=KyeLzikxLM8
+-całkiem spoko tutorial: https://www.youtube.com/watch?v=mpby4HiElek 
+
+Plansza:
+-zrobiona prosto w htmlu https://codepen.io/highplainsdrifter/pen/kvOBrm
+-generowana przez JS (coś nie chce mi działać) https://codepen.io/iamogbz/pen/pwyEVm
+
+Bootstrap:
+-Grid https://getbootstrap.com/docs/4.0/layout/grid/
