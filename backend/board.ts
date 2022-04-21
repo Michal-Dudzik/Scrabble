@@ -1,8 +1,25 @@
 import { BoardTile } from "./boardtile"
 export class Board
 {
-    boardid:number 
+    id:number 
     gameboard:BoardTile[][] = []
-    matrix = new Array(5).fill(0).map(() => new Array(4).fill(0));
-
+    players:string[] //list of player id's that are currently playing 
+    constructor(x:Board)
+    {
+        this.id = x.id
+        this.players = x.players    
+    }
+    public GenerateBoard() //method generating board
+    {
+        const emptyTile:BoardTile = {}
+        const rows:number = 14
+        const columns:number = 14
+        for (var i = 0; i < rows; i++)
+        {
+             for (var j = 0; j < columns; j++)
+             {
+                this.gameboard[i][j].push();
+             }
+        }       
+    }
 }
