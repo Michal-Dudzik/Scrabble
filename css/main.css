@@ -1,199 +1,78 @@
 /*/////////////////// Scrabble board //////////////////////*/
-@charset "UTF-8";
-* {
-	margin: 0;
-	padding: 0;
-	border: none;
-	position: relative;
-}
-
 body {
-	height: 100vh;
-	background: white;
-}
-
-#js-board {
-	width: 542px;
-	height: 542px;
-	background-color: maroon;
-	min-width: 542px;
-	min-height: 542px;
-	border: outset darkred 6px;
-	margin: 40px auto;
-}
-#js-board .board {
-	background-color: white;
-	padding: 1px;
-}
-#js-board .board .row {
-	height: 36px;
-}
-#js-board .board .row .tile {
-	width: 32px;
-	height: 32px;
-	background-color: beige;
-	border: solid white 2px;
-	display: inline-block;
-	font: bold 70%/1.5 "Open Sans", sans-serif;
-	color: rgba(0, 0, 0, 0.6);
-}
-#js-board .board .row .tile::after {
-	width: 33%;
-	height: 33%;
-	background-color: transparent;
-	content: "0";
-	content: attr(data-value);
-	position: absolute;
-	bottom: 2px;
-	right: 3px;
-	font-size: 70%;
-	line-height: 140%;
-	text-align: right;
-	z-index: 999;
-}
-#js-board .board .row .tile.tile-ct {
-	background-color: pink;
-}
-#js-board .board .row .tile.tile-ct .decal::before,
-#js-board .board .row .tile.tile-ct input::before {
-	content: "★";
-	font-size: 200%;
-}
-#js-board .board .row .tile.tile-dl .decal::before,
-#js-board .board .row .tile.tile-dl input::before,
-#js-board .board .row .tile.tile-dl .decal::after,
-#js-board .board .row .tile.tile-dl input::after,
-#js-board .board .row .tile.tile-dw .decal::before,
-#js-board .board .row .tile.tile-dw input::before,
-#js-board .board .row .tile.tile-dw .decal::after,
-#js-board .board .row .tile.tile-dw input::after,
-#js-board .board .row .tile.tile-tw .decal::before,
-#js-board .board .row .tile.tile-tw input::before,
-#js-board .board .row .tile.tile-tw .decal::after,
-#js-board .board .row .tile.tile-tw input::after,
-#js-board .board .row .tile.tile-tl .decal::before,
-#js-board .board .row .tile.tile-tl input::before,
-#js-board .board .row .tile.tile-tl .decal::after,
-#js-board .board .row .tile.tile-tl input::after {
-	content: "";
-	position: absolute;
-	top: -4px;
-	height: calc(100% + 2px * 4);
-	z-index: 999;
-	transform: scaleX(0.7);
-}
-#js-board .board .row .tile.tile-dl .decal::after,
-#js-board .board .row .tile.tile-dl input::after,
-#js-board .board .row .tile.tile-dw .decal::after,
-#js-board .board .row .tile.tile-dw input::after,
-#js-board .board .row .tile.tile-tw .decal::after,
-#js-board .board .row .tile.tile-tw input::after,
-#js-board .board .row .tile.tile-tl .decal::after,
-#js-board .board .row .tile.tile-tl input::after {
-	transform: scaleY(0.7) rotate(90deg);
-}
-#js-board .board .row .tile.tile-dl {
-	background-color: lightcyan;
-}
-#js-board .board .row .tile.tile-dl .decal::before,
-#js-board .board .row .tile.tile-dl input::before,
-#js-board .board .row .tile.tile-dl .decal::after,
-#js-board .board .row .tile.tile-dl input::after {
-	background: linear-gradient(-45deg, transparent 50%, lightcyan 0),
-		linear-gradient(45deg, transparent 50%, lightcyan 0),
-		linear-gradient(-135deg, transparent 50%, lightcyan 0),
-		linear-gradient(135deg, transparent 50%, lightcyan 0);
-	background-repeat: repeat-x;
-	background-position: 25% calc(100% + 2px), 25% calc(100% + 2px), 25% -2px,
-		25% -2px;
-	background-size: 33.3333333333% 12px;
-	width: 78%;
-	left: 11%;
-}
-#js-board .board .row .tile.tile-dw {
-	background-color: pink;
-}
-#js-board .board .row .tile.tile-dw .decal::before,
-#js-board .board .row .tile.tile-dw input::before,
-#js-board .board .row .tile.tile-dw .decal::after,
-#js-board .board .row .tile.tile-dw input::after {
-	background: linear-gradient(-45deg, transparent 50%, pink 0),
-		linear-gradient(45deg, transparent 50%, pink 0),
-		linear-gradient(-135deg, transparent 50%, pink 0),
-		linear-gradient(135deg, transparent 50%, pink 0);
-	background-repeat: repeat-x;
-	background-position: 25% calc(100% + 2px), 25% calc(100% + 2px), 25% -2px,
-		25% -2px;
-	background-size: 33.3333333333% 12px;
-	width: 78%;
-	left: 11%;
-}
-#js-board .board .row .tile.tile-tw {
-	background-color: red;
-}
-#js-board .board .row .tile.tile-tw .decal::before,
-#js-board .board .row .tile.tile-tw input::before,
-#js-board .board .row .tile.tile-tw .decal::after,
-#js-board .board .row .tile.tile-tw input::after {
-	background: linear-gradient(-45deg, transparent 50%, red 0),
-		linear-gradient(45deg, transparent 50%, red 0),
-		linear-gradient(-135deg, transparent 50%, red 0),
-		linear-gradient(135deg, transparent 50%, red 0);
-	background-repeat: repeat-x;
-	background-position: 25% calc(100% + 2px), 25% calc(100% + 2px), 25% -2px,
-		25% -2px;
-	background-size: 33.3333333333% 12px;
-	width: 78%;
-	left: 11%;
-}
-#js-board .board .row .tile.tile-tl {
-	background-color: skyblue;
-}
-#js-board .board .row .tile.tile-tl .decal::before,
-#js-board .board .row .tile.tile-tl input::before,
-#js-board .board .row .tile.tile-tl .decal::after,
-#js-board .board .row .tile.tile-tl input::after {
-	background: linear-gradient(-45deg, transparent 50%, skyblue 0),
-		linear-gradient(45deg, transparent 50%, skyblue 0),
-		linear-gradient(-135deg, transparent 50%, skyblue 0),
-		linear-gradient(135deg, transparent 50%, skyblue 0);
-	background-repeat: repeat-x;
-	background-position: 25% calc(100% + 2px), 25% calc(100% + 2px), 25% -2px,
-		25% -2px;
-	background-size: 33.3333333333% 12px;
-	width: 78%;
-	left: 11%;
-}
-#js-board .board .row .tile .decal,
-#js-board .board .row .tile input {
-	width: 100%;
-	height: 100%;
-	background-color: transparent;
-	position: absolute;
+	background: #454545;
+	box-sizing: border-box;
+	margin-top: 5vh;
+	padding: 0;
+	/* display: flex; */
+	justify-content: center;
+	align-items: center;
+  }
+  
+  .board {
+	/* position: relative;
+	bottom: 200px; */
+	max-width: 800px;
+	margin: auto;
+	border-radius: 3px;
+	border-left: 5px solid #aaa;
+	border-bottom: 5px solid #656565;
+	background: #fff;
+  
+	display: grid;
+	grid-template-columns: repeat(15, 50px);
+	grid-template-rows: repeat(15, 50px);
+	grid-gap: 3px;}
+  
+  .grid-square {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font: 700 10px "Helvetica";
+	background: #efece1;
 	text-align: center;
-	line-height: 32px;
-	text-transform: uppercase;
-	border-radius: 12%;
-	overflow: visible;
-	cursor: pointer;
-}
-#js-board .board .row .tile input {
-	font-size: 150%;
-	text-align: left;
-	text-indent: 25%;
-	z-index: 999;
-	color: transparent;
-}
-#js-board .board .row .tile input:focus {
-	background: repeating-linear-gradient(
-		45deg,
-		rgba(0, 0, 0, 0.1),
-		rgba(0, 0, 0, 0.1) 10px,
-		rgba(0, 0, 0, 0) 10px,
-		rgba(0, 0, 0, 0) 20px
-	);
-}
-#js-board .board .row .tile input.filled {
-	background-color: goldenrod;
-	text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.6);
-}
+	box-shadow: inset 0 1px 5px -2px rgba(0, 0, 0, 0.2),
+	  inset 1px -2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+  
+  .triple-word {
+	background: #fe704d;
+  }
+  
+  .double-word {
+	background: rgba(254, 112, 77, 0.4);
+  }
+  
+  .triple-letter {
+	background: #0493b5;
+  }
+  
+  .double-letter {
+	background: rgba(4, 147, 181, 0.4);
+  }
+  
+  .star-square {
+	background: rgba(254, 112, 77, 0.4);
+  }
+  
+  .fa-star {
+	font-size: 25px;
+  }
+
+  /*/////////////////// Scoreboard //////////////////////*/
+
+
+  /*/////////////////// Chat //////////////////////*/
+
+
+  /*/////////////////// Players //////////////////////*/
+
+
+  /*/////////////////// Some fancy fuckery //////////////////////*/
+
+  footer{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 5vh;	
+  }

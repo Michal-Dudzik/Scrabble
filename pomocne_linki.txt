@@ -2,10 +2,37 @@ Przykłady scrabble:
 -Scrabble w npm (brzydkie jak noc): https://www.npmjs.com/package/html-scrabble
 -Zliczanie wartości punktowej danych liczb: https://www.youtube.com/watch?v=KyeLzikxLM8
 -całkiem spoko tutorial: https://www.youtube.com/watch?v=mpby4HiElek 
+https://medium.com/@valeriemccarthy/scrabbling-with-javascript-8c2ea48b5af5
+https://github.com/agottlie/scrabble
+https://medium.com/@valeriemccarthy/scrabbling-with-javascript-8c2ea48b5af5
 
 Plansza:
 -zrobiona prosto w htmlu https://codepen.io/highplainsdrifter/pen/kvOBrm
 -generowana przez JS (coś nie chce mi działać) https://codepen.io/iamogbz/pen/pwyEVm
 
+Scoreboard:
+https://codepen.io/zaidik/pen/bGwOxmJ
+https://codepen.io/gibatronic/pen/qBPLBgL
+https://codepen.io/Flexyscore/details/dypopMB
+https://codepen.io/Flexyscore/pen/xxEGOZL
+https://codepen.io/Flexyscore/pen/gOwbBge
+Pomyśł nad implementacją statystyk takich jakie są tutaj: https://www.notion.so/63be97252a0a48a786a19c47d33ccf7b?v=38f92a8564d341bba359fc88570dab28
+
+Chat:
+- https://csshint.com/html-css-chat-box-designs/
+
+Funkcje:
+    dragndrop:
+        https://stackoverflow.com/questions/24050738/javascript-how-to-dynamically-move-div-by-clicking-and-dragging
+        https://javascript.info/mouse-drag-and-drop
+        https://www.kindacode.com/article/react-typescript-drag-and-drop/
+        https://www.kennethlange.com/drag-and-drop-in-pure-typescript-and-react/
+        
+    animacja na start: https://www.uplabs.com/posts/scrabble-tiles
+
 Bootstrap:
 -Grid https://getbootstrap.com/docs/4.0/layout/grid/
+
+
+
+Generator tabel:https://www.tablesgenerator.com/html_tables#
