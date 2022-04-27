@@ -5,6 +5,9 @@ Przykłady scrabble:
 https://medium.com/@valeriemccarthy/scrabbling-with-javascript-8c2ea48b5af5
 https://github.com/agottlie/scrabble
 https://medium.com/@valeriemccarthy/scrabbling-with-javascript-8c2ea48b5af5
+Multi:
+https://www.youtube.com/watch?v=aA_SdbGD64E&ab_channel=CoderOne
+
 
 Plansza:
 -zrobiona prosto w htmlu https://codepen.io/highplainsdrifter/pen/kvOBrm
@@ -27,8 +30,13 @@ Funkcje:
         https://javascript.info/mouse-drag-and-drop
         https://www.kindacode.com/article/react-typescript-drag-and-drop/
         https://www.kennethlange.com/drag-and-drop-in-pure-typescript-and-react/
+        https://www.youtube.com/watch?v=dRLYO1-dhQU
         
     animacja na start: https://www.uplabs.com/posts/scrabble-tiles
+
+    modal:
+    https://stackoverflow.com/questions/10233550/launch-bootstrap-modal-on-page-load
+    https://www.tutorialrepublic.com/faq/how-to-launch-bootstrap-modal-on-page-load.php
 
 Bootstrap:
 -Grid https://getbootstrap.com/docs/4.0/layout/grid/
@@ -36,3 +44,5 @@ Bootstrap:
 
 
 Generator tabel:https://www.tablesgenerator.com/html_tables#
+
+Konwertowanie JS do TS: https://www.tutorialsteacher.com/typescript/converting-javascript-to-typescript
