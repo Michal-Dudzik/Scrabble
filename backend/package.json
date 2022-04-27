@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express": "^4.18.0",
     "nodemon": "^2.0.15",
     "reflect-metadata": "^0.1.13",
     "socket-controllers": "^0.0.5",

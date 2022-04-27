@@ -1,11 +1,22 @@
-import { OnConnect, SocketController } from "socket-controllers";
- 
-@SocketController()
-class MainController
-{
+import {
+    ConnectedSocket,
+    OnConnect,
+    SocketController,
+    SocketIO,
+  } from "socket-controllers";
+  import { Socket, Server } from "socket.io";
+  
+  @SocketController()
+  export class MainController {
     @OnConnect()
-    public onConnection()
-    {
-        
+    public onConnection(
+      @ConnectedSocket() socket: Socket,
+      @SocketIO() io: Server
+    ) {
+      console.log("New Socket connected: ", socket.id);
+  
+      socket.on("custom_event", (data: any) => {
+        console.log("Data: ", data);
+      });
     }
-}
+  }
