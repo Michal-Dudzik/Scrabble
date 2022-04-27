@@ -26,5 +26,10 @@ export class UnusedTiles
     filltilestorage()
     {
        // this.unusedtilestorage{} @Michał Dudzik to twoje zadanie masz wypisać tu wpisać wszystkie literki wraz z ich wartościami dzięki <3
+       //create an array of all letters with their values, state, id and ammount of avalaible tiles
+        
+
+
+         
     }
 }
