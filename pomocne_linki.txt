@@ -5,8 +5,8 @@ Przykłady scrabble:
 https://medium.com/@valeriemccarthy/scrabbling-with-javascript-8c2ea48b5af5
 https://github.com/agottlie/scrabble
 https://medium.com/@valeriemccarthy/scrabbling-with-javascript-8c2ea48b5af5
-Multi:
-https://www.youtube.com/watch?v=aA_SdbGD64E&ab_channel=CoderOne
+
+Multi: https://www.youtube.com/watch?v=aA_SdbGD64E&ab_channel=CoderOne
 
 
 Plansza:
