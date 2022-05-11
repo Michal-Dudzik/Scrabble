@@ -1,83 +1,47 @@
-const io = require('socket.io')();
-const { initGame, gameLoop, getUpdatedVelocity } = require('./game');
-const { FRAME_RATE } = require('./constants');
-const { makeid } = require('./utils');
+import { connect } from "http2";
+import { Server } from "socket.io";
+const express = require('express')
+const app = express()
+const io = require('socket.io')(5500)
 
-const state = {};
-const clientRooms = {};
 
-io.on('connection', client => {
+// ======== SERVER STUFF ========
 
-  client.on('newGame', handleNewGame);
-  client.on('joinGame', handleJoinGame);
 
-  function handleJoinGame(roomName) {
-    const room = io.sockets.adapter.rooms[roomName];
+app.get('/', (req, res) => res.send('Hello World!'))
 
-    let allUsers;
-    if (room) {
-      allUsers = room.sockets;
-    }
 
-    let numClients = 0;
-    if (allUsers) {
-      numClients = Object.keys(allUsers).length;
-    }
+//generateBoard(); //this function generates board
+let clientNo = 0;
+let roomNo;
 
-    if (numClients === 0) {
-      client.emit('unknownCode');
-      return;
-    } else if (numClients > 3) {
-      client.emit('tooManyPlayers');
-      return;
-    }
-
-    clientRooms[client.id] = roomName;
-
-    client.join(roomName);
-    client.number = 2;
-    client.emit('init', 2);
-    
-    startGameInterval(roomName);
+io.on('connection', connected);
+//setInterval(serverLoop, 1000/60); //not sure if needed
+function connected(socket) //function that initiates when player connects
+{
+  clientNo++
+  roomNo = Math.round(clientNo/2)//assigning 2 players to rooms
+  socket.join(roomNo)
+  console.log('New player: ${clientNo}, joined room: ${roomNo}')
+  if(clientNo % 2 === 1)
+  {
+    //creating player 1
   }
-
-  function handleNewGame() {
-    let roomName = makeid(5);
-    clientRooms[client.id] = roomName;
-    client.emit('gameCode', roomName);
-
-    state[roomName] = initGame();
-
-    client.join(roomName);
-    client.number = 1;
-    client.emit('init', 1);
+  else if(clientNo % 2 === 0)
+  {
+    //creating player 2
   }
+  socket.on('disconnect', function(){
 
+    //TODO usuniecie gracza z gry
 
-
-function startGameInterval(roomName) {
-  const intervalId = setInterval(() => {
-    const winner = gameLoop(state[roomName]);
     
-    if (!winner) {
-      emitGameState(roomName, state[roomName])
-    } else {
-      emitGameOver(roomName, winner);
-      state[roomName] = null;
-      clearInterval(intervalId);
-    }
-  }, 1000 / FRAME_RATE);
+  })
 }
+//tworzenie pokoju
+//jeśli 2 gracze dołączyli to pojawia się guzik start
+// jak go pacną to się odpali ta metoda ktora wygeneruje nowa plansze
+//przypisze graczą ich kostki i rozpocznie "game loop"
 
-function emitGameState(room, gameState) {
-  // Send this event to everyone in the room.
-  io.sockets.in(room)
-    .emit('gameState', JSON.stringify(gameState));
-}
+//======== Game Models ========
 
-function emitGameOver(room, winner) {
-  io.sockets.in(room)
-    .emit('gameOver', JSON.stringify({ winner }));
-}
-
-io.listen(process.env.PORT || 3000);
