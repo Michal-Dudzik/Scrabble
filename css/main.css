@@ -16,6 +16,10 @@ body {
     -webkit-font-smoothing: antialiased;
     line-height: 1.45;
   }
+
+  .sides {
+    width: 23%;
+  }
   
   .board {
 
@@ -86,16 +90,55 @@ body {
 
   .stand{
     display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 1.5em;
     font-weight: 700;
-    
-    background: #396426;
-    border-radius: 3px;
+    width: 100%;
+    margin-top: 10px;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  .stand-background{
+    display: flex;
+    gap:5px;
     padding: 5px;
-    margin: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    background: #27ae60;
+  }
+
+  .buttonsLeft{
+    display: flex;
+    align-content: stretch;
+  }
+
+  .buttonsRight{
+    display: flex;
+    align-content: stretch;
+  }
+
+  .gameButton{   
+    height: 100%;
+    color: #fff;
+    border: 0;
+  }
+
+  #passButton{
+    background: #ae4d27;
+    border-radius: 8px 0 0 8px;
+  }
+
+  #clearButton{
+    background: #aeac27;
+  }
+
+  #swapButton{
+    background: #42ae27;
+  }
+
+  #playButton{
+    background: #278eae;
+    border-radius: 0 8px 8px 0;
   }
 
   /*/////////////////// Tiles //////////////////////*/  
@@ -127,6 +170,7 @@ body {
 
   /*/////////////////// Scoreboard //////////////////////*/
 
+
   .ScoreBoardHeader
   {
     align-self: flex-start;
@@ -134,7 +178,7 @@ body {
     border-radius: 8px 8px 0px 0px;
     box-shadow: -1px 1px 2px #666;
     border-top: 4px solid #27ae60;
-    will-change: auto;
+    /* will-change: auto; */
     height: auto;
 
   }
