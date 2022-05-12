@@ -13,26 +13,28 @@
 	</head>
 	
 	<body>
-		<div id="scoreBoard">
+		<div id="scoreBoard" class="sides">
 
 			<div class="ScoreBoardHeader">
 				<div class="player1">
 					<div>
 						<span id="player1Name">Player 1</span>
-						<span id="player1Score">0</span>
+						<span id="playe1TotalScore">0</span>
+						<span id="player1LastScore">0</span>
 					</div>
 				</div>
 				<div class="player2">
 					<div class="player2Name">
-						<span id="player2Name">Player 1</span>
-						<span id="playe2Score">0</span>
+						<span id="player2Name">Player 2</span>
+						<span id="playe2TotalScore">0</span>
+						<span id="player2LastScore">0</span>
 					</div>
 				</div>
 			</div>
 
 			<div class="wordHistory">
-				<div class="chatbot__overview">
-					<ul class="chatlist">
+				<div class="ScoreBoead__overview">
+					<ul class="wordlist">
 					<li class="bot__output bot__output--standard">Pineapple</li>
 					<li class="bot__output bot__output--standard">Archipelago</li>
 					</ul>
@@ -305,46 +307,54 @@
 				<div class="grid-square dropzone triple-word"></div>
 			  </div>
 
-			  <div class="stand dropzone">
-				<div class="tile" id="firstTile" draggable="true">
-					<div class="letter">S</div>
-					<div class="letter-weight ">2</div>
-				</div>
-				<div class="tile" id="secondTile" draggable="true">
-					<div class="letter">C</div>
-					<div class="letter-weight ">2</div>
-				</div>
-				<div class="tile" id="thirdTile" draggable="true">
-					<div class="letter">R</div>
-					<div class="letter-weight ">2</div>
-				</div>
-				<div class="tile" id="foruthTile" draggable="true">
-					<div class="letter">A</div>
-					<div class="letter-weight ">2</div>
-				</div>
-				<div class="tile" id="fifthTile" draggable="true">
-					<div class="letter">B</div>
-					<div class="letter-weight ">2</div>
-				</div>
-				<div class="tile" id="sixthTile" draggable="true">
-					<div class="letter">B</div>
-					<div class="letter-weight ">2</div>
-				</div>
-				<div class="tile" id="seventhTile" draggable="true">
-					<div class="letter">L</div>
-					<div class="letter-weight ">2</div>
-				</div>
-				<div class="tile" id="eightTile" draggable="true">
-					<div class="letter">E</div>
-					<div class="letter-weight ">2</div>
-				</div>
+			  <div class="stand">
 
-
-				
+				  <div class="buttonsLeft">
+					<button id="passButton" class="gameButton">Pass</button>
+					<button id="clearButton" class="gameButton">Clear</button>
+				  </div>
+				  <div class="stand-background dropzone">
+					<div class="tile" id="firstTile" draggable="true">
+						<div class="letter">S</div>
+						<div class="letter-weight ">2</div>
+					</div>
+					<div class="tile" id="secondTile" draggable="true">
+						<div class="letter">C</div>
+						<div class="letter-weight ">2</div>
+					</div>
+					<div class="tile" id="thirdTile" draggable="true">
+						<div class="letter">R</div>
+						<div class="letter-weight ">2</div>
+					</div>
+					<div class="tile" id="foruthTile" draggable="true">
+						<div class="letter">A</div>
+						<div class="letter-weight ">2</div>
+					</div>
+					<div class="tile" id="fifthTile" draggable="true">
+						<div class="letter">B</div>
+						<div class="letter-weight ">2</div>
+					</div>
+					<div class="tile" id="sixthTile" draggable="true">
+						<div class="letter">B</div>
+						<div class="letter-weight ">2</div>
+					</div>
+					<div class="tile" id="seventhTile" draggable="true">
+						<div class="letter">L</div>
+						<div class="letter-weight ">2</div>
+					</div>
+					<div class="tile" id="eightTile" draggable="true">
+						<div class="letter">E</div>
+						<div class="letter-weight ">2</div>
+					</div>
+				  </div>
+				<div class="buttonsRight">
+					<button id="swapButton" class="gameButton">Swap</button>
+					<button id="playButton" class="gameButton">Play</button>
+				</div>
 			  </div>
 		</div>
 
-		<div id="chat">
+		<div id="chat" class="sides">
 				<div class="chatbot__overview">
 					<ul class="chatlist">
 					<li class="bot__output bot__output--standard">Hey, I'm Navvy!</li>
