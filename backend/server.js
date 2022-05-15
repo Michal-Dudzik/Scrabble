@@ -13,19 +13,21 @@ function connected(socket) {
     clientNo++;
     roomNo = Math.round(clientNo / 2); //assigning 2 players to rooms
     socket.join(roomNo);
-    console.log('New player: ${clientNo}, joined room: ${roomNo}');
+    console.log('New player:' + clientNo + ', joined room: ' + roomNo);
     if (clientNo % 2 === 1) {
         //creating player 1
         serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
         serverboards[roomNo] = new Board(roomNo); //creating new board
         serverboards[roomNo].player1 = serverplayers[socket.id]; //adding player to board
+        console.log('Player: ' + socket.id + ' was asigned to board and his nick is: ' + serverboards[roomNo].player1.nickname);
     }
     else if (clientNo % 2 === 0) {
         //creating player 2
         serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
         serverboards[roomNo].player2 = serverplayers[socket.id]; //adding player to board
+        console.log('Player: ' + socket.id + ' was asigned to board and his nick is: ' + serverboards[roomNo].player2.nickname);
         serverboards[roomNo].GenerateEmptyBoard(); //generating empty board
-        serverboards[roomNo].tilestorage.filltilestorage(); //filling tilestorage with tiles
+        //serverboards[roomNo].tilestorage.filltilestorage() //filling tilestorage with tiles
     }
     socket.on('disconnect', function () {
         //TODO usuniecie gracza z gry
@@ -38,24 +40,29 @@ function connected(socket) {
 //======== Game Models ========
 var Board = /** @class */ (function () {
     function Board(serverroomid) {
-        this.gameboard = []; //type any because every other type created problems 
         this.id = serverroomid;
     }
     Board.prototype.GenerateEmptyBoard = function () {
         var rows = 14;
         var columns = 14;
-        for (var i = 0; i < rows; i++) {
-            for (var j = 0; j < columns; j++) {
+        for (var row = 0; row < rows; row++) {
+            for (var column = 0; column < columns; column++) {
                 var emptytile = new EmptyTile();
-                this.gameboard[i][j].push(emptytile);
+                this.gameboard[row][column].push([emptytile]);
             }
         }
         console.log("board has been generated");
+    };
+    Board.prototype.PrintBoard = function () {
     };
     return Board;
 }());
 var EmptyTile = /** @class */ (function () {
     function EmptyTile() {
+        this.id = 0;
+        this.type = "Empty";
+        this.value = 0;
+        this.status = 3;
     }
     return EmptyTile;
 }());
