@@ -22,21 +22,23 @@ function connected(socket) //function that initiates when player connects
   clientNo++
   roomNo = Math.round(clientNo/2)//assigning 2 players to rooms
   socket.join(roomNo)
-  console.log('New player: ${clientNo}, joined room: ${roomNo}')
+  console.log('New player:' + clientNo + ', joined room: ' + roomNo)
   if(clientNo % 2 === 1)
   {
     //creating player 1
     serverplayers[socket.id] = new Player(socket.id) //adding player to list of players
     serverboards[roomNo] = new Board(roomNo) //creating new board
     serverboards[roomNo].player1 = serverplayers[socket.id] //adding player to board
+    console.log('Player: ' + socket.id + ' was asigned to board and his nick is: ' + serverboards[roomNo].player1.nickname);
   }
   else if(clientNo % 2 === 0)
   {
     //creating player 2
     serverplayers[socket.id] = new Player(socket.id) //adding player to list of players
     serverboards[roomNo].player2 = serverplayers[socket.id] //adding player to board
+    console.log('Player: ' + socket.id + ' was asigned to board and his nick is: ' + serverboards[roomNo].player2.nickname);
     serverboards[roomNo].GenerateEmptyBoard() //generating empty board
-    serverboards[roomNo].tilestorage.filltilestorage() //filling tilestorage with tiles
+    //serverboards[roomNo].tilestorage.filltilestorage() //filling tilestorage with tiles
     
   }
   socket.on('disconnect', function(){
@@ -56,7 +58,7 @@ function connected(socket) //function that initiates when player connects
 class Board
 {
     id:string 
-    gameboard: any[][] = []//type any because every other type created problems 
+    gameboard: ITile[][] = []//type any because every other type created problems 
     tilestorage:UnusedTiles 
     player1:Player
     player2:Player  //list of player id's that are currently playing 
@@ -70,20 +72,21 @@ class Board
         
         const rows:number = 14
         const columns:number = 14
-        for (var i = 0; i < rows; i++)
+        for (var row = 0; row < rows; row++)
         {
-             for (var j = 0; j < columns; j++)
-             {
-                const emptytile: EmptyTile = new EmptyTile()
-                this.gameboard[i][j].push(emptytile);
-             }
+                const emptytile = new EmptyTile()
+                this.gameboard[row] = [new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile()]
         }     
+        console.log(this.gameboard[12][1])
         console.log("board has been generated")  
+    }
+    public PrintBoard(){
+        
     }
 }
  interface ITile
 {
-    
+   
     readonly type: string // 0 = empty else its letter (A = 1, B = 2...)
     readonly value: number 
     readonly status: number// 0 = tile in storage / 1 = tile is in player's hand / 2 = tile is on gameboard during acceptance phase / 3 = tile is placed on board 
@@ -91,12 +94,15 @@ class Board
 
  class EmptyTile implements ITile
 {
-    
+    public id: number
     readonly type: string // 0 = empty tile
     readonly value: number // 0 = empty tile
     public status: number // 3 because empty tile can only apear on gameboard during board generation / 4 if tile contains bonus (probably wont be implemented)
     public constructor(){
-
+        this.id = 0
+        this.type = "Empty"
+        this.value = 0
+        this.status = 3
     }
     
    
