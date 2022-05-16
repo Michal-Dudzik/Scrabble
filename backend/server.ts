@@ -23,17 +23,31 @@ function connected(socket) {
 		serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
 		serverboards[roomNo] = new Board(roomNo); //creating new board
 		serverboards[roomNo].player1 = serverplayers[socket.id]; //adding player to board
-		console.log("Player: " + socket.id + " was asigned to board and his nick is: " + serverboards[roomNo].player1.nickname);
+		console.log(
+			"Player: " +
+				socket.id +
+				" was asigned to board and his nick is: " +
+				serverboards[roomNo].player1.nickname
+		);
 	} else if (clientNo % 2 === 0) {
 		//creating player 2
 		serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
 		serverboards[roomNo].player2 = serverplayers[socket.id]; //adding player to board
-		console.log("Player: " + socket.id +" was asigned to board and his nick is: " +	serverboards[roomNo].player2.nickname);
+		console.log(
+			"Player: " +
+				socket.id +
+				" was asigned to board and his nick is: " +
+				serverboards[roomNo].player2.nickname
+		);
 		serverboards[roomNo].GenerateEmptyBoard(); //generating empty board
 		//serverboards[roomNo].PrintBoard(); //printing board (just for test)
 		serverboards[roomNo].filltilestorage(); //filling tilestorage with tiles
-		serverboards[roomNo].player1.fillplayershand(serverboards[roomNo].unusedtilestorage)
-		serverboards[roomNo].player2.fillplayershand(serverboards[roomNo].unusedtilestorage)
+		serverboards[roomNo].player1.fillplayershand(
+			serverboards[roomNo].unusedtilestorage
+		);
+		serverboards[roomNo].player2.fillplayershand(
+			serverboards[roomNo].unusedtilestorage
+		);
 	}
 	socket.on("disconnect", function () {
 		//TODO usuniecie gracza z gry
@@ -260,8 +274,8 @@ class Player {
 		this.nickname = "Harold"; //If we have too much time we can add this functionality
 		this.score = 0;
 	}
-	
-	 fillplayershand(
+
+	fillplayershand(
 		unusedtilestorage: Board["unusedtilestorage"] //used at start of game to give player tiles to play with
 	) {
 		for (
@@ -275,7 +289,7 @@ class Player {
 		}
 		console.log("Player's hand has been filled");
 	}
-	 tradetiles(
+	tradetiles(
 		chosentile: LetterTile,
 		unusedtilestorage: Board["unusedtilestorage"] //TO DO removes tile chosen by player from his hand and gives him random one from unusedtilestorage
 	) {
@@ -293,7 +307,7 @@ class Player {
 			newtile.value
 		);
 	}
-	 drawtile(
+	drawtile(
 		unusedtilestorage: Board["unusedtilestorage"] //used at end of each round
 	) {
 		const newtile: LetterTile =
