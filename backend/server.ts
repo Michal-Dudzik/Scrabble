@@ -39,7 +39,7 @@ function connected(socket) //function that initiates when player connects
     console.log('Player: ' + socket.id + ' was asigned to board and his nick is: ' + serverboards[roomNo].player2.nickname);
     serverboards[roomNo].GenerateEmptyBoard() //generating empty board
     serverboards[roomNo].PrintBoard() //printing board (just for test)
-    //serverboards[roomNo].tilestorage.filltilestorage() //filling tilestorage with tiles
+    serverboards[roomNo].tilestorage.filltilestorage() //filling tilestorage with tiles
     
   }
   socket.on('disconnect', function(){
@@ -77,7 +77,6 @@ class Board
         {               
             this.gameboard[row] = [new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile()];
         }     
-        console.log(this.gameboard[12][1])
         console.log("board has been generated")  
     }
     public PrintBoard() //printing whole board in console (just for testing)
@@ -177,7 +176,7 @@ class PlayerHand
     {
        // this.unusedtilestorage{} @Michał Dudzik to twoje zadanie masz wypisać tu wpisać wszystkie literki wraz z ich wartościami dzięki <3
        //create an array of all letters with their values, state, id and ammount of avalaible tiles
-       this.unusedtilestorage.push(new LetterTile(1, 3, "A", 0), ) 
+       this.unusedtilestorage.push(new LetterTile(0, 0, "Blank", 0), new LetterTile(1, 0, "Blank", 0), new LetterTile(2, 1, "A", 0), new LetterTile(3, 1, "A", 0), new LetterTile(4, 1, "A", 0), new LetterTile(5, 1, "A", 0),) 
       
 
          
