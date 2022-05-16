@@ -58,7 +58,7 @@ function connected(socket) //function that initiates when player connects
 class Board
 {
     id:string 
-    gameboard: any[][]//type any because every other type created problems 
+    gameboard: ITile[][] = []//type any because every other type created problems 
     tilestorage:UnusedTiles 
     player1:Player
     player2:Player  //list of player id's that are currently playing 
@@ -74,12 +74,10 @@ class Board
         const columns:number = 14
         for (var row = 0; row < rows; row++)
         {
-             for (var column = 0; column < columns; column++)
-             {
-                const emptytile: EmptyTile = new EmptyTile()
-                this.gameboard[row][column].push([emptytile]) ;
-             }
+                const emptytile = new EmptyTile()
+                this.gameboard[row] = [new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile()]
         }     
+        console.log(this.gameboard[12][1])
         console.log("board has been generated")  
     }
     public PrintBoard(){
