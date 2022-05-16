@@ -40,7 +40,7 @@ function connected(socket) {
 				serverboards[roomNo].player2.nickname
 		);
 		serverboards[roomNo].GenerateEmptyBoard(); //generating empty board
-		//serverboards[roomNo].PrintBoard(); //printing board (just for test)
+		//serverboards[roomNo].PrintBoard(); //prints board (just for test)
 		serverboards[roomNo].filltilestorage(); //filling tilestorage with tiles
 		serverboards[roomNo].player1.fillplayershand(
 			serverboards[roomNo].unusedtilestorage
@@ -48,6 +48,8 @@ function connected(socket) {
 		serverboards[roomNo].player2.fillplayershand(
 			serverboards[roomNo].unusedtilestorage
 		);
+		serverboards[roomNo].player1.printplayershand(); //prints players hand (just for test)
+		serverboards[roomNo].player1.printplayershand(); //prints players hand (just for test)
 	}
 	socket.on("disconnect", function () {
 		//TODO usuniecie gracza z gry
@@ -274,13 +276,19 @@ class Player {
 		this.nickname = "Harold"; //If we have too much time we can add this functionality
 		this.score = 0;
 	}
-
+	printplayershand() {
+		//prints players hand in console
+		console.log("PLayer " + this.id + " has those tiles in hand:");
+		for (var i: number = 0; i < this.playerhand.length; i++) {
+			console.log(this.playerhand[i]);
+		}
+	}
 	fillplayershand(
 		unusedtilestorage: Board["unusedtilestorage"] //used at start of game to give player tiles to play with
 	) {
 		for (
 			var i: number = 0;
-			i < 6;
+			i < 7;
 			i++ //draws few tiles to fill players hand
 		) {
 			const newtile: LetterTile =
