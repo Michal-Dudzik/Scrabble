@@ -14,15 +14,16 @@ Plansza:
 -generowana przez JS (coś nie chce mi działać) https://codepen.io/iamogbz/pen/pwyEVm
 
 Scoreboard:
+https://github.com/dcode-youtube/scoreboard-with-html-css-javascript
 https://codepen.io/zaidik/pen/bGwOxmJ
 https://codepen.io/gibatronic/pen/qBPLBgL
-https://codepen.io/Flexyscore/details/dypopMB
 https://codepen.io/Flexyscore/pen/xxEGOZL
 https://codepen.io/Flexyscore/pen/gOwbBge
 Pomyśł nad implementacją statystyk takich jakie są tutaj: https://www.notion.so/63be97252a0a48a786a19c47d33ccf7b?v=38f92a8564d341bba359fc88570dab28
 
 Chat:
 - https://csshint.com/html-css-chat-box-designs/
+https://medium.com/swlh/chat-rooms-with-socket-io-25e9d1a05947
 
 Funkcje:
     dragndrop:
