@@ -294,6 +294,10 @@ class Player {
 			const newtile: LetterTile =
 				unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
 			this.playerhand.push(newtile);
+			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
+
+			// serverplayers[socket.id].playerhand[1].type;
+			// serverplayers[socket.id].playerhand[1].value;
 		}
 		console.log("Player's hand has been filled");
 	}
