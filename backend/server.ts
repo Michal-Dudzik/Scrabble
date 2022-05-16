@@ -35,7 +35,8 @@ function connected(socket) {
 		serverboards[roomNo].player1.fillplayershand(serverboards[roomNo].unusedtilestorage)
 		serverboards[roomNo].player2.fillplayershand(serverboards[roomNo].unusedtilestorage)
 		serverboards[roomNo].player1.printplayershand()//prints players hand (just for test)
-		serverboards[roomNo].player1.printplayershand()//prints players hand (just for test)
+		serverboards[roomNo].player2.printplayershand()//prints players hand (just for test)
+		serverboards[roomNo].howmanytilesinstorage()//prints how many tiles are left in storage
 	}
 	socket.on("disconnect", function () {
 		//TODO usuniecie gracza z gry
@@ -107,8 +108,12 @@ class Board {
 			);
 		}
 	}
+	howmanytilesinstorage(){//prints how many tiles are left in unusedtilestorage
+	//	for(var i: number = 0; i < this.unusedtilestorage.length; i++){}
+	console.log(this.unusedtilestorage.length)
+	}
 	filltilestorage() {
-		//create an array of all letters with their values, state, id and ammount of avalaible tiles
+		//create an array of all letters with their values, state, id 
 		this.unusedtilestorage.push(
 			new LetterTile(0, 0, "Blank", 0),
 			new LetterTile(1, 0, "Blank", 0),
@@ -278,16 +283,16 @@ class Player {
 			i < 7;
 			i++ //draws few tiles to fill players hand
 		) {
-			const newtile: LetterTile =
-				unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+			const newtile: LetterTile =	unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
+			newtile.status = 1; //because it lands in players hand
 			this.playerhand.push(newtile);
 		}
 		console.log("Player's hand has been filled");
 	}
 	 tradetiles(
-		chosentile: LetterTile,
-		unusedtilestorage: Board["unusedtilestorage"] //TO DO removes tile chosen by player from his hand and gives him random one from unusedtilestorage
-	) {
+		chosentile: LetterTile, unusedtilestorage: Board["unusedtilestorage"] //TO DO removes tile chosen by player from his hand and gives him random one from unusedtilestorage
+ ) {
 		const index = this.playerhand
 			.map((object) => object.id)
 			.indexOf(chosentile.id); //find index of choesentile
@@ -306,7 +311,8 @@ class Player {
 		unusedtilestorage: Board["unusedtilestorage"] //used at end of each round
 	) {
 		const newtile: LetterTile =
-			unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+			unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage			
+			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 		this.playerhand.push(newtile);
 		console.log("TIle {0} has been added to players hand", newtile.value);
 	}
