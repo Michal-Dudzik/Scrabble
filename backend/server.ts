@@ -38,7 +38,8 @@ function connected(socket) //function that initiates when player connects
     serverboards[roomNo].player2 = serverplayers[socket.id] //adding player to board
     console.log('Player: ' + socket.id + ' was asigned to board and his nick is: ' + serverboards[roomNo].player2.nickname);
     serverboards[roomNo].GenerateEmptyBoard() //generating empty board
-    //serverboards[roomNo].tilestorage.filltilestorage() //filling tilestorage with tiles
+    serverboards[roomNo].PrintBoard() //printing board (just for test)
+    serverboards[roomNo].tilestorage.filltilestorage() //filling tilestorage with tiles
     
   }
   socket.on('disconnect', function(){
@@ -70,18 +71,21 @@ class Board
     public GenerateEmptyBoard() //method generating board and filling it with empty tiles
     {
         
-        const rows:number = 14
-        const columns:number = 14
-        for (var row = 0; row < rows; row++)
-        {
-                const emptytile = new EmptyTile()
-                this.gameboard[row] = [new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile()]
+        const rows:number = 15
+        const columns:number = 15
+        for (var row = 0; row < rows + 1; row++)
+        {               
+            this.gameboard[row] = [new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile(), new EmptyTile()];
         }     
-        console.log(this.gameboard[12][1])
         console.log("board has been generated")  
     }
-    public PrintBoard(){
-        
+    public PrintBoard() //printing whole board in console (just for testing)
+    {
+        const rows:number = 15
+        const columns:number = 15
+        for (var row = 0; row < rows + 1; row++)
+        {
+            console.log(this.gameboard[row][0].type, this.gameboard[row][1].type, this.gameboard[row][2].type, this.gameboard[row][3].type, this.gameboard[row][4].type, this.gameboard[row][5].type, this.gameboard[row][6].type, this.gameboard[row][7].type, this.gameboard[row][8].type, this.gameboard[row][9].type, this.gameboard[row][10].type, this.gameboard[row][11].type, this.gameboard[row][12].type, this.gameboard[row][13].type, this.gameboard[row][14].type);        }
     }
 }
  interface ITile
@@ -172,7 +176,7 @@ class PlayerHand
     {
        // this.unusedtilestorage{} @Michał Dudzik to twoje zadanie masz wypisać tu wpisać wszystkie literki wraz z ich wartościami dzięki <3
        //create an array of all letters with their values, state, id and ammount of avalaible tiles
-       this.unusedtilestorage.push(new LetterTile(1, 3, "A", 0), ) 
+       this.unusedtilestorage.push(new LetterTile(0, 0, "Blank", 0), new LetterTile(1, 0, "Blank", 0), new LetterTile(2, 1, "A", 0), new LetterTile(3, 1, "A", 0), new LetterTile(4, 1, "A", 0), new LetterTile(5, 1, "A", 0),) 
       
 
          
