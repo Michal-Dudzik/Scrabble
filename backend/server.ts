@@ -296,6 +296,9 @@ class Player {
 			this.playerhand.push(newtile);
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 
+			var stand = document.getElementById("stand");
+			const newtilehtml: HTMLElement = document.createElement("div"); //generate div for the tile inside tile class
+			newtilehtml.classList.add("tile");
 			// serverplayers[socket.id].playerhand[1].type;
 			// serverplayers[socket.id].playerhand[1].value;
 		}
