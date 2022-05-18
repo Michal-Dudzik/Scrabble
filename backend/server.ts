@@ -33,26 +33,21 @@ function connected(socket) {
 		//creating player 2
 		serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
 		serverboards[roomNo].player2 = serverplayers[socket.id]; //adding player to board
-		console.log(
-			"Player: " +
-				socket.id +
-				" was asigned to board and his nick is: " +
-				serverboards[roomNo].player2.nickname
-		);
-		serverboards[roomNo].GenerateEmptyBoard(); //generating empty board
+		console.log("Player: " + socket.id +" was asigned to board and his nick is: " +	serverboards[roomNo].player2.nickname);
+		serverboards[roomNo].startgame()
+		//serverboards[roomNo].GenerateEmptyBoard(); //generating empty board
 		//serverboards[roomNo].PrintBoard(); //prints board (just for test)
-		serverboards[roomNo].filltilestorage(); //filling tilestorage with tiles
-		serverboards[roomNo].player1.fillplayershand(
-			serverboards[roomNo].unusedtilestorage
-		);
-		serverboards[roomNo].player2.fillplayershand(
-			serverboards[roomNo].unusedtilestorage
-		);
-		serverboards[roomNo].player1.printplayershand(); //prints players hand (just for test)
-		serverboards[roomNo].player1.printplayershand(); //prints players hand (just for test)
+		//serverboards[roomNo].filltilestorage(); //filling tilestorage with tiles
+		//serverboards[roomNo].player1.fillplayershand(serverboards[roomNo].unusedtilestorage)
+		//serverboards[roomNo].player2.fillplayershand(serverboards[roomNo].unusedtilestorage)
+		serverboards[roomNo].player1.printplayershand()//prints players hand (just for test)
+		serverboards[roomNo].player2.printplayershand()//prints players hand (just for test)
+		serverboards[roomNo].howmanytilesinstorage()//prints how many tiles are left in storage
 	}
 	socket.on("disconnect", function () {
-		//TODO usuniecie gracza z gry
+		//end game
+		//show winner
+		serverboards.splice(roomNo)//delete board from boards
 	});
 }
 //tworzenie pokoju
@@ -61,16 +56,54 @@ function connected(socket) {
 //przypisze graczą ich kostki i rozpocznie "game loop"
 
 //======== Game Models ========
-
-class Board {
+class Game{ //not sure if i will use this class
+	board: Board
+	gameover: boolean  //false = game continues || true = game is finished
+	round: number //allows to count rounds
+	constructor(board: Board)
+	{
+		this.board = board
+	}
+	startgame()
+	{
+		this.board.GenerateEmptyBoard()
+		this.board.filltilestorage()
+		this.board.player1.fillplayershand(this.board.unusedtilestorage)
+		this.board.player2.fillplayershand(this.board.unusedtilestorage)
+	    this.round = 0;		
+	}
+	gameloop()
+	{
+		if(this.gameover = false)
+		{
+			if(this.round % 2 === 1)
+			{
+				//player 1 turn 
+			}
+			else if (this.round % 2 === 0)
+			{
+				//player 2 turn
+			}
+		}
+	}
+}
+class Board { //this class may be split in to few different classes but only if we have time for that
 	id: string;
 	gameboard: ITile[][] = []; //type any because every other type created problems
 	player1: Player;
 	player2: Player; //list of player id's that are currently playing
 	unusedtilestorage: LetterTile[] = []; //array storing lettertiles
-	//idk what else can be stored in this class
+	gameover: boolean  //false = game continues || true = game is finished
+	round: number //allows to count rounds
 	constructor(serverroomid: string) {
 		this.id = serverroomid;
+		this.gameover = false;
+	}
+	startgame(){
+		this.GenerateEmptyBoard()
+		this.filltilestorage()
+		this.player1.fillplayershand(this.unusedtilestorage)
+		this.player2.fillplayershand(this.unusedtilestorage)		
 	}
 	public GenerateEmptyBoard() {
 		//method generating board and filling it with empty tiles
@@ -121,8 +154,12 @@ class Board {
 			);
 		}
 	}
+	howmanytilesinstorage(){
+	//prints how many tiles are left in unusedtilestorage
+	console.log(this.unusedtilestorage.length)
+	}
 	filltilestorage() {
-		//create an array of all letters with their values, state, id and ammount of avalaible tiles
+		//create an array of all letters with their values, state, id 
 		this.unusedtilestorage.push(
 			new LetterTile(0, 0, "Blank", 0),
 			new LetterTile(1, 0, "Blank", 0),
@@ -296,8 +333,9 @@ class Player {
 			i < 7;
 			i++ //draws few tiles to fill players hand
 		) {
-			const newtile: LetterTile =
-				unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+			const newtile: LetterTile =	unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
+			newtile.status = 1; //because it lands in players hand
 			this.playerhand.push(newtile);
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 
@@ -335,7 +373,8 @@ class Player {
 		unusedtilestorage: Board["unusedtilestorage"] //used at end of each round
 	) {
 		const newtile: LetterTile =
-			unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+			unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage			
+			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 		this.playerhand.push(newtile);
 		console.log("TIle {0} has been added to players hand", newtile.value);
 	}
