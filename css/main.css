@@ -88,7 +88,7 @@ body {
 									supported by Chrome, Edge, Opera and Firefox */
 }
 
-.stand {
+#stand {
 	display: flex;
 	font-size: 1.5em;
 	font-weight: 700;
