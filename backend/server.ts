@@ -23,7 +23,12 @@ function connected(socket) {
 		serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
 		serverboards[roomNo] = new Board(roomNo); //creating new board
 		serverboards[roomNo].player1 = serverplayers[socket.id]; //adding player to board
-		console.log("Player: " + socket.id + " was asigned to board and his nick is: " + serverboards[roomNo].player1.nickname);
+		console.log(
+			"Player: " +
+				socket.id +
+				" was asigned to board and his nick is: " +
+				serverboards[roomNo].player1.nickname
+		);
 	} else if (clientNo % 2 === 0) {
 		//creating player 2
 		serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
@@ -308,15 +313,14 @@ class Player {
 		this.nickname = "Harold"; //If we have too much time we can add this functionality
 		this.score = 0;
 	}
-	printplayershand()//prints players hand in console
-	{
-		console.log("PLayer " + this.id + " has those tiles in hand:")
-		for(var i: number = 0; i < this.playerhand.length; i++)
-		{
-			console.log(this.playerhand[i])
+	printplayershand() {
+		//prints players hand in console
+		console.log("PLayer " + this.id + " has those tiles in hand:");
+		for (var i: number = 0; i < this.playerhand.length; i++) {
+			console.log(this.playerhand[i]);
 		}
 	}
-	 fillplayershand(
+	fillplayershand(
 		unusedtilestorage: Board["unusedtilestorage"] //used at start of game to give player tiles to play with
 	) {
 		for (
@@ -328,12 +332,20 @@ class Player {
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 			newtile.status = 1; //because it lands in players hand
 			this.playerhand.push(newtile);
+			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
+
+			var stand = document.getElementById("stand");
+			const newtilehtml: HTMLElement = document.createElement("div"); //generate div for the tile inside tile class
+			newtilehtml.classList.add("tile");
+			// serverplayers[socket.id].playerhand[1].type;
+			// serverplayers[socket.id].playerhand[1].value;
 		}
 		console.log("Player's hand has been filled");
 	}
-	 tradetiles(
-		chosentile: LetterTile, unusedtilestorage: Board["unusedtilestorage"] //TO DO removes tile chosen by player from his hand and gives him random one from unusedtilestorage
- ) {
+	tradetiles(
+		chosentile: LetterTile,
+		unusedtilestorage: Board["unusedtilestorage"] //TO DO removes tile chosen by player from his hand and gives him random one from unusedtilestorage
+	) {
 		const index = this.playerhand
 			.map((object) => object.id)
 			.indexOf(chosentile.id); //find index of choesentile
@@ -348,7 +360,7 @@ class Player {
 			newtile.value
 		);
 	}
-	 drawtile(
+	drawtile(
 		unusedtilestorage: Board["unusedtilestorage"] //used at end of each round
 	) {
 		const newtile: LetterTile =
