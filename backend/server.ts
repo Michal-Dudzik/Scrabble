@@ -29,17 +29,20 @@ function connected(socket) {
 		serverplayers[socket.id] = new Player(socket.id); //adding player to list of players
 		serverboards[roomNo].player2 = serverplayers[socket.id]; //adding player to board
 		console.log("Player: " + socket.id +" was asigned to board and his nick is: " +	serverboards[roomNo].player2.nickname);
-		serverboards[roomNo].GenerateEmptyBoard(); //generating empty board
+		serverboards[roomNo].startgame()
+		//serverboards[roomNo].GenerateEmptyBoard(); //generating empty board
 		//serverboards[roomNo].PrintBoard(); //prints board (just for test)
-		serverboards[roomNo].filltilestorage(); //filling tilestorage with tiles
-		serverboards[roomNo].player1.fillplayershand(serverboards[roomNo].unusedtilestorage)
-		serverboards[roomNo].player2.fillplayershand(serverboards[roomNo].unusedtilestorage)
+		//serverboards[roomNo].filltilestorage(); //filling tilestorage with tiles
+		//serverboards[roomNo].player1.fillplayershand(serverboards[roomNo].unusedtilestorage)
+		//serverboards[roomNo].player2.fillplayershand(serverboards[roomNo].unusedtilestorage)
 		serverboards[roomNo].player1.printplayershand()//prints players hand (just for test)
 		serverboards[roomNo].player2.printplayershand()//prints players hand (just for test)
 		serverboards[roomNo].howmanytilesinstorage()//prints how many tiles are left in storage
 	}
 	socket.on("disconnect", function () {
-		//TODO usuniecie gracza z gry
+		//end game
+		//show winner
+		serverboards.splice(roomNo)//delete board from boards
 	});
 }
 //tworzenie pokoju
@@ -49,15 +52,23 @@ function connected(socket) {
 
 //======== Game Models ========
 
-class Board {
+class Board { //this class may be split in to few different classes but only if we have time for that
 	id: string;
 	gameboard: ITile[][] = []; //type any because every other type created problems
 	player1: Player;
 	player2: Player; //list of player id's that are currently playing
 	unusedtilestorage: LetterTile[] = []; //array storing lettertiles
-	//idk what else can be stored in this class
+	gameover: boolean  //false = game continues || true = game is finished
+	round: number //allows to count rounds
 	constructor(serverroomid: string) {
 		this.id = serverroomid;
+		this.gameover = false;
+	}
+	startgame(){
+		this.GenerateEmptyBoard()
+		this.filltilestorage()
+		this.player1.fillplayershand(this.unusedtilestorage)
+		this.player2.fillplayershand(this.unusedtilestorage)		
 	}
 	public GenerateEmptyBoard() {
 		//method generating board and filling it with empty tiles
@@ -108,8 +119,8 @@ class Board {
 			);
 		}
 	}
-	howmanytilesinstorage(){//prints how many tiles are left in unusedtilestorage
-	//	for(var i: number = 0; i < this.unusedtilestorage.length; i++){}
+	howmanytilesinstorage(){
+	//prints how many tiles are left in unusedtilestorage
 	console.log(this.unusedtilestorage.length)
 	}
 	filltilestorage() {
