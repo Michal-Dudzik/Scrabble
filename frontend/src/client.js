@@ -126,8 +126,8 @@ const onChatSubmitted = (socket) => (e) => {
 (() => {
 	const newGameButton = document.getElementById("newGame"); //get new game button
 	const joinGameButton = document.getElementById("joinGame"); //get join game button
-	const roomName = document.getElementById("roomName").value; //get room input
-	const username = document.getElementById("username").value; //get player name input
+	const roomname = document.getElementById("roomName"); //get room input
+	const username = document.getElementById("username"); //get player name input
 	const acceptWord = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
 	const exit = document.getElementById("exit"); //get exit button
@@ -145,14 +145,19 @@ const onChatSubmitted = (socket) => (e) => {
 	// });
 
 	joinGameButton.addEventListener("click", () => {
-		socket.emit("joinroom", roomName, username);
+		const roomName = roomname.value;
+		const userName = username.value;
+		socket.emit("joinroom", roomName, userName);
 		console.log("Room: " + roomName);
-		console.log("Player: " + username);
+		console.log("Player: " + userName);
 	});
 
 	newGameButton.addEventListener("click", () => {
-		socket.emit("newroom");
-		console.log("newroom_client");
+		// roomName = "name";
+		const roomName = roomname.value;
+		const userName = username.value;
+		socket.emit("newroom", roomName, userName);
+		console.log("newroom_client, " + roomName);
 	});
 
 	exit.addEventListener("click", () => {
