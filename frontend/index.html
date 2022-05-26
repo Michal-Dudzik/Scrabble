@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<title>Scrabble</title>
+		<script
+			src="https://kit.fontawesome.com/2332a6a6f2.js"
+			crossorigin="anonymous"
+		></script>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+			crossorigin="anonymous"
+		></script>
+
+		<link rel="stylesheet" href="css/main.css" />
+		<link rel="shortcut icon" href="media/favicon.png" />
+	</head>
+
+	<body>
+		<div id="buttons-top">
+			<button id="help" class="btn btn-info">
+				<i class="fas fa-lg fa-question"></i>
+			</button>
+			<button id="exit" class="btn btn-danger">
+				<i class="fas fa-lg fa-xmark"></i>
+			</button>
+		</div>
+
+		<div id="scoreBoard">
+			<div class="container">
+				<div class="s_bode">
+					<div class="left_section">
+						<h2>Player 1</h2>
+						<p>Flute <span>(12)</span></p>
+						<p>Wand <span>(32)</span></p>
+						<p>Wrench <span>(92)</span></p>
+					</div>
+
+					<div class="mid_section">
+						<!-- <h2>Room <span id="curentRoom">XXXX</span></h2> -->
+						<h1>3 - 2</h1>
+					</div>
+					<div class="right_section">
+						<h2>Player 2</h2>
+						<p>Bucket <span>(67)</span></p>
+						<p>Pit <span>(49)</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="board" class="noselect d-flex flex-column h-100 dropzone">
+			<div class="board">
+				<!-- Row 1 -->
+				<div class="grid-square draggable triple-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-word"></div>
+
+				<!-- Row 2 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 3 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 4 -->
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+
+				<!-- Row 5 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 6 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 7 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 8 -->
+				<div class="grid-square draggable triple-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable star-square"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-word"></div>
+
+				<!-- Row 9 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 10 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 11 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 12 -->
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+
+				<!-- Row 13 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 14 -->
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-word"></div>
+				<div class="grid-square draggable"></div>
+
+				<!-- Row 15 -->
+				<div class="grid-square draggable triple-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-word"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable double-letter"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable"></div>
+				<div class="grid-square draggable triple-word"></div>
+			</div>
+
+			<div id="underBoard">
+				<button id="goBack" class="btn btn-info">
+					<i class="fa-solid fa-arrow-down"></i>
+				</button>
+
+				<button id="skip" class="btn btn-warning">Skip</button>
+
+				<div class="stand-background">
+					<div class="tile draggable" id="tile_1" draggable="true">
+						<span class="letter">S</span>
+						<span class="letter-weight">2</span>
+					</div>
+					<div class="tile draggable" id="tile_2" draggable="true">
+						<div class="letter">C</div>
+						<div class="letter-weight">2</div>
+					</div>
+					<div class="tile draggable" id="tile_3" draggable="true">
+						<div class="letter">R</div>
+						<div class="letter-weight">2</div>
+					</div>
+					<div class="tile draggable" id="tile_4" draggable="true">
+						<div class="letter">A</div>
+						<div class="letter-weight">5</div>
+					</div>
+					<div class="tile draggable" id="tile_5" draggable="true">
+						<div class="letter">B</div>
+						<div class="letter-weight">3</div>
+					</div>
+					<div class="tile draggable" id="tile_6" draggable="true">
+						<div class="letter">B</div>
+						<div class="letter-weight">2</div>
+					</div>
+					<div class="tile draggable" id="tile_7" draggable="true">
+						<div class="letter">L</div>
+						<div class="letter-weight">1</div>
+					</div>
+				</div>
+
+				<button id="acceptWord" class="btn btn-success">Play</button>
+
+				<button id="swap" class="btn btn-info">
+					<i class="fa-solid fa-shuffle"></i>
+				</button>
+			</div>
+		</div>
+
+		<div class="controls-wrapper d-flex flex-column h-100">
+			<ul id="events"></ul>
+			<div class="controls">
+				<div class="chat-wrapper">
+					<form id="chat-form">
+						<input id="chat" autocomplete="off" title="chat" />
+						<button id="say" class="btn btn-primary">
+							<i class="fa-solid fa-paper-plane"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<footer>
+			<div class="row justify-content-center fixed-bottom">
+				<div class="col-md-auto" style="color: #ffffffd0">
+					<p>
+						&copy; Projekt wykonany na zaliczenie by Michał Dudzik & Wojtek
+						Rusiecki
+					</p>
+				</div>
+			</div>
+		</footer>
+
+		<!-- MODAL Initial Screen -->
+		<div class="modal fade" id="initialScreen">
+			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-floating mb-3">
+									<input class="form-control" id="username" />
+									<label for="roomName">Username</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input class="form-control" id="roomName" />
+									<label for="roomName">Room</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="joinGame" type="submit" class="btn btn-primary">
+								Join
+							</button>
+							<button id="joinRandomGame" type="submit" class="btn btn-primary">
+								Join random
+							</button>
+							<button id="newGame" type="submit" class="btn btn-primary">
+								Create new game
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- MODAL Help -->
+		<div class="modal fade" id="helpModal" style="display: hidden">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Game rules</h5>
+					</div>
+					<div class="modal-body">
+						<p>
+							<b>1#</b> The first player combines two or more of his or her
+							letters to form a word and places it on the board to read either
+							across or down with one letter on the center square. Diagonal
+							words are not allowed.
+						</p>
+						<p><b>2#</b> Complete your turn by clicking play</p>
+						<p>
+							<b>3#</b> Add one or more letters to those already played to form
+							new words. If, at the same time, they touch others letters in
+							adjacent rows, those must also form complete words, with all such
+							letters. The player gets full credit for all words formed or
+							modified on his or her turn.
+						</p>
+						<p>
+							<b>4#</b> No tile may be shifted or replaced after it has been
+							played and scored
+						</p>
+						<p>
+							<b>5#</b> You may use a turn to exchange all, some, or none of the
+							letters. This ends your turn
+						</p>
+						<p>
+							<b>6#</b> Any play may be challenged before the next player starts
+							a turn. If the play challenged is unacceptable, the challenged
+							player takes back his or her tiles and loses that turn. If the
+							play challenged is acceptable, the challenger loses his or her
+							next turn.All words made in one play are challenged
+							simultaneously. If any word is unacceptable, then the entire play
+							is unacceptable.
+						</p>
+						<p>
+							<b>7#</b> The game ends when all letters have been drawn and one
+							player uses his or her last letter; or when all possible plays
+							have been made.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- BLACK BAGIC -->
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="src/client.js"></script>
+	</body>
+</html>
