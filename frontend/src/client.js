@@ -1,4 +1,3 @@
-
 //show initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
@@ -64,6 +63,44 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	});
 });
 
+// Dragndrop inny sposób ale nie do końca działa//
+// const boxes = document.querySelectorAll('.dropzone');
+
+// boxes.forEach(box => {
+//     box.addEventListener('dragenter', dragEnter)
+//     box.addEventListener('dragover', dragOver);
+//     box.addEventListener('dragleave', dragLeave);
+//     box.addEventListener('drop', drop);
+// });
+
+// function dragEnter(e) {
+//     e.preventDefault();
+//     e.target.classList.add('drag-over');
+// }
+
+// function dragOver(e) {
+//     e.preventDefault();
+//     e.target.classList.add('drag-over');
+// }
+
+// function dragLeave(e) {
+//     e.target.classList.remove('drag-over');
+// }
+
+// function drop(e) {
+//     e.target.classList.remove('drag-over');
+
+//     // get the draggable element
+//     const id = e.dataTransfer.getData('text/plain');
+//     const draggable = document.getElementById(id);
+
+//     // add it to the drop target
+//     e.target.appendChild(draggable);
+
+//     // display the draggable element
+//     draggable.classList.remove('hide');
+// }
+
 // Chat //
 const log = (text) => {
 	//log to console
@@ -89,8 +126,8 @@ const onChatSubmitted = (socket) => (e) => {
 (() => {
 	const newGameButton = document.getElementById("newGame"); //get new game button
 	const joinGameButton = document.getElementById("joinGame"); //get join game button
-	const roomName = document.getElementById("roomName"); //get room input
-	const username = document.getElementById("username"); //get player name input
+	const roomName = document.getElementById("roomName").value; //get room input
+	const username = document.getElementById("username").value; //get player name input
 	const acceptWord = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
 	const exit = document.getElementById("exit"); //get exit button
