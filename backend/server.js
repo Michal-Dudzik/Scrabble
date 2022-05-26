@@ -60,10 +60,9 @@ io.on("connection", (socket) => {
 	//creating new room
 	socket.on("newroom", function(socket) {
 		
-		if (serverboards.some(e => e.roomID === roomName))
+		if (!(serverboards.some(e => e.roomID === roomName)))
 		{
 			/* vendors contains the element we're looking for */
-		  
 		roomID = roomName; // TO DO read room name from html and check if its allready taken
 		console.log("Room: " + roomID + " was created");
 		socc.join(roomID);
@@ -75,7 +74,7 @@ io.on("connection", (socket) => {
 		}
 		else
 		{
-			socket.emit("message", "Room with this name allready exists")
+			socc.emit("message", "Room with this name allready exists")
 			console.log("Room with this name allready exists")
 		}
 

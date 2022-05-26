@@ -89,7 +89,7 @@ const onChatSubmitted = (socket) => (e) => {
 (() => {
 	const newGameButton = document.getElementById("newGame"); //get new game button
 	const joinGameButton = document.getElementById("joinGame"); //get join game button
-	const roomName = document.getElementById("roomName"); //get room input
+	const roomname = document.getElementById("roomName"); //get room input
 	const username = document.getElementById("username"); //get player name input
 	const acceptWord = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
@@ -108,18 +108,19 @@ const onChatSubmitted = (socket) => (e) => {
 	// });
 
 	joinGameButton.addEventListener("click", () => {
-		roomName = "name1";
-		username = "gracz1";
+		const roomName = roomname.value
+		const userName = username.value
 		socket.emit("joinroom", roomName, userName);
 		console.log("Room: " + roomName);
-		console.log("Player: " + username);
+		console.log("Player: " + userName);
 	});
 
 	newGameButton.addEventListener("click", () => {
-		roomName = "name1";
-		username = "gracz2";
+		// roomName = "name";
+		const roomName = roomname.value
+		const userName = username.value
 		socket.emit("newroom", roomName, userName);
-		console.log("newroom_client");
+		console.log("newroom_client, " + roomName);
 	});
 
 	exit.addEventListener("click", () => {
