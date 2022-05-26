@@ -59,14 +59,27 @@ io.on("connection", (socket) => {
 	socket.on("message", (text) => io.emit("message", text)); //receive message from client and send it to all clients
 	//creating new room
 	socket.on("newroom", function(socket) {
-		roomID = socc.id; // TO DO read room name from html and check if its allready taken
+		
+		if (serverboards.some(e => e.roomID === roomName))
+		{
+			/* vendors contains the element we're looking for */
+		  
+		roomID = roomName; // TO DO read room name from html and check if its allready taken
 		console.log("Room: " + roomID + " was created");
 		socc.join(roomID);
-		console.log("New player:" + clientNo + ", joined room: " + roomID);
 		serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
+		serverplayers[socc.id].player1.nickname = userName;
 		serverboards[roomID] = new Board(roomID); //creating new board
 		serverboards[roomID].player1 = serverplayers[socc.id]; //adding player to board
-	});
+		console.log("New player:" + player1.nickname + ", created room: " + roomID);
+		}
+		else
+		{
+			socket.emit("message", "Room with this name allready exists")
+			console.log("Room with this name allready exists")
+		}
+
+});
 	socket.on("joinroom", (socket) => {
 		// listen for incoming data msg on this newly connected socket
 		
@@ -76,7 +89,8 @@ io.on("connection", (socket) => {
 			socc.join(roomID); //()
 			serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
 			serverboards[roomID].player2 = serverplayers[socc.id]; //adding player to board
-			console.log("New player:" + clientNo + ", joined room: " + roomID);
+			serverplayers[socc.id].player2.nickname = userName;
+			console.log("New player:" + player2.nickname + ", joined room: " + roomID);
 			serverboards[roomID].startgame();
 			serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
 			serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)

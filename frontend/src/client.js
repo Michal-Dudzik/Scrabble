@@ -108,13 +108,17 @@ const onChatSubmitted = (socket) => (e) => {
 	// });
 
 	joinGameButton.addEventListener("click", () => {
-		socket.emit("joinroom", roomName, username);
+		roomName = "name1";
+		username = "gracz1";
+		socket.emit("joinroom", roomName, userName);
 		console.log("Room: " + roomName);
 		console.log("Player: " + username);
 	});
 
 	newGameButton.addEventListener("click", () => {
-		socket.emit("newroom");
+		roomName = "name1";
+		username = "gracz2";
+		socket.emit("newroom", roomName, userName);
 		console.log("newroom_client");
 	});
 
