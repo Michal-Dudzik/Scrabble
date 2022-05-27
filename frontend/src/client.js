@@ -122,7 +122,14 @@ const onChatSubmitted = (socket) => (e) => {
 
 	socket.emit("message", text);
 };
-
+socket.on("startgame", function(socket)
+{
+	socket.emit("start")
+})
+socket.on("roundresponse", function(socket)
+{/*
+	//zrób ruch i wyślij go serwerowi 
+ */})
 //join game
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
