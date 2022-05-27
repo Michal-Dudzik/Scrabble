@@ -123,10 +123,39 @@ const onChatSubmitted = (socket) => (e) => {
 	socket.emit("message", text);
 };
 
+//join game
+const onJoinGame = (socket) => (e) => {
+	e.preventDefault();
+
+	const user = document.querySelector("#username");
+	const username = user.value;
+	user.value = "";
+
+	const room = document.querySelector("#roomName");
+	const roomName = room.value;
+	room.value = "";
+
+	socket.emit("joinroom", username, roomName);
+};
+
+const onCreateGame = (socket) => (e) => {
+	e.preventDefault();
+
+	const user = document.querySelector("#username");
+	const username = user.value;
+	user.value = "";
+
+	const room = document.querySelector("#roomName");
+	const roomName = room.value;
+	room.value = "";
+
+	socket.emit("newroom", username, roomName);
+};
+
 (() => {
 	const newGameButton = document.getElementById("newGame"); //get new game button
 	const joinGameButton = document.getElementById("joinGame"); //get join game button
-	const roomname = document.getElementById("roomName"); //get room input
+	const roomName = document.getElementById("roomName"); //get room input
 	const username = document.getElementById("username"); //get player name input
 	const acceptWord = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
@@ -144,23 +173,12 @@ const onChatSubmitted = (socket) => (e) => {
 	// 	console.log("Player: " + username.value);
 	// });
 
-	joinGameButton.addEventListener("click", () => {
-		const roomName = roomname.value;
-		const userName = username.value;
-		socket.emit("joinroom", roomName, userName);
-		console.log("Room: " + roomName);
-		console.log("Player: " + userName);
-	});
+	joinGameButton.addEventListener("click", onJoinGame(socket));
 
-	newGameButton.addEventListener("click", () => {
-		// roomName = "name";
-		const roomName = roomname.value;
-		const userName = username.value;
-		socket.emit("newroom", roomName, userName);
-		console.log("newroom_client, " + roomName);
-	});
+	newGameButton.addEventListener("click", onCreateGame(socket));
 
 	exit.addEventListener("click", () => {
+		socket.emit("exit", username.value, roomName.value);
 		socket.disconnect();
 	});
 
