@@ -20,25 +20,7 @@ io.on("connection", function (socket) {
     socket.on("message", function (text) { return io.emit("message", text); }); //receive message from client and send it to all clients
     //creating new room
     socket.on("newroom", function (username, roomName) {
-        // if (!serverboards.some((e) => e.roomID === roomName)) {
-        // 	/* vendors contains the element we're looking for */
-        // 	roomID = roomName; // TO DO read room name from html and check if its allready taken
-        // 	console.log("Room: " + roomID + " was created");
-        // 	socc.join(roomID);
-        // 	serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
-        // 	serverplayers[socc.id].player1.nickname = username;
-        // 	serverboards[roomID] = new Board(roomID); //creating new board
-        // 	serverboards[roomID].player1 = serverplayers[socc.id]; //adding player to board
-        // 	console.log(
-        // 		"New player:" + player1.nickname + ", created room: " + roomID
-        // 	);
-        // } else {
-        // 	socc.emit("message", "Room with this name allready exists");
-        // 	console.log("Room with this name allready exists");
-        // }
-        //if (serverboards.includes(roomName)) {
-            
-          if (serverboards.some((e) => e.roomID === roomName)) {
+        if (serverboards.some(function (e) { return e.id === roomName; })) {
             socc.emit("message", "Room with this name allready exists");
             console.log("Room with this name allready exists");
         }
@@ -48,18 +30,16 @@ io.on("connection", function (socket) {
             socc.join(roomID);
             console.log(username + " joined room: " + roomID);
             serverboards[roomID] = new Board(roomID),
-            //add player to list of players
-            serverplayers[socc.id] = new Player(socc.id);
+                //add player to list of players & board
+                serverplayers[socc.id] = new Player(socc.id);
             serverboards[roomID].player1 = serverplayers[socc.id];
             serverboards[roomID].player1.nickname = username;
-            //create new board
-            
-                console.log("Owner of the room: " + serverboards[roomID].player1.nickname);
+            //create new board        
+            console.log("Owner of the room: " + serverboards[roomID].player1.nickname);
         }
     });
     socket.on("joinroom", function (username, roomName) {
         // listen for incoming data msg on this newly connected socket
-        //wysyłąnie/odbieranie jsona
         console.log("User: " + username + " is trying to join room: " + roomName);
         roomID = roomName;
         socc.join(roomID); //()
@@ -72,6 +52,17 @@ io.on("connection", function (socket) {
         serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
         serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)
         serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
+        if (serverboards[roomID].player2.nickname != "aezkami" && serverboards[roomID].player1.nickname != "aezkami") //validation if both players connected to room
+         {
+            socket.to(roomID).emit("startgame");
+        }
+        socket.on("start", function (socket) {
+            //if(serverboards[roomID].round == 0){
+            serverboards[roomID].round++;
+            socc.to(roomID).emit("moveresponse", serverboards[roomID]);
+        });
+        socket.on("ruch wysłany od klienta", function (socket) {
+        });
     });
     socket.on("exit", function (roomName, username) {
         console.log("Current players: " + serverplayers);
@@ -195,7 +186,7 @@ var Player = /** @class */ (function () {
         this.playerhand = []; //array storing letters currently held by player
         this.playerhand = [];
         this.id = socketid;
-        this.nickname = "Harold"; //If we have too much time we can add this functionality
+        this.nickname = "aezkami"; //If we have too much time we can add this functionality
         this.score = 0;
     }
     Player.prototype.printplayershand = function () {

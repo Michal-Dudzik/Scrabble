@@ -16,84 +16,75 @@ let clientNo = 0;
 let roomID;
 let serverplayers: Player[] = [];
 let serverboards: Board[] = [];
-io.on("connection", (socket) => {
-	let socc:Socket = socket;
-	socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
-	let playerid = socket.id;
-	console.log("New player:" + socket.id + ", connected to server");
-	socket.on("message", (text) => io.emit("message", text)); //receive message from client and send it to all clients
-
-	//creating new room
-	socket.on("newroom", function (username, roomName) {
-		// if (!serverboards.some((e) => e.roomID === roomName)) {
-		// 	/* vendors contains the element we're looking for */
-		// 	roomID = roomName; // TO DO read room name from html and check if its allready taken
-		// 	console.log("Room: " + roomID + " was created");
-		// 	socc.join(roomID);
-		// 	serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
-		// 	serverplayers[socc.id].player1.nickname = username;
-		// 	serverboards[roomID] = new Board(roomID); //creating new board
-		// 	serverboards[roomID].player1 = serverplayers[socc.id]; //adding player to board
-		// 	console.log(
-		// 		"New player:" + player1.nickname + ", created room: " + roomID
-		// 	);
-		// } else {
-		// 	socc.emit("message", "Room with this name allready exists");
-		// 	console.log("Room with this name allready exists");
-		// }
-
-		if (serverboards.includes(roomName)) {
-			socc.emit("message", "Room with this name allready exists");
-			console.log("Room with this name allready exists");
-		} else {
-			roomID = roomName
-				console.log("Room: " + roomID + " was created");
-				socc.join(roomID);
-				console.log(username + " joined room: " + roomID);
-			//add player to list of players
-			serverplayers[socc.id] = new Player(socc.id);
-			serverboards[roomID].player1 = serverplayers[socc.id];
-			serverboards[roomID].player1.nickname = username;
-			//create new board
-			serverboards[roomID] = new Board(roomID),
-			
-			console.log("Owner of the room: " + serverboards[roomID].player1.nickname);
+io.on("connection", function (socket) {
+    var socc = socket;
+    socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
+    var playerid = socket.id;
+    console.log("New player:" + socket.id + ", connected to server");
+    socket.on("message", function (text) { return io.emit("message", text); }); //receive message from client and send it to all clients
+    //creating new room
+    socket.on("newroom", function (username, roomName) {           
+        if(serverboards.some((e) => e.id === roomName)) {
+            socc.emit("message", "Room with this name allready exists");
+            console.log("Room with this name allready exists");
+        }
+        else {
+            roomID = roomName;
+            console.log("Room: " + roomID + " was created");
+            socc.join(roomID);
+            console.log(username + " joined room: " + roomID);
+            serverboards[roomID] = new Board(roomID),
+            //add player to list of players & board
+            serverplayers[socc.id] = new Player(socc.id);
+            serverboards[roomID].player1 = serverplayers[socc.id];
+            serverboards[roomID].player1.nickname = username;
+            //create new board        
+                console.log("Owner of the room: " + serverboards[roomID].player1.nickname);
+        }
+    });
+    socket.on("joinroom", function (username, roomName) {
+        
+        // listen for incoming data msg on this newly connected socket
+        console.log("User: " + username + " is trying to join room: " + roomName);
+        roomID = roomName;
+        socc.join(roomID); //()
+        console.log("test1");
+        serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
+        serverboards[roomID].player2 = serverplayers[socc.id]; //adding player to board
+        serverboards[roomID].player2.nickname = username;
+        console.log("New player:" + serverboards[roomID].player2.nickname + ", joined room: " + roomID);
+        serverboards[roomID].startgame();
+        serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
+        serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)
+        serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
+		if(serverboards[roomID].player2.nickname != "aezkami" && serverboards[roomID].player1.nickname != "aezkami") //validation if both players connected to room
+		{
+			socket.to(roomID).emit("startgame")
 		}
+		socket.on("start", function(socket)
+		{
+			//if(serverboards[roomID].round == 0){
+				serverboards[roomID].round++;
+				socc.to(roomID).emit("moveresponse",  serverboards[roomID])
+		})
+		socket.on("ruch wysłany od klienta", function(socket){
+
+			
+		})
+	
 	});
-
-	socket.on("joinroom", (username, roomName) => {
-		// listen for incoming data msg on this newly connected socket
-
-		//wysyłąnie/odbieranie jsona
-		console.log("User: " + username + " is trying to join room: " + roomName);
-		roomID = roomName;
-		socc.join(roomID); //()
-		console.log("test1");
-
-		serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
-		serverboards[roomID].player2 = serverplayers[socc.id]; //adding player to board
-		serverboards[roomID].player2.nickname = username;
-		console.log("New player:" + serverboards[roomID].player2.nickname + ", joined room: " + roomID);
-		serverboards[roomID].startgame();
-		serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
-		serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)
-		serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
-	});
-
-	socket.on("exit", (roomName, username) => {
-		console.log("Current players: " + serverplayers);
-		serverboards.filter((e) => e !== roomName);
-		serverplayers.filter((e) => e !== username);
-		console.log("Current players: " + serverplayers);
-	});
+    socket.on("exit", function (roomName, username) {
+        console.log("Current players: " + serverplayers);
+        serverboards.filter(function (e) { return e !== roomName; });
+        serverplayers.filter(function (e) { return e !== username; });
+        console.log("Current players: " + serverplayers);
+    });
 });
-
-server.on("error", (err) => {
-	console.log(err);
+server.on("error", function (err) {
+    console.log(err);
 });
-
-server.listen(8080, () => {
-	console.log("Server is running on port 8080");
+server.listen(8080, function () {
+    console.log("Server is running on port 8080");
 });
 //tworzenie pokoju
 //jeśli 2 gracze dołączyli to pojawia się guzik start
@@ -355,7 +346,7 @@ class Player {
 	) {
 		this.playerhand = [];
 		this.id = socketid;
-		this.nickname = "Harold"; //If we have too much time we can add this functionality
+		this.nickname = "aezkami"; //If we have too much time we can add this functionality
 		this.score = 0;
 	}
 	printplayershand() {
