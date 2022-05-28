@@ -290,7 +290,7 @@ li {
 	cursor: move;
 }
 
-.letter-weight {
+.letter_weight {
 	position: absolute;
 	bottom: 0;
 	right: 5px;
