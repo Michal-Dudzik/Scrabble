@@ -123,7 +123,40 @@ const onChatSubmitted = (socket) => (e) => {
 	socket.emit("message", text);
 };
 
-//join game
+const fillTiles = (socket) => (tiles) => {
+	//fill tiles
+
+	letter = "a";
+	letter_weight = 1;
+
+	for (let i = 1; i <= 7; i++) {
+		const tile = document.querySelector(`#tile_${i}`);
+		
+		// const letter = document.createElement("span");
+		// letter.classList.add("letter");
+		// letter.innerHTML = letter;
+
+		// tile.appendChild(letter);
+
+		// const letter_weight = document.createElement("span");
+		// letter_weight.classList.add("letter_weight");
+		// letter_weight.innerHTML = letter_weight;
+
+		// tile.appendChild(letter_weight);
+	};
+};
+
+
+// socket.on("startgame", function(socket) //to tak nie działa
+// {
+// 	socket.emit("start")
+// })
+// socket.on("roundresponse", function(socket)
+// {/*
+// 	//zrób ruch i wyślij go serwerowi 
+//  */})
+// //join game
+
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
 
@@ -136,6 +169,8 @@ const onJoinGame = (socket) => (e) => {
 	room.value = "";
 
 	socket.emit("joinroom", username, roomName);
+
+
 };
 
 const onCreateGame = (socket) => (e) => {
@@ -166,12 +201,6 @@ const onCreateGame = (socket) => (e) => {
 	socket.on("joinroom");
 
 	socket.on("message", log);
-
-	// joinGameButton.addEventListener("click", () => {
-	// 	socket.emit("joinroom", roomName.value, username.value);
-	// 	console.log("Room: " + roomName.value);
-	// 	console.log("Player: " + username.value);
-	// });
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
