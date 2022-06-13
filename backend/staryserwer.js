@@ -114,6 +114,9 @@ io.on("connection", (socket) => {
 		serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
 	});
 
+	
+
+
 	socket.on("exit", (roomName, username) => {
 		console.log("Current players: " + serverplayers);
 		serverboards.filter((e) => e !== roomName);
