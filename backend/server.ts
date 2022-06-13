@@ -1,4 +1,4 @@
-// import { Socket } from "socket.io";
+import { Socket } from "socket.io";
 
 const http = require("http");
 const express = require("express");
@@ -21,6 +21,7 @@ io.on("connection", function (socket) {
     socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
     var playerid = socket.id;
     console.log("New player:" + socket.id + ", connected to server");
+
     socket.on("message", function (text) { return io.emit("message", text); }); //receive message from client and send it to all clients
     //creating new room
     socket.on("newroom", function (username, roomName) {           
@@ -67,12 +68,18 @@ io.on("connection", function (socket) {
 				serverboards[roomID].round++;
 				socc.to(roomID).emit("moveresponse",  serverboards[roomID])
 		})
-		socket.on("ruch wysłany od klienta", function(socket){
+		//socket.on("ruch wysłany od klienta", function(socket){
+//
+//			
+//		})
 
-			
-		})
 	
 	});
+	socket.on("nextround")
+	{
+		socc.broadcast.to(roomID).emit("yourturn")
+	}
+
     socket.on("exit", function (roomName, username) {
         console.log("Current players: " + serverplayers);
         serverboards.filter(function (e) { return e !== roomName; });
@@ -96,6 +103,7 @@ class Game{ //not sure if i will use this class
 	board: Board
 	gameover: boolean  //false = game continues || true = game is finished
 	round: number //allows to count rounds
+	
 	constructor(board: Board)
 	{
 		this.board = board
@@ -131,6 +139,7 @@ class Board { //this class may be split in to few different classes but only if 
 	unusedtilestorage: LetterTile[] = []; //array storing lettertiles
 	gameover: boolean  //false = game continues || true = game is finished
 	round: number //allows to count rounds
+	wordlist:string [] //contains list of accepted words
 	constructor(serverroomid: string) {
 		this.id = serverroomid;
 		this.gameover = false;
