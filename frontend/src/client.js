@@ -146,16 +146,44 @@ const fillTiles = (socket) => (tiles) => {
 	};
 };
 
+function updateboard(gameboard)
+{
+	for(var i = 0; i < 16; i++)
+	{
+		for(j= 0; j < 16; j++)
+		{
+			if(gameboard[i][j] == EmptyTile)
+			{
+				document.getElementById(i + "-" + j).innerText=" "
+			}
+			else
+			{
+				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type
+			}
+		}
+	}
+}
 
-// socket.on("startgame", function(socket) //to tak nie działa
+
+socket.on("moveresponse", (board))//recieve board from server and update data
+{
+	updateboard(this.board.gameboard)//wpisz w divy litery znajdujące się w danych miejscach w tabeli
+	
+	//zaktualizuj scoreboard
+	//zaktualizuj literki w ręce gracza
+	//zaktualizuj wynik
+}
+socket.on("yourturn")
+{
+	//unlock drag and drop
+}
+
+//socket.on("wyślij słowo do sprawdzenia")
 // {
-// 	socket.emit("start")
-// })
-// socket.on("roundresponse", function(socket)
-// {/*
-// 	//zrób ruch i wyślij go serwerowi 
-//  */})
-// //join game
+//    zrób coś
+//    zablokuj drag and drop
+// }
+
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
