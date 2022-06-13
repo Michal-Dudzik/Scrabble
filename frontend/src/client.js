@@ -146,12 +146,29 @@ const fillTiles = (socket) => (tiles) => {
 	};
 };
 
-
+function updateboard(gameboard)
+{
+	for(var i = 0; i < 16; i++)
+	{
+		for(j= 0; j < 16; j++)
+		{
+			if(gameboard[i][j] == EmptyTile)
+			{
+				document.getElementById(i + "-" + j).innerText=" "
+			}
+			else
+			{
+				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type
+			}
+		}
+	}
+}
 
 
 socket.on("moveresponse", (board))//recieve board from server and update data
 {
-	//wpisz w divy litery znajdujące się w danych miejscach w tabeli
+	updateboard(this.board.gameboard)//wpisz w divy litery znajdujące się w danych miejscach w tabeli
+	
 	//zaktualizuj scoreboard
 	//zaktualizuj literki w ręce gracza
 	//zaktualizuj wynik
