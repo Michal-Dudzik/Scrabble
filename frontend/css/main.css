@@ -270,6 +270,12 @@ li {
 	align-items: center;
 }
 
+.tile_back {
+	border: #fe704d 1px dashed;
+	width: 50px;
+	height: 50px;
+}
+
 /*/////////////////// Tiles //////////////////////*/
 .tile {
 	position: relative;

@@ -13,93 +13,23 @@ helpbtn.addEventListener("click", () => {
 });
 
 // Draging tiles //
-document.addEventListener("DOMContentLoaded", (event) => {
-	var dragSrcEl = null;
+function dragstart_handler(ev) {
+	// Set the drag's format and data. Use the event target's id for the data
+	ev.dataTransfer.setData("text/plain", ev.target.id);
+}
 
-	function handleDragStart(e) {
-		dragSrcEl = this;
+function dragover_handler(ev) {
+	ev.preventDefault();
+}
 
-		e.dataTransfer.effectAllowed = "move";
-		e.dataTransfer.setData("text/html", this.innerHTML);
-	}
-
-	function handleDragOver(e) {
-		if (e.preventDefault) {
-			e.preventDefault();
-		}
-
-		e.dataTransfer.dropEffect = "move";
-
-		return false;
-	}
-
-	function handleDrop(e) {
-		if (e.stopPropagation) {
-			e.stopPropagation(); // stops the browser from redirecting.
-		}
-
-		if (dragSrcEl != this) {
-			dragSrcEl.innerHTML = this.innerHTML;
-			this.innerHTML = e.dataTransfer.getData("text/html");
-		}
-
-		return false;
-	}
-
-	function handleDragEnd(e) {
-		this.style.opacity = "1";
-
-		items.forEach(function (item) {
-			item.classList.remove("over");
-		});
-	}
-
-	let items = document.querySelectorAll(".dropzone .draggable");
-	items.forEach(function (item) {
-		item.addEventListener("dragstart", handleDragStart, false);
-		item.addEventListener("dragover", handleDragOver, false);
-		item.addEventListener("drop", handleDrop, false);
-		item.addEventListener("dragend", handleDragEnd, false);
-	});
-});
-
-// Dragndrop inny sposób ale nie do końca działa//
-// const boxes = document.querySelectorAll('.dropzone');
-
-// boxes.forEach(box => {
-//     box.addEventListener('dragenter', dragEnter)
-//     box.addEventListener('dragover', dragOver);
-//     box.addEventListener('dragleave', dragLeave);
-//     box.addEventListener('drop', drop);
-// });
-
-// function dragEnter(e) {
-//     e.preventDefault();
-//     e.target.classList.add('drag-over');
-// }
-
-// function dragOver(e) {
-//     e.preventDefault();
-//     e.target.classList.add('drag-over');
-// }
-
-// function dragLeave(e) {
-//     e.target.classList.remove('drag-over');
-// }
-
-// function drop(e) {
-//     e.target.classList.remove('drag-over');
-
-//     // get the draggable element
-//     const id = e.dataTransfer.getData('text/plain');
-//     const draggable = document.getElementById(id);
-
-//     // add it to the drop target
-//     e.target.appendChild(draggable);
-
-//     // display the draggable element
-//     draggable.classList.remove('hide');
-// }
+function drop_handler(ev) {
+	ev.preventDefault();
+	// Get the data, which is the id of the drop target
+	const data = ev.dataTransfer.getData("text");
+	ev.target.appendChild(document.getElementById(data));
+	// Clear the drag data cache (for all formats/types)
+	ev.dataTransfer.clearData();
+}
 
 // Chat //
 const log = (text) => {
@@ -131,7 +61,7 @@ const fillTiles = (socket) => (tiles) => {
 
 	for (let i = 1; i <= 7; i++) {
 		const tile = document.querySelector(`#tile_${i}`);
-		
+
 		// const letter = document.createElement("span");
 		// letter.classList.add("letter");
 		// letter.innerHTML = letter;
@@ -143,47 +73,20 @@ const fillTiles = (socket) => (tiles) => {
 		// letter_weight.innerHTML = letter_weight;
 
 		// tile.appendChild(letter_weight);
-	};
+	}
 };
 
-function updateboard(gameboard)
-{
-	for(var i = 0; i < 16; i++)
-	{
-		for(j= 0; j < 16; j++)
-		{
-			if(gameboard[i][j] == EmptyTile)
-			{
-				document.getElementById(i + "-" + j).innerText=" "
-			}
-			else
-			{
-				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type
+function updateboard(gameboard) {
+	for (var i = 0; i < 16; i++) {
+		for (j = 0; j < 16; j++) {
+			if (gameboard[i][j] == EmptyTile) {
+				document.getElementById(i + "-" + j).innerText = " ";
+			} else {
+				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
 			}
 		}
 	}
 }
-
-
-socket.on("moveresponse", (board))//recieve board from server and update data
-{
-	updateboard(this.board.gameboard)//wpisz w divy litery znajdujące się w danych miejscach w tabeli
-	
-	//zaktualizuj scoreboard
-	//zaktualizuj literki w ręce gracza
-	//zaktualizuj wynik
-}
-socket.on("yourturn")
-{
-	//unlock drag and drop
-}
-
-//socket.on("wyślij słowo do sprawdzenia")
-// {
-//    zrób coś
-//    zablokuj drag and drop
-// }
-
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
@@ -197,8 +100,6 @@ const onJoinGame = (socket) => (e) => {
 	room.value = "";
 
 	socket.emit("joinroom", username, roomName);
-
-
 };
 
 const onCreateGame = (socket) => (e) => {
@@ -229,6 +130,39 @@ const onCreateGame = (socket) => (e) => {
 	socket.on("joinroom");
 
 	socket.on("message", log);
+
+	socket.on("moveresponse", board); //recieve board from server and update data
+	{
+		updateboard(this.board.gameboard); //wpisz w divy litery znajdujące się w danych miejscach w tabeli
+
+		//zaktualizuj scoreboard
+		document.getElementById("player1").innerText = this.board.player1.name;
+		document.getElementById("player2").innerText = this.board.player2.name;
+		document.getElementById("player1score").innerText =
+			this.board.player1.score;
+		document.getElementById("player2score").innerText =
+			this.board.player2.score;
+		//zaktualizuj literki w ręce gracza
+		document.getElementById("player1hand").innerText =
+			this.board.player1.hand.length;
+		document.getElementById("player2hand").innerText =
+			this.board.player2.hand.length;
+		//zaktualizuj wynik
+		document.getElementById("player1score").innerText =
+			this.board.player1.score;
+		document.getElementById("player2score").innerText =
+			this.board.player2.score;
+	}
+	socket.on("yourturn");
+	{
+		//unlock drag and drop
+	}
+
+	socket.on("wyślij słowo do sprawdzenia");
+	{
+		//zrób coś
+		//zablokuj drag and drop
+	}
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
