@@ -22,7 +22,10 @@ io.on("connection", function (socket) {
     var playerid = socket.id;
     console.log("New player:" + socket.id + ", connected to server");
 
-    socket.on("message", function (text) { return io.emit("message", text); }); //receive message from client and send it to all clients
+	//receive message from client and send it to all clients
+    socket.on("message", function (text) { return io.emit("message", text); }); 
+
+
     //creating new room
     socket.on("newroom", function (username, roomName) {           
         if(serverboards.some((e) => e.id === roomName)) {

@@ -12,7 +12,7 @@ helpbtn.addEventListener("click", () => {
 	helpModal.toggle();
 });
 
-// Draging tiles //
+// Dragging tiles //
 function dragstart_handler(ev) {
 	// Set the drag's format and data. Use the event target's id for the data
 	ev.dataTransfer.setData("text/plain", ev.target.id);
@@ -53,14 +53,15 @@ const onChatSubmitted = (socket) => (e) => {
 	socket.emit("message", text);
 };
 
-const fillTiles = (socket) => (tiles) => {
-	//fill tiles
 
-	letter = "a";
-	letter_weight = 1;
+// const fillTiles = (socket) => (tiles) => {
+// 	//fill tiles
 
-	for (let i = 1; i <= 7; i++) {
-		const tile = document.querySelector(`#tile_${i}`);
+// 	letter = "a";
+// 	letter_weight = 1;
+
+// 	for (let i = 1; i <= 7; i++) {
+// 		const tile = document.querySelector(`#tile_${i}`);
 
 		// const letter = document.createElement("span");
 		// letter.classList.add("letter");
@@ -73,20 +74,20 @@ const fillTiles = (socket) => (tiles) => {
 		// letter_weight.innerHTML = letter_weight;
 
 		// tile.appendChild(letter_weight);
-	}
-};
+// 	}
+// };
 
-function updateboard(gameboard) {
-	for (var i = 0; i < 16; i++) {
-		for (j = 0; j < 16; j++) {
-			if (gameboard[i][j] == EmptyTile) {
-				document.getElementById(i + "-" + j).innerText = " ";
-			} else {
-				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
-			}
-		}
-	}
-}
+// function updateboard(gameboard) {
+// 	for (var i = 0; i < 16; i++) {
+// 		for (j = 0; j < 16; j++) {
+// 			if (gameboard[i][j] == EmptyTile) {
+// 				document.getElementById(i + "-" + j).innerText = " ";
+// 			} else {
+// 				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
+// 			}
+// 		}
+// 	}
+// }
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
@@ -116,6 +117,14 @@ const onCreateGame = (socket) => (e) => {
 	socket.emit("newroom", username, roomName);
 };
 
+//change letters on bench for the one associated with the player
+const changeLetters = (socket) => (letters) => {
+	for (let i = 0; i < letters.length; i++) {
+		const letter = document.querySelector(`#letter_${i}`);
+		letter.innerHTML = letters[i];
+	}
+}
+
 (() => {
 	const newGameButton = document.getElementById("newGame"); //get new game button
 	const joinGameButton = document.getElementById("joinGame"); //get join game button
@@ -131,28 +140,28 @@ const onCreateGame = (socket) => (e) => {
 
 	socket.on("message", log);
 
-	socket.on("moveresponse", board); //recieve board from server and update data
-	{
-		updateboard(this.board.gameboard); //wpisz w divy litery znajdujące się w danych miejscach w tabeli
+	// socket.on("moveresponse", board); //recieve board from server and update data
+	// {
+	// 	updateboard(this.board.gameboard); //wpisz w divy litery znajdujące się w danych miejscach w tabeli
 
-		//zaktualizuj scoreboard
-		document.getElementById("player1").innerText = this.board.player1.name;
-		document.getElementById("player2").innerText = this.board.player2.name;
-		document.getElementById("player1score").innerText =
-			this.board.player1.score;
-		document.getElementById("player2score").innerText =
-			this.board.player2.score;
-		//zaktualizuj literki w ręce gracza
-		document.getElementById("player1hand").innerText =
-			this.board.player1.hand.length;
-		document.getElementById("player2hand").innerText =
-			this.board.player2.hand.length;
-		//zaktualizuj wynik
-		document.getElementById("player1score").innerText =
-			this.board.player1.score;
-		document.getElementById("player2score").innerText =
-			this.board.player2.score;
-	}
+	// 	//zaktualizuj scoreboard
+	// 	document.getElementById("player1").innerText = this.board.player1.name;
+	// 	document.getElementById("player2").innerText = this.board.player2.name;
+	// 	document.getElementById("player1score").innerText =
+	// 		this.board.player1.score;
+	// 	document.getElementById("player2score").innerText =
+	// 		this.board.player2.score;
+	// 	//zaktualizuj literki w ręce gracza
+	// 	document.getElementById("player1hand").innerText =
+	// 		this.board.player1.hand.length;
+	// 	document.getElementById("player2hand").innerText =
+	// 		this.board.player2.hand.length;
+	// 	//zaktualizuj wynik
+	// 	document.getElementById("player1score").innerText =
+	// 		this.board.player1.score;
+	// 	document.getElementById("player2score").innerText =
+	// 		this.board.player2.score;
+	// }
 	socket.on("yourturn");
 	{
 		//unlock drag and drop
