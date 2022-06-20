@@ -18,6 +18,8 @@ io.on("connection", function (socket) {
     var playerid = socket.id;
     console.log("New player:" + socket.id + ", connected to server");
     socket.on("message", function (text) { return io.emit("message", text); }); //receive message from client and send it to all clients
+    socket.on("disconnect", function () { return io.emit("message", "Player " + socket.id + " disconnected"); }); //on disconnection send message to client
+    //send message to players in the same room
     //creating new room
     socket.on("newroom", function (username, roomName) {
         if (serverboards.some(function (e) { return e.id === roomName; })) {

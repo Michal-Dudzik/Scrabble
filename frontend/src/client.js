@@ -12,7 +12,7 @@ helpbtn.addEventListener("click", () => {
 	helpModal.toggle();
 });
 
-// Draging tiles //
+// Dragging tiles //
 function dragstart_handler(ev) {
 	// Set the drag's format and data. Use the event target's id for the data
 	ev.dataTransfer.setData("text/plain", ev.target.id);
@@ -55,40 +55,40 @@ const onChatSubmitted = (socket) => (e) => {
 	socket.emit("message", text);
 };
 
-const fillTiles = (socket) => (tiles) => {
-	//fill tiles
+// const fillTiles = (socket) => (tiles) => {
+// 	//fill tiles
 
-	letter = "a";
-	letter_weight = 1;
+// 	letter = "a";
+// 	letter_weight = 1;
 
-	for (let i = 1; i <= 7; i++) {
-		const tile = document.querySelector(`#tile_${i}`);
+// 	for (let i = 1; i <= 7; i++) {
+// 		const tile = document.querySelector(`#tile_${i}`);
 
-		// const letter = document.createElement("span");
-		// letter.classList.add("letter");
-		// letter.innerHTML = letter;
+// const letter = document.createElement("span");
+// letter.classList.add("letter");
+// letter.innerHTML = letter;
 
-		// tile.appendChild(letter);
+// tile.appendChild(letter);
 
-		// const letter_weight = document.createElement("span");
-		// letter_weight.classList.add("letter_weight");
-		// letter_weight.innerHTML = letter_weight;
+// const letter_weight = document.createElement("span");
+// letter_weight.classList.add("letter_weight");
+// letter_weight.innerHTML = letter_weight;
 
-		// tile.appendChild(letter_weight);
-	}
-};
+// tile.appendChild(letter_weight);
+// 	}
+// };
 
-function updateboard(gameboard) {
-	for (var i = 0; i < 16; i++) {
-		for (j = 0; j < 16; j++) {
-			if (gameboard[i][j] == EmptyTile) {
-				document.getElementById(i + "-" + j).innerText = " ";
-			} else {
-				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
-			}
-		}
-	}
-}
+// function updateboard(gameboard) {
+// 	for (var i = 0; i < 16; i++) {
+// 		for (j = 0; j < 16; j++) {
+// 			if (gameboard[i][j] == EmptyTile) {
+// 				document.getElementById(i + "-" + j).innerText = " ";
+// 			} else {
+// 				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
+// 			}
+// 		}
+// 	}
+// }
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
@@ -116,6 +116,14 @@ const onCreateGame = (socket) => (e) => {
 	room.value = "";
 
 	socket.emit("newroom", username, roomName);
+};
+
+//change letters on bench for the one associated with the player
+const changeLetters = (socket) => (letters) => {
+	for (let i = 0; i < letters.length; i++) {
+		const letter = document.querySelector(`#letter_${i}`);
+		letter.innerHTML = letters[i];
+	}
 };
 
 (() => {
@@ -155,16 +163,16 @@ const onCreateGame = (socket) => (e) => {
 	// 	document.getElementById("player2score").innerText =
 	// 		this.board.player2.score;
 	// }
-	// socket.on("yourturn");
-	// {
-	// 	//unlock drag and drop
-	// }
+	socket.on("yourturn");
+	{
+		//unlock drag and drop
+	}
 
-	// socket.on("wyślij słowo do sprawdzenia");
-	// {
-	// 	//zrób coś
-	// 	//zablokuj drag and drop
-	// }
+	socket.on("wyślij słowo do sprawdzenia");
+	{
+		//zrób coś
+		//zablokuj drag and drop
+	}
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
