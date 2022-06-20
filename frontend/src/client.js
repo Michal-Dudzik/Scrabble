@@ -29,6 +29,8 @@ function drop_handler(ev) {
 	ev.target.appendChild(document.getElementById(data));
 	// Clear the drag data cache (for all formats/types)
 	ev.dataTransfer.clearData();
+	// send current board to server
+	socket.emit("board", gameboard);
 }
 
 // Chat //
@@ -131,38 +133,38 @@ const onCreateGame = (socket) => (e) => {
 
 	socket.on("message", log);
 
-	socket.on("moveresponse", board); //recieve board from server and update data
-	{
-		updateboard(this.board.gameboard); //wpisz w divy litery znajdujące się w danych miejscach w tabeli
+	// socket.on("moveresponse", board); //recieve board from server and update data
+	// {
+	// 	updateboard(this.board.gameboard); //wpisz w divy litery znajdujące się w danych miejscach w tabeli
 
-		//zaktualizuj scoreboard
-		document.getElementById("player1").innerText = this.board.player1.name;
-		document.getElementById("player2").innerText = this.board.player2.name;
-		document.getElementById("player1score").innerText =
-			this.board.player1.score;
-		document.getElementById("player2score").innerText =
-			this.board.player2.score;
-		//zaktualizuj literki w ręce gracza
-		document.getElementById("player1hand").innerText =
-			this.board.player1.hand.length;
-		document.getElementById("player2hand").innerText =
-			this.board.player2.hand.length;
-		//zaktualizuj wynik
-		document.getElementById("player1score").innerText =
-			this.board.player1.score;
-		document.getElementById("player2score").innerText =
-			this.board.player2.score;
-	}
-	socket.on("yourturn");
-	{
-		//unlock drag and drop
-	}
+	// 	//zaktualizuj scoreboard
+	// 	document.getElementById("player1").innerText = this.board.player1.name;
+	// 	document.getElementById("player2").innerText = this.board.player2.name;
+	// 	document.getElementById("player1score").innerText =
+	// 		this.board.player1.score;
+	// 	document.getElementById("player2score").innerText =
+	// 		this.board.player2.score;
+	// 	//zaktualizuj literki w ręce gracza
+	// 	document.getElementById("player1hand").innerText =
+	// 		this.board.player1.hand.length;
+	// 	document.getElementById("player2hand").innerText =
+	// 		this.board.player2.hand.length;
+	// 	//zaktualizuj wynik
+	// 	document.getElementById("player1score").innerText =
+	// 		this.board.player1.score;
+	// 	document.getElementById("player2score").innerText =
+	// 		this.board.player2.score;
+	// }
+	// socket.on("yourturn");
+	// {
+	// 	//unlock drag and drop
+	// }
 
-	socket.on("wyślij słowo do sprawdzenia");
-	{
-		//zrób coś
-		//zablokuj drag and drop
-	}
+	// socket.on("wyślij słowo do sprawdzenia");
+	// {
+	// 	//zrób coś
+	// 	//zablokuj drag and drop
+	// }
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
