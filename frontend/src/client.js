@@ -101,6 +101,13 @@ const onJoinGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
+	//get room name and username from the host and change them on the page
+	document.querySelector("#Player1").innerHTML = username;
+	document.querySelector("#curentRoom").innerHTML = roomName;
+
+	//change username when the second player joins the game
+	document.querySelector("#Player2").innerHTML = username;
+
 	socket.emit("joinroom", username, roomName);
 };
 
@@ -114,6 +121,10 @@ const onCreateGame = (socket) => (e) => {
 	const room = document.querySelector("#roomName");
 	const roomName = room.value;
 	room.value = "";
+
+	//change username and room name on the page to the ones entered
+	document.querySelector("#Player1").innerHTML = username;
+	document.querySelector("#curentRoom").innerHTML = roomName;
 
 	socket.emit("newroom", username, roomName);
 };
@@ -130,7 +141,8 @@ const changeLetters = (socket) => (letters) => {
 	const newGameButton = document.getElementById("newGame"); //get new game button
 	const joinGameButton = document.getElementById("joinGame"); //get join game button
 	const roomName = document.getElementById("roomName"); //get room input
-	const username = document.getElementById("username"); //get player name input
+	const player1 = document.getElementById("Player1"); //get player name input
+	const player2 = document.getElementById("Player2");
 	const acceptWord = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
 	const exit = document.getElementById("exit"); //get exit button
@@ -141,6 +153,44 @@ const changeLetters = (socket) => (letters) => {
 
 	socket.on("message", log);
 
+	// //after joining the room show player names and letters
+	// socket.on("player1", (player1) => {
+	// 	Player1.innerHTML = player1;
+	// },
+	// socket.on("player2", (player2) => {
+	// 	Player2.innerHTML = player2;
+	// },
+	// socket.on("letters", (letters) => {
+	// 	changeLetters(socket)(letters);
+	// },
+	// socket.on("board", (board) => {
+	// 	updateboard(board);
+	// },
+	// socket.on("turn", (turn) => {
+	// 	if (turn == 1) {
+	// 		acceptWord.disabled = false;
+	// 		skip.disabled = false;
+	// 	} else {
+	// 		acceptWord.disabled = true;
+	// 		skip.disabled = true;
+	// 	}
+	// },
+	// socket.on("winner", (winner) => {
+	// 	if (winner == 1) {
+	// 		alert("Player 1 wins!");
+	// 	} else if (winner == 2) {
+	// 		alert("Player 2 wins!");
+	// 	} else {
+	// 		alert("It's a tie!");
+	// 	}
+	// },
+	// socket.on("error", (error) => {
+	// 	alert(error);
+	// },
+	// socket.on("disconnect", () => {
+	// 	alert("You have been disconnected from the server");
+	// },
+	//////////////////////////////////////////////////////////////////////////////
 	// socket.on("moveresponse", board); //recieve board from server and update data
 	// {
 	// 	updateboard(this.board.gameboard); //wpisz w divy litery znajdujące się w danych miejscach w tabeli
