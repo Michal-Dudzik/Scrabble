@@ -10,91 +10,99 @@ const io = socketio(server);
 
 // ======== SERVER STUFF ========
 
-
-
 let clientNo = 0;
 let roomID;
 let serverplayers: Player[] = [];
 let serverboards: Board[] = [];
 io.on("connection", function (socket) {
-    var socc = socket;
-    socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
-    var playerid = socket.id;
-    console.log("New player:" + socket.id + ", connected to server");
+	var socc = socket;
+	socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
+	var playerid = socket.id;
+	console.log("New player:" + socket.id + ", connected to server");
 
 	//receive message from client and send it to all clients
-    socket.on("message", function (text) { return io.emit("message", text); }); 
-
-
-    //creating new room
-    socket.on("newroom", function (username, roomName) {           
-        if(serverboards.some((e) => e.id === roomName)) {
-            socc.emit("message", "Room with this name allready exists");
-            console.log("Room with this name allready exists");
-        }
-        else {
-            roomID = roomName;
-            console.log("Room: " + roomID + " was created");
-            socc.join(roomID);
-            console.log(username + " joined room: " + roomID);
-            serverboards[roomID] = new Board(roomID),
-            //add player to list of players & board
-            serverplayers[socc.id] = new Player(socc.id);
-            serverboards[roomID].player1 = serverplayers[socc.id];
-            serverboards[roomID].player1.nickname = username;
-            //create new board        
-                console.log("Owner of the room: " + serverboards[roomID].player1.nickname);
-        }
-    });
-    socket.on("joinroom", function (username, roomName) {
-        
-        // listen for incoming data msg on this newly connected socket
-        console.log("User: " + username + " is trying to join room: " + roomName);
-        roomID = roomName;
-        socc.join(roomID); //()
-        console.log("test1");
-        serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
-        serverboards[roomID].player2 = serverplayers[socc.id]; //adding player to board
-        serverboards[roomID].player2.nickname = username;
-        console.log("New player:" + serverboards[roomID].player2.nickname + ", joined room: " + roomID);
-        serverboards[roomID].startgame();
-        serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
-        serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)
-        serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
-		if(serverboards[roomID].player2.nickname != "aezkami" && serverboards[roomID].player1.nickname != "aezkami") //validation if both players connected to room
-		{
-			socket.to(roomID).emit("startgame")
-		}
-		socket.on("start", function(socket)
-		{
-			//if(serverboards[roomID].round == 0){
-				serverboards[roomID].round++;
-				socc.to(roomID).emit("moveresponse",  serverboards[roomID])
-		})
-		//socket.on("ruch wysłany od klienta", function(socket){
-//
-//			
-//		})
-
-	
+	socket.on("message", function (text) {
+		return io.emit("message", text);
 	});
-	socket.on("nextround")
+
+	//creating new room
+	socket.on("newroom", function (username, roomName) {
+		if (serverboards.some((e) => e.id === roomName)) {
+			socc.emit("message", "Room with this name allready exists");
+			console.log("Room with this name allready exists");
+		} else {
+			roomID = roomName;
+			console.log("Room: " + roomID + " was created");
+			socc.join(roomID);
+			console.log(username + " joined room: " + roomID);
+			(serverboards[roomID] = new Board(roomID)),
+				//add player to list of players & board
+				(serverplayers[socc.id] = new Player(socc.id));
+			serverboards[roomID].player1 = serverplayers[socc.id];
+			serverboards[roomID].player1.nickname = username;
+			//create new board
+			console.log(
+				"Owner of the room: " + serverboards[roomID].player1.nickname
+			);
+		}
+	});
+	socket.on("joinroom", function (username, roomName) {
+		// listen for incoming data msg on this newly connected socket
+		console.log("User: " + username + " is trying to join room: " + roomName);
+		roomID = roomName;
+		socc.join(roomID); //()
+		console.log("test1");
+		serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
+		serverboards[roomID].player2 = serverplayers[socc.id]; //adding player to board
+		serverboards[roomID].player2.nickname = username;
+		console.log(
+			"New player:" +
+				serverboards[roomID].player2.nickname +
+				", joined room: " +
+				roomID
+		);
+		serverboards[roomID].startgame();
+		serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
+		serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)
+		serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
+		if (
+			serverboards[roomID].player2.nickname != "aezkami" &&
+			serverboards[roomID].player1.nickname != "aezkami"
+		) {
+			//validation if both players connected to room
+			socket.to(roomID).emit("startgame");
+		}
+		socket.on("start", function (socket) {
+			//if(serverboards[roomID].round == 0){
+			serverboards[roomID].round++;
+			socc.to(roomID).emit("moveresponse", serverboards[roomID]);
+		});
+		//socket.on("ruch wysłany od klienta", function(socket){
+		//
+		//
+		//		})
+	});
+	socket.on("nextround");
 	{
-		socc.broadcast.to(roomID).emit("yourturn")
+		socc.broadcast.to(roomID).emit("yourturn");
 	}
 
-    socket.on("exit", function (roomName, username) {
-        console.log("Current players: " + serverplayers);
-        serverboards.filter(function (e) { return e !== roomName; });
-        serverplayers.filter(function (e) { return e !== username; });
-        console.log("Current players: " + serverplayers);
-    });
+	socket.on("exit", function (roomName, username) {
+		console.log("Current players: " + serverplayers);
+		serverboards.filter(function (e) {
+			return e !== roomName;
+		});
+		serverplayers.filter(function (e) {
+			return e !== username;
+		});
+		console.log("Current players: " + serverplayers);
+	});
 });
 server.on("error", function (err) {
-    console.log(err);
+	console.log(err);
 });
 server.listen(8080, function () {
-    console.log("Server is running on port 8080");
+	console.log("Server is running on port 8080");
 });
 //tworzenie pokoju
 //jeśli 2 gracze dołączyli to pojawia się guzik start
@@ -102,56 +110,51 @@ server.listen(8080, function () {
 //przypisze graczą ich kostki i rozpocznie "game loop"
 
 //======== Game Models ========
-class Game{ //not sure if i will use this class
-	board: Board
-	gameover: boolean  //false = game continues || true = game is finished
-	round: number //allows to count rounds
-	
-	constructor(board: Board)
-	{
-		this.board = board
+class Game {
+	//not sure if i will use this class
+	board: Board;
+	gameover: boolean; //false = game continues || true = game is finished
+	round: number; //allows to count rounds
+
+	constructor(board: Board) {
+		this.board = board;
 	}
-	startgame()
-	{
-		this.board.GenerateEmptyBoard()
-		this.board.filltilestorage()
-		this.board.player1.fillplayershand(this.board.unusedtilestorage)
-		this.board.player2.fillplayershand(this.board.unusedtilestorage)
-	    this.round = 0;		
+	startgame() {
+		this.board.GenerateEmptyBoard();
+		this.board.filltilestorage();
+		this.board.player1.fillplayershand(this.board.unusedtilestorage);
+		this.board.player2.fillplayershand(this.board.unusedtilestorage);
+		this.round = 0;
 	}
-	gameloop()
-	{
-		if(this.gameover = false)
-		{
-			if(this.round % 2 === 1)
-			{
-				//player 1 turn 
-			}
-			else if (this.round % 2 === 0)
-			{
+	gameloop() {
+		if ((this.gameover = false)) {
+			if (this.round % 2 === 1) {
+				//player 1 turn
+			} else if (this.round % 2 === 0) {
 				//player 2 turn
 			}
 		}
 	}
 }
-class Board { //this class may be split in to few different classes but only if we have time for that
+class Board {
+	//this class may be split in to few different classes but only if we have time for that
 	id: string;
 	gameboard: ITile[][] = []; //type any because every other type created problems
 	player1: Player;
 	player2: Player; //list of player id's that are currently playing
 	unusedtilestorage: LetterTile[] = []; //array storing lettertiles
-	gameover: boolean  //false = game continues || true = game is finished
-	round: number //allows to count rounds
-	wordlist:string [] //contains list of accepted words
+	gameover: boolean; //false = game continues || true = game is finished
+	round: number; //allows to count rounds
+	wordlist: string[]; //contains list of accepted words
 	constructor(serverroomid: string) {
 		this.id = serverroomid;
 		this.gameover = false;
 	}
-	startgame(){
-		this.GenerateEmptyBoard()
-		this.filltilestorage()
-		this.player1.fillplayershand(this.unusedtilestorage)
-		this.player2.fillplayershand(this.unusedtilestorage)		
+	startgame() {
+		this.GenerateEmptyBoard();
+		this.filltilestorage();
+		this.player1.fillplayershand(this.unusedtilestorage);
+		this.player2.fillplayershand(this.unusedtilestorage);
 	}
 	public GenerateEmptyBoard() {
 		//method generating board and filling it with empty tiles
@@ -202,12 +205,12 @@ class Board { //this class may be split in to few different classes but only if 
 			);
 		}
 	}
-	howmanytilesinstorage(){
-	//prints how many tiles are left in unusedtilestorage
-	console.log(this.unusedtilestorage.length)
+	howmanytilesinstorage() {
+		//prints how many tiles are left in unusedtilestorage
+		console.log(this.unusedtilestorage.length);
 	}
 	filltilestorage() {
-		//create an array of all letters with their values, state, id 
+		//create an array of all letters with their values, state, id
 		this.unusedtilestorage.push(
 			new LetterTile(0, 0, "Blank", 0),
 			new LetterTile(1, 0, "Blank", 0),
@@ -371,17 +374,18 @@ class Player {
 	fillplayershand(
 		unusedtilestorage: Board["unusedtilestorage"] //used at start of game to give player tiles to play with
 	) {
-		var my_div 
-		var newDiv 
-		var letter 
-		var letterValue
+		var my_div;
+		var newDiv;
+		var letter;
+		var letterValue;
 
 		for (
 			var i: number = 0;
 			i < 7;
 			i++ //draws few tiles to fill players hand
 		) {
-			const newtile: LetterTile =	unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+			const newtile: LetterTile =
+				unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 			newtile.status = 1; //because it lands in players hand
 			this.playerhand.push(newtile);
@@ -391,11 +395,10 @@ class Player {
 			//letterValue =  serverplayers[this.playerhand.id].playerhand[1].value; //get value from tile
 
 			// newDiv = document.createElement("div"); //generate div for the tile inside tile class
-  			// newDiv.innerHTML = '<div class="tile" id="tile_'+i+'"> <div class="letter">'+letter+'</div> <div class="letter-weight ">'+letterValue+'</div> </div>'; //Fill created div with generated tile
-			
+			// newDiv.innerHTML = '<div class="tile" id="tile_'+i+'"> <div class="letter">'+letter+'</div> <div class="letter-weight ">'+letterValue+'</div> </div>'; //Fill created div with generated tile
+
 			// my_div = document.getElementById("stand");
 			// document.body.insertBefore(newDiv, my_div);
-			
 		}
 		console.log("Player's hand has been filled");
 	}
@@ -421,8 +424,8 @@ class Player {
 		unusedtilestorage: Board["unusedtilestorage"] //used at end of each round
 	) {
 		const newtile: LetterTile =
-			unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage			
-			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
+			unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
+		unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 		this.playerhand.push(newtile);
 		console.log("TIle {0} has been added to players hand", newtile.value);
 	}
