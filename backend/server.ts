@@ -71,8 +71,10 @@ io.on("connection", function (socket) {
 		) {
 			//validation if both players connected to room
 			socket.to(roomID).emit("startgame");
+			console.log("startgame");
 		}
 		socket.on("start", function (socket) {
+
 			//if(serverboards[roomID].round == 0){
 			serverboards[roomID].round++;
 			socc.to(roomID).emit("moveresponse", serverboards[roomID]);
