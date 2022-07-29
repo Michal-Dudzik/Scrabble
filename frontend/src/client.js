@@ -78,17 +78,17 @@ const onChatSubmitted = (socket) => (e) => {
 // 	}
 // };
 
-// function updateboard(gameboard) {
-// 	for (var i = 0; i < 16; i++) {
-// 		for (j = 0; j < 16; j++) {
-// 			if (gameboard[i][j] == EmptyTile) {
-// 				document.getElementById(i + "-" + j).innerText = " ";
-// 			} else {
-// 				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
-// 			}
-// 		}
-// 	}
-// }
+function updateboard(gameboard) {
+	for (var i = 0; i < 16; i++) {
+		for (j = 0; j < 16; j++) {
+			if (gameboard[i][j] == EmptyTile) {
+				document.getElementById(i + "-" + j).innerText = " ";
+			} else {
+				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
+			}
+		}
+	}
+}
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
@@ -152,6 +152,20 @@ const changeLetters = (socket) => (letters) => {
 	socket.on("joinroom");
 
 	socket.on("message", log);
+
+	socket.on("startgame")
+	{
+		socket.emit("start");
+		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
+	}
+	socket.on("moveresponse", function(board)
+	{
+		Player1.innerHTML = board.player1.nickname
+		Player2.innerHTML = board.player2.nickname
+		curentRoom.innerHTML = board.id
+		updateboard(board);
+	}
+	)
 
 	// //after joining the room show player names and letters
 	// socket.on("player1", (player1) => {
