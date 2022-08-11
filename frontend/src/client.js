@@ -1,4 +1,4 @@
-//show initial screen modal //
+var localgameboard; //show initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
 	{}
@@ -29,8 +29,8 @@ function drop_handler(ev) {
 	ev.target.appendChild(document.getElementById(data));
 	// Clear the drag data cache (for all formats/types)
 	ev.dataTransfer.clearData();
-	// send current board to server
-	socket.emit("board", gameboard);
+	// save to local gameboard
+	localgameboard[ev.target.id] = document.getElementById(data).innerText;
 }
 
 // Chat //
@@ -78,13 +78,13 @@ const onChatSubmitted = (socket) => (e) => {
 // 	}
 // };
 
-function updateboard(gameboard) {
+function updateboard(boardd) {
 	for (var i = 0; i < 16; i++) {
 		for (j = 0; j < 16; j++) {
-			if (gameboard[i][j] == EmptyTile) {
-				document.getElementById(i + "-" + j).innerText = " ";
+			if (boardd[i][j] == EmptyTile) {
+				document.getElementId(i + "-" + j).innerText = " ";
 			} else {
-				document.getElementById(i + "-" + j).innerText = gameboard[i][j].type;
+				document.getElementById(i + "-" + j).innerText = boardd[i][j].type;
 			}
 		}
 	}
@@ -101,12 +101,12 @@ const onJoinGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
-	//get room name and username from the host and change them on the page
-	document.querySelector("#Player1").innerHTML = username;
-	document.querySelector("#curentRoom").innerHTML = roomName;
+	// //get room name and username from the host and change them on the page
+	// document.querySelector("#Player1").innerHTML = username;
+	// document.querySelector("#curentRoom").innerHTML = roomName;
 
-	//change username when the second player joins the game
-	document.querySelector("#Player2").innerHTML = username;
+	// //change username when the second player joins the game
+	// document.querySelector("#Player2").innerHTML = username;
 
 	socket.emit("joinroom", username, roomName);
 };
@@ -123,10 +123,14 @@ const onCreateGame = (socket) => (e) => {
 	room.value = "";
 
 	//change username and room name on the page to the ones entered
-	document.querySelector("#Player1").innerHTML = username;
-	document.querySelector("#curentRoom").innerHTML = roomName;
+	// document.querySelector("#Player1").innerHTML = username;
+	// document.querySelector("#curentRoom").innerHTML = roomName;
 
 	socket.emit("newroom", username, roomName);
+};
+const onEmitbtn = (socket) => (e) => {
+	e.preventDefault();
+	socket.emit("sendboard", localgameboard);
 };
 
 //change letters on bench for the one associated with the player
@@ -141,11 +145,12 @@ const changeLetters = (socket) => (letters) => {
 	const newGameButton = document.getElementById("newGame"); //get new game button
 	const joinGameButton = document.getElementById("joinGame"); //get join game button
 	const roomName = document.getElementById("roomName"); //get room input
-	const player1 = document.getElementById("Player1"); //get player name input
-	const player2 = document.getElementById("Player2");
+	const Player1 = document.getElementById("Player1"); //get player name input
+	const Player2 = document.getElementById("Player2");
 	const acceptWord = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
 	const exit = document.getElementById("exit"); //get exit button
+	const emitbtn = document.getElementById("emitbtn"); //get emit button
 
 	const socket = io(); //connect to server
 
@@ -153,23 +158,22 @@ const changeLetters = (socket) => (letters) => {
 
 	socket.on("message", log);
 
-	socket.on("startgame")
-	{
-		socket.emit("start");
-		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
-	}
-	socket.on("moveresponse", function(board)
-	{
-		Player1.innerHTML = board.player1.nickname
-		Player2.innerHTML = board.player2.nickname
-		curentRoom.innerHTML = board.id
-		updateboard(board);
-	}
-	)
+	socket.on("moveresponse", function (board) {
+		localgameboard = board.gameboard;
+		document.querySelector("#Player1").innerHTML = board.player1.nickname;
+		document.querySelector("#Player2").innerHTML = board.player2.nickname;
+		curentRoom.innerHTML = board.id;
+		updateboard(gameboard);
+	});
 
-	// //after joining the room show player names and letters
+	//
+	socket.on("startgame", () => {
+		socket.emit("start");
+
+		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
+	}); //after joining the room show player names and letters
 	// socket.on("player1", (player1) => {
-	// 	Player1.innerHTML = player1;
+	//// 	Player1.innerH.gameboardTML = player1;
 	// },
 	// socket.on("player2", (player2) => {
 	// 	Player2.innerHTML = player2;
@@ -241,6 +245,8 @@ const changeLetters = (socket) => (letters) => {
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
 	newGameButton.addEventListener("click", onCreateGame(socket));
+
+	emitbtn.addEventListener("click", onEmitbtn(socket));
 
 	exit.addEventListener("click", () => {
 		socket.emit("exit", username.value, roomName.value);
