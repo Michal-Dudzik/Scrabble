@@ -29,8 +29,7 @@ function drop_handler(ev) {
 	ev.target.appendChild(document.getElementById(data));
 	// Clear the drag data cache (for all formats/types)
 	ev.dataTransfer.clearData();
-	// save to local gameboard
-	localgameboard[ev.target.id] = document.getElementById(data).innerText;
+	//TODO: take space where the tile is dropped and put it in the gameboard
 }
 
 // Chat //
