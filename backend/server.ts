@@ -28,7 +28,7 @@ io.on("connection", function (socket) {
 	//creating new room
 	socket.on("newroom", function (username, roomName) {
 		if (serverboards.some((e) => e.id === roomName)) {
-			socc.emit("message", "Room with this name allready exists");
+			io.emit("message", "Room with this name allready exists");
 			console.log("Room with this name allready exists");
 		} else {
 			roomID = roomName;
@@ -70,14 +70,14 @@ io.on("connection", function (socket) {
 			serverboards[roomID].player1.nickname != "aezkami"
 		) {
 			//validation if both players connected to room
-			socket.to(roomID).emit("startgame");
+			io.to(roomID).emit("startgame");
 			console.log("startgame");
 		}
 		socket.on("start", function (socket) {
 
 			//if(serverboards[roomID].round == 0){
 			serverboards[roomID].round++;
-			socc.to(roomID).emit("moveresponse", serverboards[roomID]);
+			io.to(roomID).emit("moveresponse", serverboards[roomID]);
 		});
 		//socket.on("ruch wysłany od klienta", function(socket){
 		//
