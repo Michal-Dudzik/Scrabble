@@ -81,9 +81,10 @@ function updateboard(boardd) {
 	for (var i = 0; i < 16; i++) {
 		for (j = 0; j < 16; j++) {
 			if (boardd[i][j] == EmptyTile) {
-				document.getElementId(i + "-" + j).innerText = " ";
+				
+				document.querySelector("#" + + "-" + j).innerHTML = " ",
 			} else {
-				document.getElementById(i + "-" + j).innerText = boardd[i][j].type;
+				document.querySelector("#" + + "-" + j).innerHTML = boardd[i][j].type;
 			}
 		}
 	}
