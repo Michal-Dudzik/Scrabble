@@ -77,16 +77,41 @@ const onChatSubmitted = (socket) => (e) => {
 // 	}
 // };
 
-function updateboard(boardd) {
+function updateboard(localgameboard) {
 	for (var i = 0; i < 16; i++) {
 		for (j = 0; j < 16; j++) {
-			if (boardd[i][j] == EmptyTile) {
+			if (localgameboard[i][j].type == "Empty") {
 				
-				document.querySelector("#" + + "-" + j).innerHTML = " ",
-			} else {
-				document.querySelector("#" + + "-" + j).innerHTML = boardd[i][j].type;
+				document.querySelector("#" + (i+1) + "-" + (j+1)).textContent = (" ");
+			} 
+			else {
+				document.querySelector("#" + (i+1) + "-" + (j+1)).textContent = (localgameboard[i][j].type);
 			}
 		}
+	}
+}
+function UpdateBoard(localgameboard) {
+	
+	const rows = 15;
+	
+	for (var row = 0; row < rows + 1; row++) {
+		console.log(
+			localgameboard[row][0].type,
+			localgameboard[row][1].type,
+			localgameboard[row][2].type,
+			localgameboard[row][3].type,
+			localgameboard[row][4].type,
+			localgameboard[row][5].type,
+			localgameboard[row][6].type,
+			localgameboard[row][7].type,
+			localgameboard[row][8].type,
+			localgameboard[row][9].type,
+			localgameboard[row][10].type,
+			localgameboard[row][11].type,
+			localgameboard[row][12].type,
+			localgameboard[row][13].type,
+			localgameboard[row][14].type
+		);
 	}
 }
 
@@ -163,11 +188,12 @@ const changeLetters = (socket) => (letters) => {
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		curentRoom.innerHTML = board.id;
-		updateboard(gameboard);
+		updateboard(localgameboard);
 	});
 
 	//
 	socket.on("startgame", () => {
+		
 		socket.emit("start");
 
 		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
