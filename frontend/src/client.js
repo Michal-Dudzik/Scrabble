@@ -114,6 +114,30 @@ function UpdateBoard(localgameboard) {
 		);
 	}
 }
+function UpdateBoard(localgameboard) {
+	
+	const rows = 15;
+	
+	for (var row = 0; row < rows + 1; row++) {
+		console.log(
+			localgameboard[row][0].type,
+			localgameboard[row][1].type,
+			localgameboard[row][2].type,
+			localgameboard[row][3].type,
+			localgameboard[row][4].type,
+			localgameboard[row][5].type,
+			localgameboard[row][6].type,
+			localgameboard[row][7].type,
+			localgameboard[row][8].type,
+			localgameboard[row][9].type,
+			localgameboard[row][10].type,
+			localgameboard[row][11].type,
+			localgameboard[row][12].type,
+			localgameboard[row][13].type,
+			localgameboard[row][14].type
+		);
+	}
+}
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
