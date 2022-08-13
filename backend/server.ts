@@ -119,12 +119,14 @@ io.on("connection", function (socket) {
 		console.log("Current players: " + serverplayers);
 	});
 });
+
 server.on("error", function (err) {
 	console.log(err);
 });
 server.listen(8080, function () {
 	console.log("Server is running on port 8080");
 });
+
 //tworzenie pokoju
 //jeśli 2 gracze dołączyli to pojawia się guzik start
 // jak go pacną to się odpali ta metoda ktora wygeneruje nowa plansze

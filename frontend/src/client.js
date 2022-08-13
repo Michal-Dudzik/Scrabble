@@ -1,4 +1,6 @@
-var localgameboard; //show initial screen modal //
+var localgameboard;
+
+//show initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
 	{}
@@ -81,10 +83,9 @@ function updateboard(boardd) {
 	for (var i = 0; i < 16; i++) {
 		for (j = 0; j < 16; j++) {
 			if (boardd[i][j] == EmptyTile) {
-				
-				document.querySelector("#" + + "-" + j).innerHTML = " ",
+				document.querySelector("#" + +"-" + j).innerHTML = " ";
 			} else {
-				document.querySelector("#" + + "-" + j).innerHTML = boardd[i][j].type;
+				document.querySelector("#" + +"-" + j).innerHTML = boardd[i][j].type;
 			}
 		}
 	}
@@ -101,13 +102,6 @@ const onJoinGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
-	// //get room name and username from the host and change them on the page
-	// document.querySelector("#Player1").innerHTML = username;
-	// document.querySelector("#curentRoom").innerHTML = roomName;
-
-	// //change username when the second player joins the game
-	// document.querySelector("#Player2").innerHTML = username;
-
 	socket.emit("joinroom", username, roomName);
 };
 
@@ -121,10 +115,6 @@ const onCreateGame = (socket) => (e) => {
 	const room = document.querySelector("#roomName");
 	const roomName = room.value;
 	room.value = "";
-
-	//change username and room name on the page to the ones entered
-	// document.querySelector("#Player1").innerHTML = username;
-	// document.querySelector("#curentRoom").innerHTML = roomName;
 
 	socket.emit("newroom", username, roomName);
 };
@@ -147,7 +137,7 @@ const changeLetters = (socket) => (letters) => {
 	const roomName = document.getElementById("roomName"); //get room input
 	const Player1 = document.getElementById("Player1"); //get player name input
 	const Player2 = document.getElementById("Player2");
-	const acceptWord = document.getElementById("acceptWord"); //get accept word button
+	const playButton = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
 	const exit = document.getElementById("exit"); //get exit button
 	const emitbtn = document.getElementById("emitbtn"); //get emit button
@@ -236,17 +226,13 @@ const changeLetters = (socket) => (letters) => {
 		//unlock drag and drop
 	}
 
-	socket.on("wyślij słowo do sprawdzenia");
-	{
-		//zrób coś
-		//zablokuj drag and drop
-	}
+	playButton.addEventListener("click", onPlay(socket));
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
 	newGameButton.addEventListener("click", onCreateGame(socket));
 
-	emitbtn.addEventListener("click", onEmitbtn(socket));
+	// emitbtn.addEventListener("click", onEmitbtn(socket));
 
 	exit.addEventListener("click", () => {
 		socket.emit("exit", username.value, roomName.value);
