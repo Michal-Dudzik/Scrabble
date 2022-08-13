@@ -1,6 +1,4 @@
-var localgameboard;
-
-//show initial screen modal //
+var localgameboard; //show initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
 	{}
@@ -79,15 +77,65 @@ const onChatSubmitted = (socket) => (e) => {
 // 	}
 // };
 
-function updateboard(boardd) {
+function updateboard(localgameboard) {
 	for (var i = 0; i < 16; i++) {
 		for (j = 0; j < 16; j++) {
-			if (boardd[i][j] == EmptyTile) {
-				document.querySelector("#" + +"-" + j).innerHTML = " ";
-			} else {
-				document.querySelector("#" + +"-" + j).innerHTML = boardd[i][j].type;
+			if (localgameboard[i][j].type == "Empty") {
+				
+				document.querySelector("#" + (i+1) + "-" + (j+1)).textContent = (" ");
+			} 
+			else {
+				document.querySelector("#" + (i+1) + "-" + (j+1)).textContent = (localgameboard[i][j].type);
 			}
 		}
+	}
+}
+function UpdateBoard(localgameboard) {
+	
+	const rows = 15;
+	
+	for (var row = 0; row < rows + 1; row++) {
+		console.log(
+			localgameboard[row][0].type,
+			localgameboard[row][1].type,
+			localgameboard[row][2].type,
+			localgameboard[row][3].type,
+			localgameboard[row][4].type,
+			localgameboard[row][5].type,
+			localgameboard[row][6].type,
+			localgameboard[row][7].type,
+			localgameboard[row][8].type,
+			localgameboard[row][9].type,
+			localgameboard[row][10].type,
+			localgameboard[row][11].type,
+			localgameboard[row][12].type,
+			localgameboard[row][13].type,
+			localgameboard[row][14].type
+		);
+	}
+}
+function UpdateBoard(localgameboard) {
+	
+	const rows = 15;
+	
+	for (var row = 0; row < rows + 1; row++) {
+		console.log(
+			localgameboard[row][0].type,
+			localgameboard[row][1].type,
+			localgameboard[row][2].type,
+			localgameboard[row][3].type,
+			localgameboard[row][4].type,
+			localgameboard[row][5].type,
+			localgameboard[row][6].type,
+			localgameboard[row][7].type,
+			localgameboard[row][8].type,
+			localgameboard[row][9].type,
+			localgameboard[row][10].type,
+			localgameboard[row][11].type,
+			localgameboard[row][12].type,
+			localgameboard[row][13].type,
+			localgameboard[row][14].type
+		);
 	}
 }
 
@@ -102,6 +150,13 @@ const onJoinGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
+	// //get room name and username from the host and change them on the page
+	// document.querySelector("#Player1").innerHTML = username;
+	// document.querySelector("#curentRoom").innerHTML = roomName;
+
+	// //change username when the second player joins the game
+	// document.querySelector("#Player2").innerHTML = username;
+
 	socket.emit("joinroom", username, roomName);
 };
 
@@ -115,6 +170,10 @@ const onCreateGame = (socket) => (e) => {
 	const room = document.querySelector("#roomName");
 	const roomName = room.value;
 	room.value = "";
+
+	//change username and room name on the page to the ones entered
+	// document.querySelector("#Player1").innerHTML = username;
+	// document.querySelector("#curentRoom").innerHTML = roomName;
 
 	socket.emit("newroom", username, roomName);
 };
@@ -137,7 +196,7 @@ const changeLetters = (socket) => (letters) => {
 	const roomName = document.getElementById("roomName"); //get room input
 	const Player1 = document.getElementById("Player1"); //get player name input
 	const Player2 = document.getElementById("Player2");
-	const playButton = document.getElementById("acceptWord"); //get accept word button
+	const acceptWord = document.getElementById("acceptWord"); //get accept word button
 	const skip = document.getElementById("skip"); //get skip button
 	const exit = document.getElementById("exit"); //get exit button
 	const emitbtn = document.getElementById("emitbtn"); //get emit button
@@ -153,11 +212,12 @@ const changeLetters = (socket) => (letters) => {
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		curentRoom.innerHTML = board.id;
-		updateboard(gameboard);
+		updateboard(localgameboard);
 	});
 
 	//
 	socket.on("startgame", () => {
+		
 		socket.emit("start");
 
 		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
@@ -226,13 +286,17 @@ const changeLetters = (socket) => (letters) => {
 		//unlock drag and drop
 	}
 
-	playButton.addEventListener("click", onPlay(socket));
+	socket.on("wyślij słowo do sprawdzenia");
+	{
+		//zrób coś
+		//zablokuj drag and drop
+	}
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
 	newGameButton.addEventListener("click", onCreateGame(socket));
 
-	// emitbtn.addEventListener("click", onEmitbtn(socket));
+	emitbtn.addEventListener("click", onEmitbtn(socket));
 
 	exit.addEventListener("click", () => {
 		socket.emit("exit", username.value, roomName.value);
