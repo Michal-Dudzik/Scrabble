@@ -78,14 +78,14 @@ const onChatSubmitted = (socket) => (e) => {
 // };
 
 function updateboard(localgameboard) {
-	for (var i = 0; i < 16; i++) {
-		for (j = 0; j < 16; j++) {
+	for (var i = 0; i < 15; i++) {
+		for (var j = 0; j < 15; j++) {
 			if (localgameboard[i][j].type == "Empty") {
 				
-				document.querySelector("#" + (i+1) + "-" + (j+1)).textContent = (" ");
+				document.getElementById((i+1) + "-" + (j+1)).innerHTML  = (" ");
 			} 
 			else {
-				document.querySelector("#" + (i+1) + "-" + (j+1)).textContent = (localgameboard[i][j].type);
+				document.getElementById((i+1) + "-" + (j+1)).innerHTML  = (localgameboard[i][j].type);
 			}
 		}
 	}
@@ -114,30 +114,7 @@ function UpdateBoard(localgameboard) {
 		);
 	}
 }
-function UpdateBoard(localgameboard) {
-	
-	const rows = 15;
-	
-	for (var row = 0; row < rows + 1; row++) {
-		console.log(
-			localgameboard[row][0].type,
-			localgameboard[row][1].type,
-			localgameboard[row][2].type,
-			localgameboard[row][3].type,
-			localgameboard[row][4].type,
-			localgameboard[row][5].type,
-			localgameboard[row][6].type,
-			localgameboard[row][7].type,
-			localgameboard[row][8].type,
-			localgameboard[row][9].type,
-			localgameboard[row][10].type,
-			localgameboard[row][11].type,
-			localgameboard[row][12].type,
-			localgameboard[row][13].type,
-			localgameboard[row][14].type
-		);
-	}
-}
+
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();

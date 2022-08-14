@@ -107,6 +107,9 @@ io.on("connection", function (socket) {
 				gameboard[row][14].type
 			);
 		}
+		
+			
+		
 	});
 	socket.on("exit", function (roomName, username) {
 		console.log("Current players: " + serverplayers);
