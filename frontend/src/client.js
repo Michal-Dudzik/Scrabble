@@ -93,6 +93,13 @@ function updateboard(localgameboard) {
 		}
 	}
 }
+function updatehand(playerhand)
+{
+	for (var i = 0; i < playerhand.length; i++)
+	{
+		document.getElementById("tile_" + (i+1)).innerHTML = playerhand[i].type;
+	}
+}
 
 //synchronize the gameboard with the server
 function UpdateBoard(localgameboard) {
@@ -188,6 +195,17 @@ const changeLetters = (socket) => (letters) => {
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		curentRoom.innerHTML = board.id;
 		updateboard(localgameboard);
+		console.log(board.player1.id )
+		console.log(board.player2.id )
+		console.log(socket.id)
+		if(board.player1.id == socket.id)
+		{
+			updatehand(board.player1.playerhand)
+		}
+		else if(board.player2.id == socket.id)
+		{
+			updatehand(board.player2.playerhand)
+		}
 	});
 
 	//
