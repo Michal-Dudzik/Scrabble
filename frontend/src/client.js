@@ -1,4 +1,6 @@
-var localgameboard; //show initial screen modal //
+var localgameboard; 
+
+//show initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
 	{}
@@ -77,6 +79,7 @@ const onChatSubmitted = (socket) => (e) => {
 // 	}
 // };
 
+//updating local gameboard
 function updateboard(localgameboard) {
 	for (var i = 0; i < 15; i++) {
 		for (var j = 0; j < 15; j++) {
@@ -90,6 +93,8 @@ function updateboard(localgameboard) {
 		}
 	}
 }
+
+//synchronize the gameboard with the server
 function UpdateBoard(localgameboard) {
 	
 	const rows = 15;
@@ -127,14 +132,9 @@ const onJoinGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
-	// //get room name and username from the host and change them on the page
-	// document.querySelector("#Player1").innerHTML = username;
-	// document.querySelector("#curentRoom").innerHTML = roomName;
-
-	// //change username when the second player joins the game
-	// document.querySelector("#Player2").innerHTML = username;
-
 	socket.emit("joinroom", username, roomName);
+
+	initialScreen.toggle();
 };
 
 const onCreateGame = (socket) => (e) => {
@@ -148,11 +148,9 @@ const onCreateGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
-	//change username and room name on the page to the ones entered
-	// document.querySelector("#Player1").innerHTML = username;
-	// document.querySelector("#curentRoom").innerHTML = roomName;
-
 	socket.emit("newroom", username, roomName);
+
+	initialScreen.toggle();
 };
 const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
