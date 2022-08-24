@@ -1,4 +1,4 @@
-var localgameboard; 
+var localgameboard;
 
 //show initial screen modal //
 var initialScreen = new bootstrap.Modal(
@@ -15,23 +15,43 @@ helpbtn.addEventListener("click", () => {
 });
 
 // Dragging tiles //
-function dragstart_handler(ev) {
-	// Set the drag's format and data. Use the event target's id for the data
-	ev.dataTransfer.setData("text/plain", ev.target.id);
-}
+const list_items = document.querySelectorAll(".tile");
+const lists = document.querySelectorAll(".dropzone");
 
-function dragover_handler(ev) {
-	ev.preventDefault();
-}
+let draggedItem = null;
 
-function drop_handler(ev) {
-	ev.preventDefault();
-	// Get the data, which is the id of the drop target
-	const data = ev.dataTransfer.getData("text");
-	ev.target.appendChild(document.getElementById(data));
-	// Clear the drag data cache (for all formats/types)
-	ev.dataTransfer.clearData();
-	//TODO: take space where the tile is dropped and put it in the gameboard
+for (let i = 0; i < list_items.length; i++) {
+	const item = list_items[i];
+
+	item.addEventListener("dragstart", function () {
+		draggedItem = item;
+		setTimeout(function () {
+			item.style.display = "none";
+		}, 0);
+	});
+
+	item.addEventListener("dragend", function () {
+		setTimeout(function () {
+			draggedItem.style.display = "flex";
+			draggedItem = null;
+		}, 0);
+	});
+
+	for (let j = 0; j < lists.length; j++) {
+		const list = lists[j];
+
+		list.addEventListener("dragover", function (e) {
+			e.preventDefault();
+		});
+
+		list.addEventListener("dragenter", function (e) {
+			e.preventDefault();
+		});
+
+		list.addEventListener("drop", function (e) {
+			this.append(draggedItem);
+		});
+	}
 }
 
 // Chat //
@@ -84,28 +104,25 @@ function updateboard(localgameboard) {
 	for (var i = 0; i < 15; i++) {
 		for (var j = 0; j < 15; j++) {
 			if (localgameboard[i][j].type == "Empty") {
-				
-				document.getElementById((i+1) + "-" + (j+1)).innerHTML  = (" ");
-			} 
-			else {
-				document.getElementById((i+1) + "-" + (j+1)).innerHTML  = (localgameboard[i][j].type);
+				document.getElementById(i + 1 + "-" + (j + 1)).innerHTML = " ";
+			} else {
+				document.getElementById(i + 1 + "-" + (j + 1)).innerHTML =
+					localgameboard[i][j].type;
 			}
 		}
 	}
 }
-function updatehand(playerhand)
-{
-	for (var i = 0; i < playerhand.length; i++)
-	{
-		document.getElementById("tile_" + (i+1)).innerHTML = playerhand[i].type;
+
+function updatehand(playerhand) {
+	for (var i = 0; i < playerhand.length; i++) {
+		document.getElementById("tile_" + (i + 1)).innerHTML = playerhand[i].type;
 	}
 }
 
 //synchronize the gameboard with the server
 function UpdateBoard(localgameboard) {
-	
 	const rows = 15;
-	
+
 	for (var row = 0; row < rows + 1; row++) {
 		console.log(
 			localgameboard[row][0].type,
@@ -126,7 +143,6 @@ function UpdateBoard(localgameboard) {
 		);
 	}
 }
-
 
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
@@ -195,22 +211,18 @@ const changeLetters = (socket) => (letters) => {
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		curentRoom.innerHTML = board.id;
 		updateboard(localgameboard);
-		console.log(board.player1.id )
-		console.log(board.player2.id )
-		console.log(socket.id)
-		if(board.player1.id == socket.id)
-		{
-			updatehand(board.player1.playerhand)
-		}
-		else if(board.player2.id == socket.id)
-		{
-			updatehand(board.player2.playerhand)
+		console.log(board.player1.id);
+		console.log(board.player2.id);
+		console.log(socket.id);
+		if (board.player1.id == socket.id) {
+			updatehand(board.player1.playerhand);
+		} else if (board.player2.id == socket.id) {
+			updatehand(board.player2.playerhand);
 		}
 	});
 
 	//
 	socket.on("startgame", () => {
-		
 		socket.emit("start");
 
 		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
