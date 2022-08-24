@@ -15,13 +15,13 @@ helpbtn.addEventListener("click", () => {
 });
 
 // Dragging tiles //
-const list_items = document.querySelectorAll(".tile");
-const lists = document.querySelectorAll(".dropzone");
+const tile = document.querySelectorAll(".tile");
+const dropzone = document.querySelectorAll(".dropzone");
 
 let draggedItem = null;
 
-for (let i = 0; i < list_items.length; i++) {
-	const item = list_items[i];
+for (let i = 0; i < tile.length; i++) {
+	const item = tile[i];
 
 	item.addEventListener("dragstart", function () {
 		draggedItem = item;
@@ -37,8 +37,8 @@ for (let i = 0; i < list_items.length; i++) {
 		}, 0);
 	});
 
-	for (let j = 0; j < lists.length; j++) {
-		const list = lists[j];
+	for (let j = 0; j < dropzone.length; j++) {
+		const list = dropzone[j];
 
 		list.addEventListener("dragover", function (e) {
 			e.preventDefault();
@@ -46,10 +46,16 @@ for (let i = 0; i < list_items.length; i++) {
 
 		list.addEventListener("dragenter", function (e) {
 			e.preventDefault();
+			this.dropzone;
 		});
 
 		list.addEventListener("drop", function (e) {
-			this.append(draggedItem);
+			if (list.childNodes.length > 0) {
+				console.log("⛔️ Element is NOT empty");
+			} else {
+				console.log("✅ Element is empty");
+				this.append(draggedItem);
+			}
 		});
 	}
 }
