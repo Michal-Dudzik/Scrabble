@@ -14,6 +14,16 @@ helpbtn.addEventListener("click", () => {
 	helpModal.toggle();
 });
 
+//open confirmation modal //
+var confirmationModal = new bootstrap.Modal(
+	document.getElementById("confirmationModal"),
+	{}
+);
+var playbtn = document.getElementById("play");
+playbtn.addEventListener("click", () => {
+	confirmationModal.toggle();
+});
+
 // Dragging tiles //
 const tile = document.querySelectorAll(".tile");
 const dropzone = document.querySelectorAll(".dropzone");
@@ -234,7 +244,7 @@ const changeLetters = (socket) => (letters) => {
 		//wyświetl graczowi popup że ma sprawdzić board i wyświetl mu gdzieś guzik który potwierdzi że wszystko git git
 	});
 	socket.on("waiting", () => {
-		//wyświetl popup "waiting for other players acceptance"
+		//show modal
 	});
 
 	socket.on("startgame", () => {
@@ -301,16 +311,6 @@ const changeLetters = (socket) => (letters) => {
 	// 	document.getElementById("player2score").innerText =
 	// 		this.board.player2.score;
 	// }
-	socket.on("yourturn");
-	{
-		//unlock drag and drop
-	}
-
-	socket.on("wyślij słowo do sprawdzenia");
-	{
-		//zrób coś
-		//zablokuj drag and drop
-	}
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 

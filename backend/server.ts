@@ -10,7 +10,9 @@ const io = socketio(server);
 
 // ======== SERVER STUFF ========
 
-let clientNo = 0;
+// potrzbne to?
+// let clientNo = 0;
+
 let roomID;
 let serverplayers: Player[] = [];
 let serverboards: Board[] = [];
@@ -46,6 +48,8 @@ io.on("connection", function (socket) {
 			);
 		}
 	});
+
+	//join existing room
 	socket.on("joinroom", function (username, roomName) {
 		// listen for incoming data msg on this newly connected socket
 		console.log("User: " + username + " is trying to join room: " + roomName);
@@ -74,19 +78,17 @@ io.on("connection", function (socket) {
 			io.to(roomID).emit("startgame");
 			console.log("startgame");
 		}
-		socket.on("start", function (socket) {
-			//if(serverboards[roomID].round == 0){
-			serverboards[roomID].round++;
-			io.to(roomID).emit("moveresponse", serverboards[roomID]);
-		});
-		
+	});
+
+	socket.on("start", function (socket) {
+		//if(serverboards[roomID].round == 0){
+		serverboards[roomID].round++;
+		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 	});
 
 	socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
-
 		io.to(thisplayer).emit("waiting");
 		io.to(otherplayer).emit("check");
-
 
 		// const rows: number = 15;
 		// const columns: number = 15;
@@ -109,9 +111,6 @@ io.on("connection", function (socket) {
 		// 		gameboard[row][14].type
 		// 	);
 		// }
-		
-			
-		
 	});
 	socket.on("exit", function (roomName, username) {
 		console.log("Current players: " + serverplayers);
@@ -128,6 +127,7 @@ io.on("connection", function (socket) {
 server.on("error", function (err) {
 	console.log(err);
 });
+
 server.listen(8080, function () {
 	console.log("Server is running on port 8080");
 });
@@ -164,6 +164,7 @@ class Game {
 		}
 	}
 }
+
 class Board {
 	//this class may be split in to few different classes but only if we have time for that
 	id: string;
@@ -343,6 +344,7 @@ class Board {
 		);
 	}
 }
+
 interface ITile {
 	readonly type: string; // 0 = empty else its letter (A = 1, B = 2...)
 	readonly value: number;
@@ -361,6 +363,7 @@ class EmptyTile implements ITile {
 		this.status = 3;
 	}
 }
+
 class LetterTile implements ITile {
 	readonly type: string; // A = 1, B = 2 etc
 	readonly value: number; // value of tile that is used in counting score
@@ -379,6 +382,7 @@ class LetterTile implements ITile {
 		this.type = type;
 	}
 }
+
 class Player {
 	id: string; //value by which player can be recognized
 	nickname: string; //can be set by player but doesnt serve any bigger reason

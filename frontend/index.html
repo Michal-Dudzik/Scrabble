@@ -495,6 +495,44 @@
 			</div>
 		</div>
 
+		<!-- MODAL Confirmation -->
+		<div class="modal fade" id="confirmationModal" style="display: hidden">
+			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
+					</div>
+					<div class="modal-body">
+						<p>Do you accept word that other player used?</p>
+						<p id="currentWord"></p>
+					</div>
+					<div class="modal-footer">
+						<button id="leaveGame" type="submit" class="btn btn-primary">
+							Yes
+						</button>
+						<button id="stayInGame" type="submit" class="btn btn-primary">
+							No
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- MODAL Awaiting other player response -->
+		<div class="modal fade" id="awaitingResponseModal" style="display: hidden">
+			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">
+							Awaiting other player response
+						</h5>
+					</div>
+					<div class="modal-body">
+						<p>Waiting for other player to respond...</p>
+					</div>
+				</div>
+			</div>
+
 		<!-- BLACK BAGIC -->
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="src/client.js"></script>
