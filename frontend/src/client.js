@@ -50,12 +50,7 @@ for (let i = 0; i < tile.length; i++) {
 		});
 
 		list.addEventListener("drop", function (e) {
-			if (list.childNodes.length > 0) {
-				console.log("⛔️ Element is NOT empty");
-			} else {
-				console.log("✅ Element is empty");
-				this.append(draggedItem);
-			}
+			if (list.textContent.trim() === "") this.append(draggedItem);
 		});
 	}
 }
@@ -241,7 +236,7 @@ const changeLetters = (socket) => (letters) => {
 	socket.on("waiting", () => {
 		//wyświetl popup "waiting for other players acceptance"
 	});
-	
+
 	socket.on("startgame", () => {
 		socket.emit("start");
 
