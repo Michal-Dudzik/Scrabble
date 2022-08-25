@@ -183,7 +183,16 @@ const onCreateGame = (socket) => (e) => {
 };
 const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
-	socket.emit("sendboard", localgameboard);
+	var thisplayer;
+	var otherplayer;
+	if (board.player1.id == socket.id) {
+		thisplayer = board.player1.id;
+		otherplayer = board.player2.id;
+	} else if (board.player2.id == socket.id) {
+		thisplayer = board.player2.id;
+		otherplayer = board.player1.id;
+	}
+	socket.emit("checkboard", localgameboard, thisplayer, otherplayer);
 };
 
 //change letters on bench for the one associated with the player
@@ -226,8 +235,13 @@ const changeLetters = (socket) => (letters) => {
 			updatehand(board.player2.playerhand);
 		}
 	});
-
-	//
+	socket.on("check", () => {
+		//wyświetl graczowi popup że ma sprawdzić board i wyświetl mu gdzieś guzik który potwierdzi że wszystko git git
+	});
+	socket.on("waiting", () => {
+		//wyświetl popup "waiting for other players acceptance"
+	});
+	
 	socket.on("startgame", () => {
 		socket.emit("start");
 
