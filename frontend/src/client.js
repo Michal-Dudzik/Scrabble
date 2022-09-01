@@ -41,6 +41,12 @@ for (let i = 0; i < tile.length; i++) {
 	});
 
 	item.addEventListener("dragend", function () {
+		//get id of dropzone
+		const dropzoneId = item.parentNode.id;
+		console.log("dropzoneId: " + dropzoneId);
+		//get id of tile
+		const tileId = item.id;
+		console.log("tileId: " + tileId);
 		setTimeout(function () {
 			draggedItem.style.display = "flex";
 			draggedItem = null;
@@ -87,49 +93,26 @@ const onChatSubmitted = (socket) => (e) => {
 	socket.emit("message", text);
 };
 
-// const fillTiles = (socket) => (tiles) => {
-// 	//fill tiles
-
-// 	letter = "a";
-// 	letter_weight = 1;
-
-// 	for (let i = 1; i <= 7; i++) {
-// 		const tile = document.querySelector(`#tile_${i}`);
-
-// const letter = document.createElement("span");
-// letter.classList.add("letter");
-// letter.innerHTML = letter;
-
-// tile.appendChild(letter);
-
-// const letter_weight = document.createElement("span");
-// letter_weight.classList.add("letter_weight");
-// letter_weight.innerHTML = letter_weight;
-
-// tile.appendChild(letter_weight);
-// 	}
-// };
+//convert div with id "board" to json and send to server
 
 //updating local gameboard
 function updateboard(localgameboard) {
 	for (var i = 0; i < 15; i++) {
 		for (var j = 0; j < 15; j++) {
 			if (localgameboard[i][j].type == "Empty") {
-				document.getElementById(i + 1 + "-" + (j + 1)).innerHTML = " ";
+				document.getElementById(i + "-" + j).innerHTML = " ";
 			} else {
-				document.getElementById(i + 1 + "-" + (j + 1)).innerHTML =
+				document.getElementById(i + "-" + j).innerHTML =
 					localgameboard[i][j].type;
 			}
 		}
 	}
 }
-
 function updatehand(playerhand) {
 	for (var i = 0; i < playerhand.length; i++) {
 		document.getElementById("tile_" + (i + 1)).innerHTML = playerhand[i].type;
 	}
 }
-
 //synchronize the gameboard with the server
 function UpdateBoard(localgameboard) {
 	const rows = 15;
@@ -154,7 +137,6 @@ function UpdateBoard(localgameboard) {
 		);
 	}
 }
-
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
 
@@ -170,7 +152,6 @@ const onJoinGame = (socket) => (e) => {
 
 	initialScreen.toggle();
 };
-
 const onCreateGame = (socket) => (e) => {
 	e.preventDefault();
 
@@ -199,7 +180,6 @@ const onEmitbtn = (socket) => (e) => {
 	}
 	socket.emit("checkboard", localgameboard, thisplayer, otherplayer);
 };
-
 //change letters on bench for the one associated with the player
 const changeLetters = (socket) => (letters) => {
 	for (let i = 0; i < letters.length; i++) {
@@ -246,7 +226,6 @@ const changeLetters = (socket) => (letters) => {
 	socket.on("waiting", () => {
 		//show modal
 	});
-
 	socket.on("startgame", () => {
 		socket.emit("start");
 

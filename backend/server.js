@@ -8,6 +8,7 @@ app.use(express.static("./frontend")); //connection to frontend side
 var server = http.createServer(app);
 var io = socketio(server);
 // ======== SERVER STUFF ========
+// potrzbne to?
 var clientNo = 0;
 var roomID;
 var serverplayers = [];
@@ -20,6 +21,10 @@ io.on("connection", function (socket) {
     //receive message from client and send it to all clients
     socket.on("message", function (text) {
         return io.emit("message", text);
+    });
+    //receive board from client and synchronize it with other clients
+    socket.on("boardToServer", function (boardjson) {
+        return io.emit("serverToBoard", boardjson);
     });
     //creating new room
     socket.on("newroom", function (username, roomName) {
@@ -41,6 +46,7 @@ io.on("connection", function (socket) {
             console.log("Owner of the room: " + serverboards[roomID].player1.nickname);
         }
     });
+    //join existing room
     socket.on("joinroom", function (username, roomName) {
         // listen for incoming data msg on this newly connected socket
         console.log("User: " + username + " is trying to join room: " + roomName);
@@ -65,11 +71,11 @@ io.on("connection", function (socket) {
             io.to(roomID).emit("startgame");
             console.log("startgame");
         }
-        socket.on("start", function (socket) {
-            //if(serverboards[roomID].round == 0){
-            serverboards[roomID].round++;
-            io.to(roomID).emit("moveresponse", serverboards[roomID]);
-        });
+    });
+    socket.on("start", function (socket) {
+        //if(serverboards[roomID].round == 0){
+        serverboards[roomID].round++;
+        io.to(roomID).emit("moveresponse", serverboards[roomID]);
     });
     socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
         io.to(thisplayer).emit("waiting");

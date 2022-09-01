@@ -11,7 +11,7 @@ const io = socketio(server);
 // ======== SERVER STUFF ========
 
 // potrzbne to?
-// let clientNo = 0;
+let clientNo = 0;
 
 let roomID;
 let serverplayers: Player[] = [];
@@ -25,6 +25,11 @@ io.on("connection", function (socket) {
 	//receive message from client and send it to all clients
 	socket.on("message", function (text) {
 		return io.emit("message", text);
+	});
+
+	//receive board from client and synchronize it with other clients
+	socket.on("boardToServer", function (boardjson) {
+		return io.emit("serverToBoard", boardjson);
 	});
 
 	//creating new room
