@@ -24,6 +24,12 @@ playbtn.addEventListener("click", () => {
 	confirmationModal.toggle();
 });
 
+//open waiting modal //
+var waitingModal = new bootstrap.Modal(
+	document.getElementById("waitingModal"),
+	{}
+);
+
 // Dragging tiles //
 const tile = document.querySelectorAll(".tile");
 const dropzone = document.querySelectorAll(".dropzone");

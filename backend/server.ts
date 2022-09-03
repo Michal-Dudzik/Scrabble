@@ -90,7 +90,6 @@ io.on("connection", function (socket) {
 		serverboards[roomID].round++;
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 	});
-
 	socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
 		io.to(thisplayer).emit("waiting");
 		io.to(otherplayer).emit("check");
