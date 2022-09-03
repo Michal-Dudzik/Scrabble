@@ -334,46 +334,48 @@
 
 				<div class="stand-background" id="tiles">
 					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_1">
-							<span class="letter" >S</span>
-							<span class="letter_weight">2</span>
+						<div class="tile" LetterInside="" draggable="true" id="tile_0">
+							<span id="letter_0" class="letter" >S</span>
+							<span id="letter_score_0" class="letter_weight">2</span>
 						</div>
 					</div>
 
 					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true"id="tile_2">
-							<span class="letter" >S</span>
-							<span class="letter_weight">2</span>
+						<div class="tile" LetterInside="" draggable="true"id="tile_1">
+							<span id="letter_1" class="letter" >S</span>
+							<span id="letter_score_1" class="letter_weight">2</span>
+						</div>
+					</div>
+					<div class="tile_back dropzone">
+						<div class="tile" LetterInside="" draggable="true" id="tile_2">
+							<span id="letter_2" class="letter" >S</span>
+							<span id="letter_score_2" class="letter_weight">2</span>
 						</div>
 					</div>
 					<div class="tile_back dropzone">
 						<div class="tile" LetterInside="" draggable="true" id="tile_3">
-							<span class="letter" >S</span>
-							<span class="letter_weight">2</span>
+							<span id="letter_3" class="letter" >S</span>
+							<span id="letter_score_3" class="letter_weight">2</span>
 						</div>
 					</div>
 					<div class="tile_back dropzone">
 						<div class="tile" LetterInside="" draggable="true" id="tile_4">
-							<span class="letter" >S</span>
-							<span class="letter_weight">2</span>
+							<span id="letter_4" class="letter" >S</span>
+							<span id="letter_score_4" class="letter_weight">2</span>
 						</div>
 					</div>
 					<div class="tile_back dropzone">
 						<div class="tile" LetterInside="" draggable="true" id="tile_5">
-							<span class="letter" >S</span>
-							<span class="letter_weight">2</span>
+							<span id="letter_5" class="letter" >S</span>
+							<span id="letter_score_5"
+							class="letter_weight">2</span>
 						</div>
 					</div>
 					<div class="tile_back dropzone">
 						<div class="tile" LetterInside="" draggable="true" id="tile_6">
-							<span class="letter" >S</span>
-							<span class="letter_weight">2</span>
-						</div>
-					</div>
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_7">
-							<span class="letter" >S</span>
-							<span class="letter_weight">2</span>
+							<span id="letter_6" class="letter" >S</span>
+							<span id="letter_score_6"
+							class="letter_weight">2</span>
 						</div>
 					</div>
 				</div>
@@ -414,8 +416,8 @@
 		</footer>
 
 		<!-- MODAL Initial Screen -->
-		<div class="modal fade" id="initialScreen">
-			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal fade" id="initialScreen" data-bs-keyboard="false" data-bs-backdrop="static">
+			<div class="modal-dialog modal-sm modal-dialog-centered" role="document" >
 				<div class="modal-content">
 					<div class="modal-body">
 						<div class="row">
@@ -496,7 +498,7 @@
 		</div>
 
 		<!-- MODAL Confirmation -->
-		<div class="modal fade" id="confirmationModal" style="display: hidden">
+		<div class="modal fade" id="confirmationModal" style="display: hidden" data-bs-keyboard="false" data-bs-backdrop="static">
 			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -519,7 +521,7 @@
 		</div>
 
 		<!-- MODAL Awaiting other player response -->
-		<div class="modal fade" id="awaitingResponseModal" style="display: hidden">
+		<div class="modal fade" id="awaitingResponseModal" style="display: hidden" data-bs-keyboard="false" data-bs-backdrop="static">
 			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">

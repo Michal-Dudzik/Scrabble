@@ -1,4 +1,3 @@
-
 var localboard;
 //show initial screen modal //
 var initialScreen = new bootstrap.Modal(
@@ -25,10 +24,6 @@ playbtn.addEventListener("click", () => {
 });
 
 //open waiting modal //
-var waitingModal = new bootstrap.Modal(
-	document.getElementById("waitingModal"),
-	{}
-);
 
 // Dragging tiles //
 const tile = document.querySelectorAll(".tile");
@@ -53,6 +48,7 @@ for (let i = 0; i < tile.length; i++) {
 		//get id of letter inside tile
 		const tileId = item.getAttribute("LetterInside");
 		console.log("tileId: " + tileId);
+
 		setTimeout(function () {
 			draggedItem.style.display = "flex";
 			draggedItem = null;
@@ -114,16 +110,19 @@ function updateboard(localgameboard) {
 }
 function updatehand(playerhand) {
 	for (var i = 0; i < playerhand.length; i++) {
-		document.getElementById("tile_" + (i + 1)).innerHTML = playerhand[i].type;
+		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
+
+		document.getElementById("letter_score_" + i).innerHTML =
+			playerhand[i].value;
+
 		document
-			.getElementById("tile_" + (i + 1))
+			.getElementById("tile_" + i)
 			.setAttribute("LetterInside", playerhand[i].id);
 	}
 }
-function updateroomlist(roomlist)
-{
+function updateroomlist(roomlist) {
 	for (var i = 0; i < roomlist.length; i++) {
-		document.getElementById("nazwa").innerHTML = roomlist[i].id;		
+		document.getElementById("nazwa").innerHTML = roomlist[i].id;
 	}
 }
 //synchronize the gameboard with the server
@@ -212,7 +211,6 @@ const onEmitbtn = (socket) => (e) => {
 	socket.on("message", log);
 
 	socket.on("moveresponse", function (board) {
-		
 		localboard = board;
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
