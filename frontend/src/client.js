@@ -114,6 +114,12 @@ function updatehand(playerhand) {
 			.setAttribute("LetterInside", playerhand[i].id);
 	}
 }
+function updateroomlist(roomlist)
+{
+	for (var i = 0; i < roomlist.length; i++) {
+		document.getElementById("nazwa").innerHTML = roomlist[i].id;		
+	}
+}
 //synchronize the gameboard with the server
 function UpdateBoard(localgameboard) {
 	const rows = 15;
