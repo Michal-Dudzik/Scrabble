@@ -143,32 +143,7 @@ server.listen(8080, function () {
 //przypisze graczą ich kostki i rozpocznie "game loop"
 
 //======== Game Models ========
-class Game {
-	//not sure if i will use this class
-	board: Board;
-	gameover: boolean; //false = game continues || true = game is finished
-	round: number; //allows to count rounds
 
-	constructor(board: Board) {
-		this.board = board;
-	}
-	startgame() {
-		this.board.GenerateEmptyBoard();
-		this.board.filltilestorage();
-		this.board.player1.fillplayershand(this.board.unusedtilestorage);
-		this.board.player2.fillplayershand(this.board.unusedtilestorage);
-		this.round = 0;
-	}
-	gameloop() {
-		if ((this.gameover = false)) {
-			if (this.round % 2 === 1) {
-				//player 1 turn
-			} else if (this.round % 2 === 0) {
-				//player 2 turn
-			}
-		}
-	}
-}
 
 class Board {
 	//this class may be split in to few different classes but only if we have time for that
