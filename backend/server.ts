@@ -16,8 +16,14 @@ let clientNo = 0;
 let roomID;
 let serverplayers: Player[] = [];
 let serverboards: Board[] = [];
+let boardnames: string[] = [];
 io.on("connection", function (socket) {
 	var socc = socket;
+	for (let i = 0; i = serverboards.length; i++)
+	{
+		boardnames.push(serverboards[i].id);
+	}
+	io.emit("roomlist", boardnames);
 	socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
 	var playerid = socket.id;
 	console.log("New player:" + socket.id + ", connected to server");
@@ -27,11 +33,7 @@ io.on("connection", function (socket) {
 		return io.emit("message", text);
 	});
 
-	//receive board from client and synchronize it with other clients
-	socket.on("boardToServer", function (boardjson) {
-		return io.emit("serverToBoard", boardjson);
-	});
-
+	
 	//creating new room
 	socket.on("newroom", function (username, roomName) {
 		if (serverboards.some((e) => e.id === roomName)) {
