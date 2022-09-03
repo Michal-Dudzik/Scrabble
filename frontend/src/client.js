@@ -1,5 +1,5 @@
-var localgameboard;
 
+var localboard;
 //show initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
@@ -120,6 +120,12 @@ function updatehand(playerhand) {
 			.setAttribute("LetterInside", playerhand[i].id);
 	}
 }
+function updateroomlist(roomlist)
+{
+	for (var i = 0; i < roomlist.length; i++) {
+		document.getElementById("nazwa").innerHTML = roomlist[i].id;		
+	}
+}
 //synchronize the gameboard with the server
 function UpdateBoard(localgameboard) {
 	const rows = 15;
@@ -178,14 +184,14 @@ const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
 	var thisplayer;
 	var otherplayer;
-	if (board.player1.id == socket.id) {
-		thisplayer = board.player1.id;
-		otherplayer = board.player2.id;
-	} else if (board.player2.id == socket.id) {
-		thisplayer = board.player2.id;
-		otherplayer = board.player1.id;
+	if (localboard.player1.id == socket.id) {
+		thisplayer = localboard.player1.id;
+		otherplayer = localboard.player2.id;
+	} else if (localboard.player2.id == socket.id) {
+		thisplayer = localboard.player2.id;
+		otherplayer = localboard.player1.id;
 	}
-	socket.emit("checkboard", localgameboard, thisplayer, otherplayer);
+	socket.emit("checkboard", localboard.gameboard, thisplayer, otherplayer);
 };
 
 (() => {
@@ -206,11 +212,12 @@ const onEmitbtn = (socket) => (e) => {
 	socket.on("message", log);
 
 	socket.on("moveresponse", function (board) {
-		localgameboard = board.gameboard;
+		
+		localboard = board;
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		curentRoom.innerHTML = board.id;
-		updateboard(localgameboard);
+		updateboard(localboard.gameboard);
 		console.log(board.player1.id);
 		console.log(board.player2.id);
 		console.log(socket.id);
