@@ -44,8 +44,8 @@ for (let i = 0; i < tile.length; i++) {
 		//get id of dropzone
 		const dropzoneId = item.parentNode.id;
 		console.log("dropzoneId: " + dropzoneId);
-		//get id of tile
-		const tileId = item.id;
+		//get id of letter inside tile
+		const tileId = item.getAttribute("LetterInside");
 		console.log("tileId: " + tileId);
 		setTimeout(function () {
 			draggedItem.style.display = "flex";
@@ -93,8 +93,6 @@ const onChatSubmitted = (socket) => (e) => {
 	socket.emit("message", text);
 };
 
-//convert div with id "board" to json and send to server
-
 //updating local gameboard
 function updateboard(localgameboard) {
 	for (var i = 0; i < 15; i++) {
@@ -111,6 +109,9 @@ function updateboard(localgameboard) {
 function updatehand(playerhand) {
 	for (var i = 0; i < playerhand.length; i++) {
 		document.getElementById("tile_" + (i + 1)).innerHTML = playerhand[i].type;
+		document
+			.getElementById("tile_" + (i + 1))
+			.setAttribute("LetterInside", playerhand[i].id);
 	}
 }
 //synchronize the gameboard with the server
@@ -179,13 +180,6 @@ const onEmitbtn = (socket) => (e) => {
 		otherplayer = board.player1.id;
 	}
 	socket.emit("checkboard", localgameboard, thisplayer, otherplayer);
-};
-//change letters on bench for the one associated with the player
-const changeLetters = (socket) => (letters) => {
-	for (let i = 0; i < letters.length; i++) {
-		const letter = document.querySelector(`#letter_${i}`);
-		letter.innerHTML = letters[i];
-	}
 };
 
 (() => {
