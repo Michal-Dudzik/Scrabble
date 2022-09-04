@@ -134,13 +134,17 @@ function readfromhtml(socket)
 				
 				
 				if(socket.id == localboard.player1.id)
-				{
-					localboard.gameboard[i][j] = localboard.player1.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
+				{	
+					const tile = localboard.player1.playerhand.find(tile => tile.id = document.getElementById(i + "-" + j).id);
+					localboard.gameboard[i][j] = tile;
 				}
 				if(socket.id == localboard.player2.id)
 				{
-					localboard.gameboard[i][j] = localboard.player2.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
+					
+					const tile = localboard.player1.playerhand.find(tile => tile.id = document.getElementById(i + "-" + j).id);
+					localboard.gameboard[i][j] = tile;
 				}
+
 				
 				
 			} 
