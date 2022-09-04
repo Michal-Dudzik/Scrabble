@@ -131,7 +131,7 @@ function readfromhtml()
 		for (var j = 0; j < 15; j++) {
 			
 			if (document.getElementById(i + "-" + j).innerHTML !== " ") {
-				var thistile;
+				
 				
 				if(socket.id == localboard.player1.id)
 				{
@@ -141,7 +141,7 @@ function readfromhtml()
 				{
 					
 				}
-				localgameboard[i][j].type = thistile;
+				
 				
 			} 
 		}
