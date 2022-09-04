@@ -125,7 +125,7 @@ function updateroomlist(roomlist) {
 		document.getElementById("nazwa").innerHTML = roomlist[i].id;
 	}
 }
-function readfromhtml()
+function readfromhtml(socket)
 {
 	for (var i = 0; i < 15; i++) {
 		for (var j = 0; j < 15; j++) {
@@ -135,11 +135,11 @@ function readfromhtml()
 				
 				if(socket.id == localboard.player1.id)
 				{
-					localgameboard[i][j] = localboard.player1.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
+					localboard.gameboard[i][j] = localboard.player1.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
 				}
 				if(socket.id == localboard.player2.id)
 				{
-					localgameboard[i][j] = localboard.player2.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
+					localboard.gameboard[i][j] = localboard.player2.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
 				}
 				
 				
@@ -203,6 +203,7 @@ const onCreateGame = (socket) => (e) => {
 };
 const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
+	readfromhtml(socket);
 	var thisplayer;
 	var otherplayer;
 	if (localboard.player1.id == socket.id) {

@@ -13,18 +13,19 @@ var clientNo = 0;
 var roomID;
 var serverplayers = [];
 var serverboards = [];
+var boardnames = [];
 io.on("connection", function (socket) {
     var socc = socket;
+    for (var i = 0; i = serverboards.length; i++) {
+        boardnames.push(serverboards[i].id);
+    }
+    io.emit("roomlist", boardnames);
     socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
     var playerid = socket.id;
     console.log("New player:" + socket.id + ", connected to server");
     //receive message from client and send it to all clients
     socket.on("message", function (text) {
         return io.emit("message", text);
-    });
-    //receive board from client and synchronize it with other clients
-    socket.on("boardToServer", function (boardjson) {
-        return io.emit("serverToBoard", boardjson);
     });
     //creating new room
     socket.on("newroom", function (username, roomName) {
@@ -78,29 +79,13 @@ io.on("connection", function (socket) {
         io.to(roomID).emit("moveresponse", serverboards[roomID]);
     });
     socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
-        io.to(thisplayer).emit("waiting");
-        io.to(otherplayer).emit("check");
-        // const rows: number = 15;
-        // const columns: number = 15;
-        // for (var row = 0; row < rows + 1; row++) {
-        // 	console.log(
-        // 		gameboard[row][0].type,
-        // 		gameboard[row][1].type,
-        // 		gameboard[row][2].type,
-        // 		gameboard[row][3].type,
-        // 		gameboard[row][4].type,
-        // 		gameboard[row][5].type,
-        // 		gameboard[row][6].type,
-        // 		gameboard[row][7].type,
-        // 		gameboard[row][8].type,
-        // 		gameboard[row][9].type,
-        // 		gameboard[row][10].type,
-        // 		gameboard[row][11].type,
-        // 		gameboard[row][12].type,
-        // 		gameboard[row][13].type,
-        // 		gameboard[row][14].type
-        // 	);
-        // }
+        // io.to(thisplayer).emit("waiting");
+        // io.to(otherplayer).emit("check");
+        var rows = 15;
+        var columns = 15;
+        for (var row = 0; row < rows + 1; row++) {
+            console.log(gameboard[row][0].type, gameboard[row][1].type, gameboard[row][2].type, gameboard[row][3].type, gameboard[row][4].type, gameboard[row][5].type, gameboard[row][6].type, gameboard[row][7].type, gameboard[row][8].type, gameboard[row][9].type, gameboard[row][10].type, gameboard[row][11].type, gameboard[row][12].type, gameboard[row][13].type, gameboard[row][14].type);
+        }
     });
     socket.on("exit", function (roomName, username) {
         console.log("Current players: " + serverplayers);
@@ -124,29 +109,6 @@ server.listen(8080, function () {
 // jak go pacną to się odpali ta metoda ktora wygeneruje nowa plansze
 //przypisze graczą ich kostki i rozpocznie "game loop"
 //======== Game Models ========
-var Game = /** @class */ (function () {
-    function Game(board) {
-        this.board = board;
-    }
-    Game.prototype.startgame = function () {
-        this.board.GenerateEmptyBoard();
-        this.board.filltilestorage();
-        this.board.player1.fillplayershand(this.board.unusedtilestorage);
-        this.board.player2.fillplayershand(this.board.unusedtilestorage);
-        this.round = 0;
-    };
-    Game.prototype.gameloop = function () {
-        if ((this.gameover = false)) {
-            if (this.round % 2 === 1) {
-                //player 1 turn
-            }
-            else if (this.round % 2 === 0) {
-                //player 2 turn
-            }
-        }
-    };
-    return Game;
-}());
 var Board = /** @class */ (function () {
     function Board(serverroomid) {
         this.gameboard = []; //type any because every other type created problems
