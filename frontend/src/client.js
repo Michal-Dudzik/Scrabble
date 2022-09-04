@@ -135,11 +135,11 @@ function readfromhtml()
 				
 				if(socket.id == localboard.player1.id)
 				{
-					localgameboard[i][j] = localboard.player1.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id)
+					localgameboard[i][j] = localboard.player1.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
 				}
 				if(socket.id == localboard.player2.id)
 				{
-					
+					localgameboard[i][j] = localboard.player2.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id);
 				}
 				
 				
