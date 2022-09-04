@@ -125,8 +125,30 @@ function updateroomlist(roomlist) {
 		document.getElementById("nazwa").innerHTML = roomlist[i].id;
 	}
 }
+function readfromhtml()
+{
+	for (var i = 0; i < 15; i++) {
+		for (var j = 0; j < 15; j++) {
+			
+			if (document.getElementById(i + "-" + j).innerHTML !== " ") {
+				var thistile;
+				
+				if(socket.id == localboard.player1.id)
+				{
+					localgameboard[i][j] = localboard.player1.playerhand.find(elemment => element.id = document.getElementById(i + "-" + j).id)
+				}
+				if(socket.id == localboard.player2.id)
+				{
+					
+				}
+				localgameboard[i][j].type = thistile;
+				
+			} 
+		}
+	}
+}
 //synchronize the gameboard with the server
-function UpdateBoard(localgameboard) {
+function PrintBoard(localgameboard) {
 	const rows = 15;
 
 	for (var row = 0; row < rows + 1; row++) {
