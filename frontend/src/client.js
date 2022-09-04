@@ -108,6 +108,7 @@ function updateboard(localgameboard) {
 		}
 	}
 }
+//update player's hand
 function updatehand(playerhand) {
 	for (var i = 0; i < playerhand.length; i++) {
 		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
@@ -120,11 +121,13 @@ function updatehand(playerhand) {
 			.setAttribute("LetterInside", playerhand[i].id);
 	}
 }
+// create list of game rooms "servers"
 function updateroomlist(roomlist) {
 	for (var i = 0; i < roomlist.length; i++) {
 		document.getElementById("nazwa").innerHTML = roomlist[i].id;
 	}
 }
+//read data from client and save it in localboard.gameboard
 function readfromhtml(socket)
 {
 	for (var i = 0; i < 15; i++) {
@@ -151,7 +154,7 @@ function readfromhtml(socket)
 		}
 	}
 }
-//synchronize the gameboard with the server
+//print board
 function PrintBoard(localgameboard) {
 	const rows = 15;
 
@@ -205,6 +208,7 @@ const onCreateGame = (socket) => (e) => {
 
 	initialScreen.toggle();
 };
+//for test use
 const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
 	readfromhtml(socket);
