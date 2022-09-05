@@ -18,10 +18,14 @@ var confirmationModal = new bootstrap.Modal(
 	document.getElementById("confirmationModal"),
 	{}
 );
-var playbtn = document.getElementById("play");
-playbtn.addEventListener("click", () => {
-	confirmationModal.toggle();
-});
+var acceptWord = document.getElementById("acceptWord");
+var declineWord = document.getElementById("declineWord");
+acceptWord.addEventListener("click", () => {
+	confirmationModal.toggle();});
+	socket.emit("");
+
+declineWord.addEventListener("click", () => {
+	confirmationModal.toggle();});
 
 //open waiting modal //
 
@@ -221,6 +225,8 @@ const onEmitbtn = (socket) => (e) => {
 		thisplayer = localboard.player2.id;
 		otherplayer = localboard.player1.id;
 	}
+
+	confirmationModal.toggle();
 	socket.emit("checkboard", localboard.gameboard, thisplayer, otherplayer);
 };
 
