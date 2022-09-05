@@ -28,7 +28,7 @@ io.on("connection", function (socket) {
 	var playerid = socket.id;
 	console.log("New player:" + socket.id + ", connected to server");
 
-	//receive message from client and send it to all clients
+	//chat
 	socket.on("message", function (text) {
 		return io.emit("message", text);
 	});

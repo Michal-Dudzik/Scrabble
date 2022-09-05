@@ -380,8 +380,6 @@
 					</div>
 				</div>
 
-				<button id="play" class="btn btn-success">Play</button>
-
 				<button id="emitbtn" class="btn btn-success">Emit</button>
 
 				<button id="swap" class="btn btn-info">
@@ -418,10 +416,9 @@
 		<!-- MODAL Initial Screen -->
 		<div class="modal fade" id="initialScreen" data-bs-keyboard="false" data-bs-backdrop="static">
 			<div class="modal-dialog  modal-dialog-centered" role="document" >
-				<div class="modal-content">
+				<div class="modal-content" style="border:0; background-color: transparent;">
 					<div class="modal-body" >
 						<div class="container-fluid" >
-
 							<div class="row">
 								<div class="col-7 login-left">
 									<div class="form-floating mb-3">
@@ -444,15 +441,11 @@
 								</div>
 
 								<div class="col-5 login-right">
-									<h1>Rooms</h1>
+									<h4>Rooms</h4>
 								</div>
 							</div>
-
-							
 						</div>
-				</div>
-
-				
+					</div>
 				</div>
 			</div>
 		</div>
@@ -518,10 +511,10 @@
 						<p id="currentWord"></p>
 					</div>
 					<div class="modal-footer">
-						<button id="leaveGame" type="submit" class="btn btn-primary">
+						<button id="acceptWord" type="submit" class="btn btn-primary">
 							Yes
 						</button>
-						<button id="stayInGame" type="submit" class="btn btn-primary">
+						<button id="declineWord" type="submit" class="btn btn-primary">
 							No
 						</button>
 					</div>

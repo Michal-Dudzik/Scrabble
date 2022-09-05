@@ -173,7 +173,7 @@ li {
 }
 
 #underBoard button {
-	width: 80px;
+	width: 90px;
 	height: 50px;
 }
 
@@ -187,15 +187,6 @@ li {
 	width: 100%;
 }
 
-.modal-content{
-	border:0;
-	background-color: transparent;
-}
-
-.modal-body{
-	padding:0;
-}
-
 .login-left{
 	border-radius: 10%;
 	padding: 2rem;
@@ -206,8 +197,10 @@ li {
 
 .login-right{
 	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
+	padding-left: 2rem;
+	padding-top: 1rem;
+	/* justify-content: space-evenly;
+	align-items: center; */
 	background-color:#0d6efd;
 	color: white;
 	border-radius: 0 10% 10% 0;
