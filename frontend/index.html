@@ -382,7 +382,7 @@
 
 				<button id="emitbtn" class="btn btn-success">Emit</button>
 
-				<button id="swap" class="btn btn-info">
+				<button id="shuffle" class="btn btn-info">
 					<i class="fa-solid fa-shuffle"></i>
 				</button>
 			</div>
@@ -440,8 +440,8 @@
 									</div>
 								</div>
 
-								<div class="col-5 login-right">
-									<h4>Rooms</h4>
+								<div id="roomList" class="col-5 login-right">
+									<h4>Active rooms</h4>
 								</div>
 							</div>
 						</div>
@@ -523,19 +523,17 @@
 		</div>
 
 		<!-- MODAL Awaiting other player response -->
-		<div class="modal fade" id="awaitingResponseModal" style="display: hidden" data-bs-keyboard="false" data-bs-backdrop="static">
-			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-				<div class="modal-content">
+		<div class="modal fade " id="waitingModal" style="display: hidden" data-bs-keyboard="false" data-bs-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content ">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">
-							Awaiting other player response
-						</h5>
-					</div>
-					<div class="modal-body">
-						<p>Waiting for other player to respond...</p>
+						<h4 class="justify-content-center">
+							Awaiting for other players response...
+						</h4>
 					</div>
 				</div>
 			</div>
+		</div>
 
 		<!-- BLACK MAGIC -->
 		<script src="/socket.io/socket.io.js"></script>

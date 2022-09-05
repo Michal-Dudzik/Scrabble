@@ -24,7 +24,7 @@ io.on("connection", function (socket) {
 		boardnames.push(serverboards[i].id);
 	}
 	io.emit("roomlist", boardnames);
-	socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
+	socket.emit("message", "Welcome to the game!");
 	var playerid = socket.id;
 	console.log("New player:" + socket.id + ", connected to server");
 
@@ -93,8 +93,9 @@ io.on("connection", function (socket) {
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 	});
 	socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
-		// io.to(thisplayer).emit("waiting");
-		// io.to(otherplayer).emit("check");
+		io.to(thisplayer).emit("waiting");
+		io.to(otherplayer).emit("check");
+
 		serverboards[roomID].gameboard = gameboard;
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 		// const rows: number = 15;
@@ -119,6 +120,17 @@ io.on("connection", function (socket) {
 		// 	// );
 		// }
 	});
+
+	socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
+		//odczytaj słowo
+		//zlicz punkty
+		//dodaj słowo i punkty do scoreboarda
+		//kolejna tura
+		//wyłącz waiting modal
+		console.log("acceptedWord");
+		io.to(thisplayer).emit("stopWaiting");
+	});
+
 	socket.on("exit", function (roomName, username) {
 		console.log("Current players: " + serverplayers);
 		serverboards.filter(function (e) {

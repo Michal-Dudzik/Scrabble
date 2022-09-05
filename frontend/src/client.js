@@ -1,33 +1,54 @@
 var localboard;
-//show initial screen modal //
+// Initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
 	{}
 );
 initialScreen.toggle();
 
-// open help modal //
+// Help modal //
 var helpModal = new bootstrap.Modal(document.getElementById("helpModal"), {});
 var helpbtn = document.getElementById("help");
 helpbtn.addEventListener("click", () => {
 	helpModal.toggle();
 });
 
-//open confirmation modal //
+// Confirmation modal //
 var confirmationModal = new bootstrap.Modal(
 	document.getElementById("confirmationModal"),
 	{}
 );
-var acceptWord = document.getElementById("acceptWord");
-var declineWord = document.getElementById("declineWord");
-acceptWord.addEventListener("click", () => {
-	confirmationModal.toggle();});
-	socket.emit("");
 
-declineWord.addEventListener("click", () => {
-	confirmationModal.toggle();});
+const onConfirm = (socket) => (e) => {
+	e.preventDefault();
 
-//open waiting modal //
+	var acceptWord = document.getElementById("acceptWord");
+	acceptWord.addEventListener("click", () => {
+		confirmationModal.toggle();
+		//once implemented add sending word to server for scoring
+		console.log("approved");
+		socket.emit("acceptedWord");
+	});
+};
+
+
+const onDecline = (socket) => (e) => {
+	e.preventDefault();
+
+	var declineWord = document.getElementById("declineWord");
+	declineWord.addEventListener("click", () => {
+		confirmationModal.toggle();
+		console.log("declined");
+		socket.emit("declinedWord");
+	});
+};
+
+
+// Waiting modal //
+var waitingModal = new bootstrap.Modal(
+	document.getElementById("waitingModal"),
+	{}
+);
 
 // Dragging tiles //
 const tile = document.querySelectorAll(".tile");
@@ -114,7 +135,7 @@ function updateboard(localgameboard) {
 }
 //update player's hand
 function updatehand(playerhand) {
-	for (var i = 0; i < playerhand.length; i++) {
+	for (var i = 0; i < 7; i++) {
 		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
 
 		document.getElementById("letter_score_" + i).innerHTML =
@@ -128,7 +149,7 @@ function updatehand(playerhand) {
 // create list of game rooms "servers"
 function updateroomlist(roomlist) {
 	for (var i = 0; i < roomlist.length; i++) {
-		document.getElementById("nazwa").innerHTML = roomlist[i].id;
+		document.getElementById("roomList").innerHTML = roomlist[i].id;
 	}
 }
 //read data from client and save it in localboard.gameboard
@@ -212,6 +233,7 @@ const onCreateGame = (socket) => (e) => {
 
 	initialScreen.toggle();
 };
+
 //for test use
 const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
@@ -225,8 +247,6 @@ const onEmitbtn = (socket) => (e) => {
 		thisplayer = localboard.player2.id;
 		otherplayer = localboard.player1.id;
 	}
-
-	confirmationModal.toggle();
 	socket.emit("checkboard", localboard.gameboard, thisplayer, otherplayer);
 };
 
@@ -236,7 +256,7 @@ const onEmitbtn = (socket) => (e) => {
 	const roomName = document.getElementById("roomName"); //get room input
 	const Player1 = document.getElementById("Player1"); //get player name input
 	const Player2 = document.getElementById("Player2");
-	const acceptWord = document.getElementById("acceptWord"); //get accept word button
+	const shufflebtn = document.getElementById("shuffle");
 	const skip = document.getElementById("skip"); //get skip button
 	const exit = document.getElementById("exit"); //get exit button
 	const emitbtn = document.getElementById("emitbtn"); //get emit button
@@ -263,11 +283,13 @@ const onEmitbtn = (socket) => (e) => {
 		}
 	});
 	socket.on("check", () => {		
-		//wyświetl graczowi popup że ma sprawdzić board i wyświetl mu gdzieś guzik który potwierdzi że wszystko git git
 		confirmationModal.toggle();
 	});
-	socket.on("waiting", () => {``
-		//show modal
+	socket.on("waiting", () => {
+		waitingModal.toggle();
+	});
+	socket.on("stopWaiting", () => {
+		waitingModal.toggle();
 	});
 	socket.on("startgame", () => {
 		socket.emit("start");
@@ -280,6 +302,12 @@ const onEmitbtn = (socket) => (e) => {
 	newGameButton.addEventListener("click", onCreateGame(socket));
 
 	emitbtn.addEventListener("click", onEmitbtn(socket));
+
+	acceptWord.addEventListener("click", onConfirm(socket));
+
+	declineWord.addEventListener("click", onDecline(socket));
+
+	// shufflebtn.addEventListener("click", updatehand(socket));
 
 	exit.addEventListener("click", () => {
 		socket.emit("exit", username.value, roomName.value);
