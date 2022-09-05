@@ -19,10 +19,12 @@ let serverboards: Board[] = [];
 let boardnames: string[] = [];
 io.on("connection", function (socket) {
 	var socc = socket;
-	for (let i = 0; i = serverboards.length; i++)
-	{
-		boardnames.push(serverboards[i].id);
-	}
+	if(serverboards.length > 0){
+		for (let i = 0; i = serverboards.length; i++)
+		{
+			boardnames.push(serverboards[i].id);
+		}
+	};
 	io.emit("roomlist", boardnames);
 	socket.emit("message", "Welcome to the game!");
 	var playerid = socket.id;
