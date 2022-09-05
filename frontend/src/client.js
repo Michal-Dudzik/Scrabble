@@ -256,10 +256,11 @@ const onEmitbtn = (socket) => (e) => {
 			updatehand(board.player2.playerhand);
 		}
 	});
-	socket.on("check", () => {
+	socket.on("check", () => {		
 		//wyświetl graczowi popup że ma sprawdzić board i wyświetl mu gdzieś guzik który potwierdzi że wszystko git git
+		confirmationModal.toggle();
 	});
-	socket.on("waiting", () => {
+	socket.on("waiting", () => {``
 		//show modal
 	});
 	socket.on("startgame", () => {

@@ -81,11 +81,29 @@ io.on("connection", function (socket) {
     socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
         // io.to(thisplayer).emit("waiting");
         // io.to(otherplayer).emit("check");
-        var rows = 15;
-        var columns = 15;
-        for (var row = 0; row < rows + 1; row++) {
-            console.log(gameboard[row][0].type, gameboard[row][1].type, gameboard[row][2].type, gameboard[row][3].type, gameboard[row][4].type, gameboard[row][5].type, gameboard[row][6].type, gameboard[row][7].type, gameboard[row][8].type, gameboard[row][9].type, gameboard[row][10].type, gameboard[row][11].type, gameboard[row][12].type, gameboard[row][13].type, gameboard[row][14].type);
-        }
+        serverboards[roomID].gameboard = gameboard;
+        io.to(roomID).emit("moveresponse", serverboards[roomID]);
+        // const rows: number = 15;
+        // const columns: number = 15;
+        // for (var row = 0; row < rows + 1; row++) {
+        // 	// console.log(
+        // 	// 	gameboard[row][0].type,
+        // 	// 	gameboard[row][1].type,
+        // 	// 	gameboard[row][2].type,
+        // 	// 	gameboard[row][3].type,
+        // 	// 	gameboard[row][4].type,
+        // 	// 	gameboard[row][5].type,
+        // 	// 	gameboard[row][6].type,
+        // 	// 	gameboard[row][7].type,
+        // 	// 	gameboard[row][8].type,
+        // 	// 	gameboard[row][9].type,
+        // 	// 	gameboard[row][10].type,
+        // 	// 	gameboard[row][11].type,
+        // 	// 	gameboard[row][12].type,
+        // 	// 	gameboard[row][13].type,
+        // 	// 	gameboard[row][14].type
+        // 	// );
+        // }
     });
     socket.on("exit", function (roomName, username) {
         console.log("Current players: " + serverplayers);
