@@ -79,8 +79,8 @@ io.on("connection", function (socket) {
         io.to(roomID).emit("moveresponse", serverboards[roomID]);
     });
     socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
-        // io.to(thisplayer).emit("waiting");
-        // io.to(otherplayer).emit("check");
+        io.to(thisplayer).emit("waiting");
+        io.to(otherplayer).emit("check");
         var rows = 15;
         var columns = 15;
         for (var row = 0; row < rows + 1; row++) {

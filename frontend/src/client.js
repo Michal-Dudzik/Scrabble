@@ -262,66 +262,7 @@ const onEmitbtn = (socket) => (e) => {
 		socket.emit("start");
 
 		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
-	}); //after joining the room show player names and letters
-	// socket.on("player1", (player1) => {
-	//// 	Player1.innerH.gameboardTML = player1;
-	// },
-	// socket.on("player2", (player2) => {
-	// 	Player2.innerHTML = player2;
-	// },
-	// socket.on("letters", (letters) => {
-	// 	changeLetters(socket)(letters);
-	// },
-	// socket.on("board", (board) => {
-	// 	updateboard(board);
-	// },
-	// socket.on("turn", (turn) => {
-	// 	if (turn == 1) {
-	// 		acceptWord.disabled = false;
-	// 		skip.disabled = false;
-	// 	} else {
-	// 		acceptWord.disabled = true;
-	// 		skip.disabled = true;
-	// 	}
-	// },
-	// socket.on("winner", (winner) => {
-	// 	if (winner == 1) {
-	// 		alert("Player 1 wins!");
-	// 	} else if (winner == 2) {
-	// 		alert("Player 2 wins!");
-	// 	} else {
-	// 		alert("It's a tie!");
-	// 	}
-	// },
-	// socket.on("error", (error) => {
-	// 	alert(error);
-	// },
-	// socket.on("disconnect", () => {
-	// 	alert("You have been disconnected from the server");
-	// },
-	//////////////////////////////////////////////////////////////////////////////
-	// socket.on("moveresponse", board); //recieve board from server and update data
-	// {
-	// 	updateboard(this.board.gameboard); //wpisz w divy litery znajdujące się w danych miejscach w tabeli
-
-	// 	//zaktualizuj scoreboard
-	// 	document.getElementById("player1").innerText = this.board.player1.name;
-	// 	document.getElementById("player2").innerText = this.board.player2.name;
-	// 	document.getElementById("player1score").innerText =
-	// 		this.board.player1.score;
-	// 	document.getElementById("player2score").innerText =
-	// 		this.board.player2.score;
-	// 	//zaktualizuj literki w ręce gracza
-	// 	document.getElementById("player1hand").innerText =
-	// 		this.board.player1.hand.length;
-	// 	document.getElementById("player2hand").innerText =
-	// 		this.board.player2.hand.length;
-	// 	//zaktualizuj wynik
-	// 	document.getElementById("player1score").innerText =
-	// 		this.board.player1.score;
-	// 	document.getElementById("player2score").innerText =
-	// 		this.board.player2.score;
-	// }
+	}); 
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
