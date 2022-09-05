@@ -417,33 +417,42 @@
 
 		<!-- MODAL Initial Screen -->
 		<div class="modal fade" id="initialScreen" data-bs-keyboard="false" data-bs-backdrop="static">
-			<div class="modal-dialog modal-sm modal-dialog-centered" role="document" >
+			<div class="modal-dialog  modal-dialog-centered" role="document" >
 				<div class="modal-content">
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-floating mb-3">
-									<input class="form-control" id="username" />
-									<label for="roomName">Username</label>
+					<div class="modal-body" >
+						<div class="container-fluid" >
+
+							<div class="row">
+								<div class="col-7 login-left">
+									<div class="form-floating mb-3">
+										<input class="form-control" id="username" />
+										<label for="roomName">Username</label>
+									</div>
+									<div class="form-floating mb-3">
+										<input class="form-control" id="roomName" />
+										<label for="roomName">Room</label>
+									</div>
+									<div class="modal-footer col-md-12">
+										<button id="joinGame" type="submit" class="btn btn-primary">
+											Join
+										</button>
+										
+										<button id="newGame" type="submit" class="btn btn-primary">
+											Create new game
+										</button>
+									</div>
 								</div>
-								<div class="form-floating mb-3">
-									<input class="form-control" id="roomName" />
-									<label for="roomName">Room</label>
+
+								<div class="col-5 login-right">
+									<h1>Rooms</h1>
 								</div>
 							</div>
+
+							
 						</div>
-						<div class="modal-footer">
-							<button id="joinGame" type="submit" class="btn btn-primary">
-								Join
-							</button>
-							<button id="joinRandomGame" type="submit" class="btn btn-primary">
-								Join random
-							</button>
-							<button id="newGame" type="submit" class="btn btn-primary">
-								Create new game
-							</button>
-						</div>
-					</div>
+				</div>
+
+				
 				</div>
 			</div>
 		</div>
