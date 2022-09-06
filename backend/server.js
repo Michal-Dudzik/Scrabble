@@ -16,7 +16,6 @@ var serverboards = [];
 var boardnames = [];
 io.on("connection", function (socket) {
     var socc = socket;
-    console.log(boardnames);
     io.emit("roomlist", boardnames);
     socket.emit("message", "Welcome to the game!");
     var playerid = socket.id;
@@ -78,32 +77,16 @@ io.on("connection", function (socket) {
         serverboards[roomID].round++;
         io.to(roomID).emit("moveresponse", serverboards[roomID]);
     });
-    socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
+    socket.on("checkboard", function (localgameboard, hand1, hand2, thisplayer, otherplayer) {
         io.to(thisplayer).emit("waiting");
         io.to(otherplayer).emit("check");
-        serverboards[roomID].gameboard = gameboard;
-        io.to(roomID).emit("moveresponse", serverboards[roomID]);
-        // const rows: number = 15;
-        // const columns: number = 15;
-        // for (var row = 0; row < rows + 1; row++) {
-        // 	// console.log(
-        // 	// 	gameboard[row][0].type,
-        // 	// 	gameboard[row][1].type,
-        // 	// 	gameboard[row][2].type,
-        // 	// 	gameboard[row][3].type,
-        // 	// 	gameboard[row][4].type,
-        // 	// 	gameboard[row][5].type,
-        // 	// 	gameboard[row][6].type,
-        // 	// 	gameboard[row][7].type,
-        // 	// 	gameboard[row][8].type,
-        // 	// 	gameboard[row][9].type,
-        // 	// 	gameboard[row][10].type,
-        // 	// 	gameboard[row][11].type,
-        // 	// 	gameboard[row][12].type,
-        // 	// 	gameboard[row][13].type,
-        // 	// 	gameboard[row][14].type
-        // 	// );
-        // }
+        var tempboard = serverboards[roomID];
+        tempboard.gameboard = localgameboard;
+        tempboard.player1.playerhand = hand1;
+        tempboard.player2.playerhand = hand2;
+        tempboard.player1.fillplayershand(serverboards[roomID].unusedtilestorage);
+        tempboard.player2.fillplayershand(serverboards[roomID].unusedtilestorage);
+        io.to(roomID).emit("moveresponse", tempboard);
     });
     socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
         //odczytaj słowo
@@ -111,8 +94,10 @@ io.on("connection", function (socket) {
         //dodaj słowo i punkty do scoreboarda
         //kolejna tura
         //wyłącz waiting modal
+        //zaaktualizuj board na sv
         console.log("acceptedWord");
-        io.to(thisplayer).emit("stopWaiting");
+        io.to(roomID).emit("moveresponse", gameboard);
+        io.to(otherplayer).emit("stopWaiting");
     });
     socket.on("exit", function (roomName, username) {
         console.log("Current players: " + serverplayers);
