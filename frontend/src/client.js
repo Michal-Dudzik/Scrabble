@@ -27,7 +27,17 @@ const onConfirm = (socket) => (e) => {
 		confirmationModal.toggle();
 		//once implemented add sending word to server for scoring
 		console.log("approved");
-		socket.emit("acceptedWord");
+		var thisplayer;
+		var otherplayer;
+		if (localboard.player1.id == socket.id) {
+			thisplayer = localboard.player1.id;
+			otherplayer = localboard.player2.id;
+		} else if (localboard.player2.id == socket.id) {
+			thisplayer = localboard.player2.id;
+			otherplayer = localboard.player1.id;
+		}
+		
+		socket.emit("acceptedWord", localboard, thisplayer ,otherplayer );
 	});
 };
 
@@ -135,7 +145,9 @@ function updateboard(localgameboard) {
 }
 //update player's hand
 function updatehand(playerhand) {
-	for (var i = 0; i < 7; i++) {
+	for (var i = 0; i < playerhand.length && i < 7; i++) {
+		console.log("updatehand" + i);
+		if(document.getElementById("letter_" + i).innerHTML !== null){
 		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
 
 		document.getElementById("letter_score_" + i).innerHTML =
@@ -144,7 +156,7 @@ function updatehand(playerhand) {
 		document
 			.getElementById("tile_" + i)
 			.setAttribute("LetterInside", playerhand[i].id);
-	}
+	}}
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
@@ -243,6 +255,8 @@ const onEmitbtn = (socket) => (e) => {
 	readfromhtml(socket);
 	var thisplayer;
 	var otherplayer;
+	var hand1 = localboard.player1.playerhand;
+	var hand2 = localboard.player2.playerhand
 	if (localboard.player1.id == socket.id) {
 		thisplayer = localboard.player1.id;
 		otherplayer = localboard.player2.id;
@@ -250,7 +264,7 @@ const onEmitbtn = (socket) => (e) => {
 		thisplayer = localboard.player2.id;
 		otherplayer = localboard.player1.id;
 	}
-	socket.emit("checkboard", localboard.gameboard, thisplayer, otherplayer);
+	socket.emit("checkboard", localboard.gameboard,hand1,hand2, thisplayer, otherplayer);
 };
 
 (() => {
@@ -272,6 +286,10 @@ const onEmitbtn = (socket) => (e) => {
 
 	socket.on("moveresponse", function (board) {
 		localboard = board;
+		console.log("hand1");
+		PrintHand(localboard.player1.playerhand)
+		console.log("hand2");
+		PrintHand(localboard.player2.playerhand)
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		curentRoom.innerHTML = board.id;
