@@ -159,19 +159,27 @@ function readfromhtml(socket)
 		for (var j = 0; j < 15; j++) {			
 			if (document.getElementById(i + "-" + j).innerHTML !== " ") {								
 				if(socket.id == localboard.player1.id)
-				{	
-					const newtile = localboard.player1.playerhand.find(newtile => newtile.id = document.getElementById(i + "-" + j).id);
-					console.log(document.getElementById(i + "-" + j).innerHTML);
+				{						 		
+					let newtile = localboard.player1.playerhand.find(x => x.id == document.getElementById(i + "-" + j).childNodes[1].getAttribute("letterinside"));
+					localboard.player1.playerhand.splice(localboard.player1.playerhand.indexOf(newtile), 1)
 					localboard.gameboard[i][j] = newtile;
+					
 				}
 				else if(socket.id == localboard.player2.id)
-				{					
-					const newtile = localboard.player2.playerhand.find(newtile => newtile.id = document.getElementById(i + "-" + j).id);
-					console.log(document.getElementById(i + "-" + j).innerHTML);
+				{									
+					let newtile = localboard.player2.playerhand.find(x => x.id == document.getElementById(i + "-" + j).childNodes[1].getAttribute("letterinside"));
+					localboard.player2.playerhand.splice(localboard.player2.playerhand.indexOf(newtile), 1)
 					localboard.gameboard[i][j] = newtile;
+					
 				}								
 			} 
 		}
+	}
+}
+function PrintHand(hand)
+{
+	for (var i = 0; i < hand.length; i++) {
+		console.log(hand[i]);
 	}
 }
 //print board

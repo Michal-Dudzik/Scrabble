@@ -93,11 +93,11 @@ io.on("connection", function (socket) {
 		serverboards[roomID].round++;
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 	});
-	socket.on("checkboard", function (gameboard, thisplayer, otherplayer) {
+	socket.on("checkboard", function (localgameboard, thisplayer, otherplayer) {
 		io.to(thisplayer).emit("waiting");
 		io.to(otherplayer).emit("check");
-
-		serverboards[roomID].gameboard = gameboard;
+		
+		serverboards[roomID].gameboard = localgameboard;
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 		// const rows: number = 15;
 		// const columns: number = 15;
