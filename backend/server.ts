@@ -19,12 +19,9 @@ let serverboards: Board[] = [];
 let boardnames: string[] = [];
 io.on("connection", function (socket) {
 	var socc = socket;
-	if(serverboards.length > 0){
-		for (let i = 0; i = serverboards.length; i++)
-		{
-			boardnames.push(serverboards[i].id);
-		}
-	};
+		
+		console.log(boardnames);
+	
 	io.emit("roomlist", boardnames);
 	socket.emit("message", "Welcome to the game!");
 	var playerid = socket.id;
@@ -48,9 +45,10 @@ io.on("connection", function (socket) {
 			console.log(username + " joined room: " + roomID);
 			(serverboards[roomID] = new Board(roomID)),
 				//add player to list of players & board
-				(serverplayers[socc.id] = new Player(socc.id));
+			(serverplayers[socc.id] = new Player(socc.id));
 			serverboards[roomID].player1 = serverplayers[socc.id];
 			serverboards[roomID].player1.nickname = username;
+			boardnames.push(roomID);
 			//create new board
 			console.log(
 				"Owner of the room: " + serverboards[roomID].player1.nickname
@@ -68,6 +66,7 @@ io.on("connection", function (socket) {
 		serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
 		serverboards[roomID].player2 = serverplayers[socc.id]; //adding player to board
 		serverboards[roomID].player2.nickname = username;
+		boardnames.splice(serverboards.indexOf(serverboards[roomID], 1));
 		console.log(
 			"New player:" +
 				serverboards[roomID].player2.nickname +

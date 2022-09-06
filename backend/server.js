@@ -16,11 +16,9 @@ var serverboards = [];
 var boardnames = [];
 io.on("connection", function (socket) {
     var socc = socket;
-    for (var i = 0; i = serverboards.length; i++) {
-        boardnames.push(serverboards[i].id);
-    }
+    console.log(boardnames);
     io.emit("roomlist", boardnames);
-    socket.emit("message", "Welcome to the game!"); //on connection to server send message to client
+    socket.emit("message", "Welcome to the game!");
     var playerid = socket.id;
     console.log("New player:" + socket.id + ", connected to server");
     //chat
@@ -43,6 +41,7 @@ io.on("connection", function (socket) {
                 (serverplayers[socc.id] = new Player(socc.id));
             serverboards[roomID].player1 = serverplayers[socc.id];
             serverboards[roomID].player1.nickname = username;
+            boardnames.push(roomID);
             //create new board
             console.log("Owner of the room: " + serverboards[roomID].player1.nickname);
         }
@@ -57,6 +56,7 @@ io.on("connection", function (socket) {
         serverplayers[socc.id] = new Player(socc.id); //adding player to list of players
         serverboards[roomID].player2 = serverplayers[socc.id]; //adding player to board
         serverboards[roomID].player2.nickname = username;
+        boardnames.splice(serverboards.indexOf(serverboards[roomID], 1));
         console.log("New player:" +
             serverboards[roomID].player2.nickname +
             ", joined room: " +
@@ -111,6 +111,7 @@ io.on("connection", function (socket) {
         //dodaj słowo i punkty do scoreboarda
         //kolejna tura
         //wyłącz waiting modal
+        console.log("acceptedWord");
         io.to(thisplayer).emit("stopWaiting");
     });
     socket.on("exit", function (roomName, username) {
