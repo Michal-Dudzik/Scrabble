@@ -193,6 +193,8 @@ li {
 	margin-right: -23px;
 	z-index: 5;
 	background-color: white;
+	position: relative;
+	left: 18%;
 }
 
 .login-right{
@@ -205,7 +207,14 @@ li {
 	color: white;
 	border-radius: 0 10% 10% 0;
 	z-index: 1;
+	position: relative;
+	left: -15%;
 }
+
+ .showRooms{
+	position: relative;
+	left: 17%;
+ }
 
 /* BOARD */
 

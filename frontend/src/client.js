@@ -1,10 +1,21 @@
 var localboard;
+
 // Initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
 	{}
 );
 initialScreen.toggle();
+
+//on click show list of open rooms and hide it when clicked again
+document.getElementById('roomList').addEventListener('click', () => {
+	if(document.getElementById('roomList').classList.contains('showRooms')){
+		document.getElementById('roomList').classList.remove('showRooms');
+	}
+	else{
+		document.getElementById('roomList').classList.add('showRooms');
+	}
+  }); 
 
 // Help modal //
 var helpModal = new bootstrap.Modal(document.getElementById("helpModal"), {});
@@ -41,7 +52,6 @@ const onConfirm = (socket) => (e) => {
 	});
 };
 
-
 const onDecline = (socket) => (e) => {
 	e.preventDefault();
 
@@ -52,7 +62,6 @@ const onDecline = (socket) => (e) => {
 		socket.emit("declinedWord");
 	});
 };
-
 
 // Waiting modal //
 var waitingModal = new bootstrap.Modal(
@@ -145,8 +154,16 @@ function updateboard(localgameboard) {
 }
 //update player's hand
 function updatehand(playerhand) {
+	// var i = 0;
+	// while (i < playerhand.length) {
+	// 	if(playerhand[i].type == "null"){
+	// 		
+	// 	}
+	// }
+
+	//nie chciało mi sie nad tym myśleć w nocy, ale trzeba chyba to zrobić, while null wypisz literkę, jak nie to nie ruszaj
 	for (var i = 0; i < playerhand.length && i < 7; i++) {
-		console.log("updatehand" + i);
+		
 		if(document.getElementById("letter_" + i).innerHTML !== null){
 		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
 
@@ -161,7 +178,8 @@ function updatehand(playerhand) {
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
 	for (var i = 0; i < roomlist.length; i++) {
-		document.getElementById("roomList").innerHTML = roomlist[i].id;
+		// document.getElementById("roomList").innerHTML = roomlist[i].id;
+		console.log(roomlist[i].id);
 	}
 }
 //read data from client and save it in localboard.gameboard
@@ -188,6 +206,7 @@ function readfromhtml(socket)
 		}
 	}
 }
+//print letter for the player
 function PrintHand(hand)
 {
 	for (var i = 0; i < hand.length; i++) {
@@ -218,6 +237,7 @@ function PrintBoard(localgameboard) {
 		);
 	}
 }
+//preatty much the same as onCreateGame
 const onJoinGame = (socket) => (e) => {
 	e.preventDefault();
 
@@ -233,6 +253,7 @@ const onJoinGame = (socket) => (e) => {
 
 	initialScreen.toggle();
 };
+//when creating new room turn off initial modal, change displayed usernames and room name, emit this data to server
 const onCreateGame = (socket) => (e) => {
 	e.preventDefault();
 
@@ -249,7 +270,7 @@ const onCreateGame = (socket) => (e) => {
 	initialScreen.toggle();
 };
 
-//for test use
+//for test use, ps will stay here
 const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
 	readfromhtml(socket);
@@ -268,17 +289,23 @@ const onEmitbtn = (socket) => (e) => {
 };
 
 (() => {
-	const newGameButton = document.getElementById("newGame"); //get new game button
-	const joinGameButton = document.getElementById("joinGame"); //get join game button
-	const roomName = document.getElementById("roomName"); //get room input
-	const Player1 = document.getElementById("Player1"); //get player name input
+	const newGameButton = document.getElementById("newGame"); 
+	const joinGameButton = document.getElementById("joinGame"); 
+	const roomName = document.getElementById("roomName"); 
+	const Player1 = document.getElementById("Player1"); 
 	const Player2 = document.getElementById("Player2");
 	const shufflebtn = document.getElementById("shuffle");
-	const skip = document.getElementById("skip"); //get skip button
-	const exit = document.getElementById("exit"); //get exit button
-	const emitbtn = document.getElementById("emitbtn"); //get emit button
+	const skip = document.getElementById("skip"); 
+	const exit = document.getElementById("exit"); 
+	const emitbtn = document.getElementById("emitbtn");
 
-	const socket = io(); //connect to server
+	//connect to server
+	const socket = io(); 
+
+	//nie działa tak jak byśmy chcieli, trzeba przerobić jak się łączy z serwerem
+	socket.on("roomlist", function (boardnames) {
+		updateroomlist(boardnames);
+	});
 
 	socket.on("joinroom");
 
@@ -315,7 +342,7 @@ const onEmitbtn = (socket) => (e) => {
 	socket.on("startgame", () => {
 		socket.emit("start");
 
-		//wyemituj wiadomość że turę zaczyna gracz  i podaj jego nick
+		//TODO wyemituj wiadomość że turę zaczyna dany gracz i podaj jego nick
 	}); 
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
@@ -330,6 +357,7 @@ const onEmitbtn = (socket) => (e) => {
 
 	// shufflebtn.addEventListener("click", updatehand(socket));
 
+	//disconnecting from server
 	exit.addEventListener("click", () => {
 		socket.emit("exit", username.value, roomName.value);
 		socket.disconnect();
