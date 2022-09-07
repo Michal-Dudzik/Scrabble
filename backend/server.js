@@ -214,23 +214,13 @@ var Player = /** @class */ (function () {
     };
     Player.prototype.fillplayershand = function (unusedtilestorage //used at start of game to give player tiles to play with
     ) {
-        var my_div;
-        var newDiv;
-        var letter;
-        var letterValue;
-        for (var i = 0; i < 7; i++ //draws few tiles to fill players hand
+        for (var i = this.playerhand.length; i < 7; i++ //draws few tiles to fill players hand
         ) {
             var newtile = unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
             unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
             newtile.status = 1; //because it lands in players hand
             this.playerhand.push(newtile);
             unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
-            //letter = serverplayers[socc.id].playerhand[1].type; //get letter from tile
-            //letterValue =  serverplayers[this.playerhand.id].playerhand[1].value; //get value from tile
-            // newDiv = document.createElement("div"); //generate div for the tile inside tile class
-            // newDiv.innerHTML = '<div class="tile" id="tile_'+i+'"> <div class="letter">'+letter+'</div> <div class="letter-weight ">'+letterValue+'</div> </div>'; //Fill created div with generated tile
-            // my_div = document.getElementById("stand");
-            // document.body.insertBefore(newDiv, my_div);
         }
         console.log("Player's hand has been filled");
     };
