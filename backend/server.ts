@@ -167,7 +167,7 @@ class Board {
 		this.player1.fillplayershand(this.unusedtilestorage);
 		this.player2.fillplayershand(this.unusedtilestorage);
 	}
-	public CheckForWordVertical(x:string, player: Player) //TO DO
+	public CheckForWordVertical(x:coordiantes, player: Player) //TO DO
 	{
 		let IndexI:number = Number(x.charAt(0));
 		let IndexJ:number = Number(x.charAt(1));
@@ -215,89 +215,126 @@ class Board {
 
 		}
 	}
-	public CheckForWordHorizontal(x:string, player: Player)
+	public CheckForWordHorizontal(x:coordiantes, player: Player) //checks for words in right direction starting from given coordinates 
 	{	
-		let IndexI:number = Number(x.charAt(0));
-		let IndexJ:number = Number(x.charAt(1));
-		let output:string = ""
-		let score:number = 0;
-		let z:number = 9;
-		while(z < 10)
+		let IndexI:number = x.x;
+		let IndexJ:number = x.y;	
+		let score: number = 0;
+		let word: string = "";	
+		var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status == 4;
+		var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status == 4;
+		while(true)
 		{
-			//jeśli nie mogęw górę ani w prawo
-			if(this.gameboard[IndexI + 1][IndexJ].status == 4 || this.gameboard[IndexI][IndexJ].status == 3 || IndexI == 0 && this.gameboard[IndexI][IndexJ + 1].status == 4 || IndexJ == 0)
+			if(conVertical && conHorizontal) //no way to move
 			{
-				output += this.gameboard[IndexI][IndexJ].type;
+				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
 				break;
-			}
-			//jeśli nie mogę w górę ale mogę w prawo
-			else if(this.gameboard[IndexI + 1][IndexJ].status == 4 || this.gameboard[IndexI][IndexJ].status == 3 || IndexI == 0 && this.gameboard[IndexI][IndexJ + 1].status != 4 && IndexJ != 0)
+			}			
+			if(conVertical || this.gameboard[IndexI][IndexJ].status == 3)//only horizontal
 			{
-				output += this.gameboard[IndexI][IndexJ].type;
+				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				IndexJ + 1;
-				
+				IndexJ += 1;
 			}
-			//jeśli mogę w górę bo 2 i nie mogę w prawo
-			else if(this.gameboard[IndexI + 1][IndexJ].status != 4 && this.gameboard[IndexI][IndexJ].status == 2 && IndexI != 0 && this.gameboard[IndexI][IndexJ + 1].status == 4 ||  IndexJ == 0)
-			{	
-				output += this.gameboard[IndexI][IndexJ].type;
+			if(conHorizontal || this.gameboard[IndexI][IndexJ].status == 2)//only vertical
+			{
+				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				let tempi:number = IndexI + 1;
-				let temp:string = "" + tempi + IndexJ;
-				this.CheckForWordVertical(temp, player);
+				this.CheckForWordVertical(new coordiantes(IndexI,IndexJ), player)
 				break;
 			}
-			//jeśli mogę i w górę i w prawo
-			else
+			else //horizontal and vertical
 			{
-				output += this.gameboard[IndexI][IndexJ].type;
+				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				let tempi:number = IndexI + 1;
-				let temp:string = "" + tempi + IndexJ;				
-				this.CheckForWordVertical(this.CheckForFirstLetterIndex(temp, 1), player);
-				IndexJ + 1;			
-			}		
-			player.score += score;
-			player.wordlist.push(output);
+				this.CheckForWordVertical(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),2)[0], player)
+				IndexJ += 1;
+			}
+
+
 
 		}
+
 	}
-	public CheckForFirstLetterIndex(x:string, direction:number) :string //this function finds index of firstletter of word (or two words than output has 4 characters)
+	public CheckForFirstLetterIndex(x:coordiantes, direction:number) :coordiantes[] 
+	//this function finds index of firstletter of word (or two words than output contains 2 coordinates )
 	// initialize with 0 to find only horizontal words
 	// initialize with 1 that means its first use of this function and it will check if leters are in vertical and horizontal alignment 
 	// initialize with 2 to find only vertical words
-	{
-		let IndexI:number = Number(x.charAt(0));
-		let IndexJ:number = Number(x.charAt(1));
-		var start2: string = "";
-		let output: string ="";
-			
-			let z:number = 9;
-			while(z < 10){
+	// initialize with 3 when we dont know directions
+	{		
+		let IndexI:number = x.x;
+		let IndexJ:number = x.y;
+		
+		var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status == 4;
+		var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status == 4;	
+		
+			while(true)
+			{
+				if(conVertical && conHorizontal)
+					break;		
+				if(direction == 3)
+				{
+					if(!conVertical && !conHorizontal)
+					{
+						direction = 1;
+					}
+					else if(!conVertical)
+					{
+						direction = 2;
+					}
+					else
+					{
+						direction = 0;
+					}
+				}
+				if(direction == 0) //only horizontal
+				{
+					if(conHorizontal) //no way way to move
+						break;	
+
+					IndexJ -= 1;				
+				}			
+				
+				if(direction == 1) //horizontal and vertical
+				{
+					var horizontaloutput = this.CheckForFirstLetterIndex(x, 0);
+					var verticaloutput = this.CheckForFirstLetterIndex(x, 2);
+					return([horizontaloutput[0], verticaloutput[0]]);
+				}
+
+				if(direction == 2) //only vertical
+				{
+					if(conVertical)
+						break;
+
+					IndexI -= 1;
+				}				
+			}
+			return([new coordiantes(IndexI, IndexJ)]);
 			//nie ma nic w górę ani w lewo
-			//jeśli(o jedną kratkę w lewo nie ma litery lub chcemy układać tylko )
-			if(this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 || IndexJ == 0 || direction == 2)
-			{
-				break;
-			}	
-			//nie ma nic w górę ale jest w lewo
-			else if(this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status != 4 && IndexJ != 0)
-			{
-				IndexJ - 1;
-			}
-			else if(this.gameboard[IndexI - 1][IndexJ].status != 4  && direction == 1 && IndexI != 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 ||  IndexJ == 0)
-			{
-				IndexI - 1;
-			}
-			else
-			{
-				IndexI - 1;
-				start2 = this.CheckForFirstLetterIndex(x = "" + IndexI + IndexJ, 0) //because its second use of this loop that means it goes left but ignores going up
-			}
-			}
-			return(output = ""+ IndexI + IndexJ + start2);
+			// //jeśli(o jedną kratkę w lewo nie ma litery lub chcemy układać tylko )
+			// if(this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 || IndexJ == 0 )
+			// {
+			// 	break;
+			// }	
+			// //nie ma nic w górę ale jest w lewo
+			// else if(this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status != 4 && IndexJ != 0)
+			// {
+			// 	IndexJ -= 1;
+			// }
+			// else if(this.gameboard[IndexI - 1][IndexJ].status != 4  && direction == 1 && IndexI != 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 ||  IndexJ == 0)
+			// {
+			// 	IndexI -= 1;
+			// }
+			// else
+			// {
+			// 	IndexI -= 1;
+			// 	start2 = this.CheckForFirstLetterIndex(x = "" + IndexI + IndexJ, 0) //because its second use of this loop that means it goes left but ignores going up
+			// }
+			// }
+			//return(output = ""+ IndexI + ";" + IndexJ + start2);
 	}
 	public CheckForNewLetterIndex()// this method finds index of letter with lowest index that was newly added to board
 	{
@@ -306,8 +343,8 @@ class Board {
 												
 					if(this.gameboard[i][j].status == 2)
 					{											 		
-						let x: string = "" + i + j;																	
-						return(x);						
+																						
+						return(new coordiantes(i,j));						
 					}												
 				} 
 			}
@@ -594,5 +631,15 @@ class Player {
 		unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 		this.playerhand.push(newtile);
 		console.log("TIle {0} has been added to players hand", newtile.value);
+	}
+}
+class coordiantes
+{
+	x: number;
+	y: number;
+	constructor(x:number, y:number)
+	{
+		this.x = x;
+		this.y = y;
 	}
 }
