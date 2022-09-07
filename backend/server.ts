@@ -102,6 +102,12 @@ io.on("connection", function (socket) {
 		tempboard.player2.playerhand = hand2;
 		tempboard.player1.fillplayershand(serverboards[roomID].unusedtilestorage);
 		tempboard.player2.fillplayershand(serverboards[roomID].unusedtilestorage);
+		let firsttile : any = tempboard.CheckForNewLetters();
+		if(firsttile)
+		{
+		//	for(){}// TO DO
+			console.log(firsttile)
+		}
 		io.to(roomID).emit("moveresponse", tempboard);		
 	});
 
@@ -138,10 +144,7 @@ server.listen(8080, function () {
 	console.log("Server is running on port 8080");
 });
 
-//tworzenie pokoju
-//jeśli 2 gracze dołączyli to pojawia się guzik start
-// jak go pacną to się odpali ta metoda ktora wygeneruje nowa plansze
-//przypisze graczą ich kostki i rozpocznie "game loop"
+
 
 //======== Game Models ========
 
@@ -165,6 +168,35 @@ class Board {
 		this.filltilestorage();
 		this.player1.fillplayershand(this.unusedtilestorage);
 		this.player2.fillplayershand(this.unusedtilestorage);
+	}
+	public CheckForNewLetters()// this method finds letter that was newly added to board
+	{
+		for (var i = 0; i < 15; i++) {
+			for (var j = 0; j < 15; j++) {			
+												
+					if(this.gameboard[i][j].status == 2)
+					{											 		
+						let x: string = "" + i + j;																	
+						return(x);						
+					}												
+				} 
+			}
+			
+	}
+	public SaveLettersInBoard() //changes newletter's status to 3
+	{
+		for (var i = 0; i < 15; i++) {
+			for (var j = 0; j < 15; j++) {			
+												
+					if(this.gameboard[i][j].status == 2)
+					{											 		
+						let newtile: any = this.gameboard[i][j];
+						newtile.status = 3;						
+						this.gameboard[i][j] = newtile;
+						
+					}												
+				} 
+			}
 	}
 	public GenerateEmptyBoard() {
 		//method generating board and filling it with empty tiles
@@ -327,21 +359,22 @@ class Board {
 }
 
 interface ITile {
+
 	readonly type: string; // 0 = empty else its letter (A = 1, B = 2...)
 	readonly value: number;
-	readonly status: number; // 0 = tile in storage / 1 = tile is in player's hand / 2 = tile is on gameboard during acceptance phase / 3 = tile is placed on board
+	readonly status: number; // 0 = tile in storage / 1 = tile is in player's hand / 2 = tile is on gameboard during acceptance phase / 3 = tile is placed on board / 4 if its empty tile
 }
 
 class EmptyTile implements ITile {
 	public id: number;
 	readonly type: string; // 0 = empty tile
 	readonly value: number; // 0 = empty tile
-	public status: number; // 3 because empty tile can only apear on gameboard during board generation / 4 if tile contains bonus (probably wont be implemented)
+	public status: number; // 4 because its empty tile)
 	public constructor() {
 		this.id = 0;
 		this.type = "Empty";
 		this.value = 0;
-		this.status = 3;
+		this.status = 4;
 	}
 }
 

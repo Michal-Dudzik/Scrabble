@@ -154,15 +154,8 @@ function updateboard(localgameboard) {
 }
 //update player's hand
 function updatehand(playerhand) {
-	// var i = 0;
-	// while (i < playerhand.length) {
-	// 	if(playerhand[i].type == "null"){
-	// 		
-	// 	}
-	// }
-
-	//nie chciało mi sie nad tym myśleć w nocy, ale trzeba chyba to zrobić, while null wypisz literkę, jak nie to nie ruszaj
-	for (var i = 0; i < playerhand.length && i < 7; i++) {
+	
+	for (var i = 0; i < playerhand.length ; i++) {
 		
 		if(document.getElementById("letter_" + i).innerHTML !== null){
 		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
@@ -189,16 +182,18 @@ function readfromhtml(socket)
 		for (var j = 0; j < 15; j++) {			
 			if (document.getElementById(i + "-" + j).innerHTML !== " ") {								
 				if(socket.id == localboard.player1.id)
-				{						 		
+				{											 		
 					let newtile = localboard.player1.playerhand.find(x => x.id == document.getElementById(i + "-" + j).childNodes[1].getAttribute("letterinside"));
 					localboard.player1.playerhand.splice(localboard.player1.playerhand.indexOf(newtile), 1)
+					newtile.status = 2;
 					localboard.gameboard[i][j] = newtile;
 					
 				}
-				else if(socket.id == localboard.player2.id)
+				else if(socket.id == localboard.player2.id )
 				{									
 					let newtile = localboard.player2.playerhand.find(x => x.id == document.getElementById(i + "-" + j).childNodes[1].getAttribute("letterinside"));
 					localboard.player2.playerhand.splice(localboard.player2.playerhand.indexOf(newtile), 1)
+					newtile.status = 2;
 					localboard.gameboard[i][j] = newtile;
 					
 				}								

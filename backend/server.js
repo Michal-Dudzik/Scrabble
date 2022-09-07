@@ -86,6 +86,11 @@ io.on("connection", function (socket) {
         tempboard.player2.playerhand = hand2;
         tempboard.player1.fillplayershand(serverboards[roomID].unusedtilestorage);
         tempboard.player2.fillplayershand(serverboards[roomID].unusedtilestorage);
+        var firsttile = tempboard.CheckForNewLetters();
+        if (firsttile) {
+            //	for(){}// TO DO
+            console.log(firsttile);
+        }
         io.to(roomID).emit("moveresponse", tempboard);
     });
     socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
@@ -116,10 +121,6 @@ server.on("error", function (err) {
 server.listen(8080, function () {
     console.log("Server is running on port 8080");
 });
-//tworzenie pokoju
-//jeśli 2 gracze dołączyli to pojawia się guzik start
-// jak go pacną to się odpali ta metoda ktora wygeneruje nowa plansze
-//przypisze graczą ich kostki i rozpocznie "game loop"
 //======== Game Models ========
 var Board = /** @class */ (function () {
     function Board(serverroomid) {
@@ -133,6 +134,27 @@ var Board = /** @class */ (function () {
         this.filltilestorage();
         this.player1.fillplayershand(this.unusedtilestorage);
         this.player2.fillplayershand(this.unusedtilestorage);
+    };
+    Board.prototype.CheckForNewLetters = function () {
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                if (this.gameboard[i][j].status == 2) {
+                    var x = "" + i + j;
+                    return (x);
+                }
+            }
+        }
+    };
+    Board.prototype.SaveLettersInBoard = function () {
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                if (this.gameboard[i][j].status == 2) {
+                    var newtile = this.gameboard[i][j];
+                    newtile.status = 3;
+                    this.gameboard[i][j] = newtile;
+                }
+            }
+        }
     };
     Board.prototype.GenerateEmptyBoard = function () {
         //method generating board and filling it with empty tiles
@@ -182,7 +204,7 @@ var EmptyTile = /** @class */ (function () {
         this.id = 0;
         this.type = "Empty";
         this.value = 0;
-        this.status = 3;
+        this.status = 4;
     }
     return EmptyTile;
 }());
