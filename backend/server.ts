@@ -10,18 +10,13 @@ const io = socketio(server);
 
 // ======== SERVER STUFF ========
 
-// potrzbne to?
-let clientNo = 0;
-
 let roomID;
 let serverplayers: Player[] = [];
 let serverboards: Board[] = [];
 let boardnames: string[] = [];
 io.on("connection", function (socket) {
 	var socc = socket;
-	
 
-	
 	io.emit("roomlist", boardnames);
 	socket.emit("message", "Welcome to the game!");
 	var playerid = socket.id;
@@ -32,7 +27,6 @@ io.on("connection", function (socket) {
 		return io.emit("message", text);
 	});
 
-	
 	//creating new room
 	socket.on("newroom", function (username, roomName) {
 		if (serverboards.some((e) => e.id === roomName)) {
@@ -45,7 +39,7 @@ io.on("connection", function (socket) {
 			console.log(username + " joined room: " + roomID);
 			(serverboards[roomID] = new Board(roomID)),
 				//add player to list of players & board
-			(serverplayers[socc.id] = new Player(socc.id));
+				(serverplayers[socc.id] = new Player(socc.id));
 			serverboards[roomID].player1 = serverplayers[socc.id];
 			serverboards[roomID].player1.nickname = username;
 			boardnames.push(roomID);
@@ -77,7 +71,6 @@ io.on("connection", function (socket) {
 		serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
 		serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)
 		serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
-		console.log("jebać ulane kurwy");
 		if (
 			serverboards[roomID].player2.nickname != "aezkami" &&
 			serverboards[roomID].player1.nickname != "aezkami"
@@ -93,23 +86,25 @@ io.on("connection", function (socket) {
 		serverboards[roomID].round++;
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 	});
-	socket.on("checkboard", function (localgameboard,hand1, hand2, thisplayer, otherplayer) {
-		io.to(thisplayer).emit("waiting");
-		io.to(otherplayer).emit("check");
-		let tempboard: Board = serverboards[roomID];	
-		tempboard.gameboard = localgameboard;
-		tempboard.player1.playerhand = hand1;
-		tempboard.player2.playerhand = hand2;
-		tempboard.player1.fillplayershand(serverboards[roomID].unusedtilestorage);
-		tempboard.player2.fillplayershand(serverboards[roomID].unusedtilestorage);
-		let firsttile : any = tempboard.CheckForNewLetters();
-		if(firsttile)
-		{
-		//	for(){}// TO DO
-			console.log(firsttile)
+	socket.on(
+		"checkboard",
+		function (localgameboard, hand1, hand2, thisplayer, otherplayer) {
+			io.to(thisplayer).emit("waiting");
+			io.to(otherplayer).emit("check");
+			let tempboard: Board = serverboards[roomID];
+			tempboard.gameboard = localgameboard;
+			tempboard.player1.playerhand = hand1;
+			tempboard.player2.playerhand = hand2;
+			tempboard.player1.fillplayershand(serverboards[roomID].unusedtilestorage);
+			tempboard.player2.fillplayershand(serverboards[roomID].unusedtilestorage);
+			let firsttile: any = tempboard.CheckForNewLetters();
+			if (firsttile) {
+				//	for(){}// TO DO
+				console.log(firsttile);
+			}
+			io.to(roomID).emit("moveresponse", tempboard);
 		}
-		io.to(roomID).emit("moveresponse", tempboard);		
-	});
+	);
 
 	socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
 		//odczytaj słowo
@@ -121,7 +116,6 @@ io.on("connection", function (socket) {
 		console.log("acceptedWord");
 		io.to(roomID).emit("moveresponse", gameboard);
 		io.to(otherplayer).emit("stopWaiting");
-		
 	});
 
 	socket.on("exit", function (roomName, username) {
@@ -144,10 +138,7 @@ server.listen(8080, function () {
 	console.log("Server is running on port 8080");
 });
 
-
-
 //======== Game Models ========
-
 
 class Board {
 	//this class may be split in to few different classes but only if we have time for that
@@ -169,34 +160,28 @@ class Board {
 		this.player1.fillplayershand(this.unusedtilestorage);
 		this.player2.fillplayershand(this.unusedtilestorage);
 	}
-	public CheckForNewLetters()// this method finds letter that was newly added to board
-	{
+	public CheckForNewLetters() {
+		// this method finds letter that was newly added to board
 		for (var i = 0; i < 15; i++) {
-			for (var j = 0; j < 15; j++) {			
-												
-					if(this.gameboard[i][j].status == 2)
-					{											 		
-						let x: string = "" + i + j;																	
-						return(x);						
-					}												
-				} 
+			for (var j = 0; j < 15; j++) {
+				if (this.gameboard[i][j].status == 2) {
+					let x: string = "" + i + j;
+					return x;
+				}
 			}
-			
+		}
 	}
-	public SaveLettersInBoard() //changes newletter's status to 3
-	{
+	public SaveLettersInBoard() {
+		//changes newletter's status to 3
 		for (var i = 0; i < 15; i++) {
-			for (var j = 0; j < 15; j++) {			
-												
-					if(this.gameboard[i][j].status == 2)
-					{											 		
-						let newtile: any = this.gameboard[i][j];
-						newtile.status = 3;						
-						this.gameboard[i][j] = newtile;
-						
-					}												
-				} 
+			for (var j = 0; j < 15; j++) {
+				if (this.gameboard[i][j].status == 2) {
+					let newtile: any = this.gameboard[i][j];
+					newtile.status = 3;
+					this.gameboard[i][j] = newtile;
+				}
 			}
+		}
 	}
 	public GenerateEmptyBoard() {
 		//method generating board and filling it with empty tiles
@@ -359,7 +344,6 @@ class Board {
 }
 
 interface ITile {
-
 	readonly type: string; // 0 = empty else its letter (A = 1, B = 2...)
 	readonly value: number;
 	readonly status: number; // 0 = tile in storage / 1 = tile is in player's hand / 2 = tile is on gameboard during acceptance phase / 3 = tile is placed on board / 4 if its empty tile
@@ -419,8 +403,7 @@ class Player {
 	}
 	fillplayershand(
 		unusedtilestorage: Board["unusedtilestorage"] //used at start of game to give player tiles to play with
-	) {		
-
+	) {
 		for (
 			var i: number = this.playerhand.length;
 			i < 7;
@@ -432,8 +415,6 @@ class Player {
 			newtile.status = 1; //because it lands in players hand
 			this.playerhand.push(newtile);
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
-
-			
 		}
 		console.log("Player's hand has been filled");
 	}

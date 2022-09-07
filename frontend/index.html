@@ -333,51 +333,19 @@
 				<button id="skip" class="btn btn-warning">Skip</button>
 
 				<div class="stand-background" id="tiles">
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_0">
-							<span id="letter_0" class="letter" >S</span>
+					<div class="tile_back dropzone" id="tile_0">
+						<!-- <div id="movedTile_0" class="tile" LetterInside="" draggable="true">
+							<span id="letter_0" class="letter">S</span>
 							<span id="letter_score_0" class="letter_weight">2</span>
-						</div>
+						</div> -->
 					</div>
 
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true"id="tile_1">
-							<span id="letter_1" class="letter" >S</span>
-							<span id="letter_score_1" class="letter_weight">2</span>
-						</div>
-					</div>
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_2">
-							<span id="letter_2" class="letter" >S</span>
-							<span id="letter_score_2" class="letter_weight">2</span>
-						</div>
-					</div>
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_3">
-							<span id="letter_3" class="letter" >S</span>
-							<span id="letter_score_3" class="letter_weight">2</span>
-						</div>
-					</div>
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_4">
-							<span id="letter_4" class="letter" >S</span>
-							<span id="letter_score_4" class="letter_weight">2</span>
-						</div>
-					</div>
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_5">
-							<span id="letter_5" class="letter" >S</span>
-							<span id="letter_score_5"
-							class="letter_weight">2</span>
-						</div>
-					</div>
-					<div class="tile_back dropzone">
-						<div class="tile" LetterInside="" draggable="true" id="tile_6">
-							<span id="letter_6" class="letter" >S</span>
-							<span id="letter_score_6"
-							class="letter_weight">2</span>
-						</div>
-					</div>
+					<div class="tile_back dropzone" id="tile_1"></div>
+					<div class="tile_back dropzone" id="tile_2"></div>
+					<div class="tile_back dropzone" id="tile_3"></div>
+					<div class="tile_back dropzone" id="tile_4"></div>
+					<div class="tile_back dropzone" id="tile_5"></div>
+					<div class="tile_back dropzone" id="tile_6"></div>
 				</div>
 
 				<button id="emitbtn" class="btn btn-success">Emit</button>
@@ -414,11 +382,19 @@
 		</footer>
 
 		<!-- MODAL Initial Screen -->
-		<div class="modal fade" id="initialScreen" data-bs-keyboard="false" data-bs-backdrop="static">
-			<div class="modal-dialog  modal-dialog-centered" role="document" >
-				<div class="modal-content" style="border:0; background-color: transparent;">
-					<div class="modal-body" >
-						<div class="container-fluid" >
+		<div
+			class="modal fade"
+			id="initialScreen"
+			data-bs-keyboard="false"
+			data-bs-backdrop="static"
+		>
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div
+					class="modal-content"
+					style="border: 0; background-color: transparent"
+				>
+					<div class="modal-body">
+						<div class="container-fluid">
 							<div class="row">
 								<div class="col-7 login-left">
 									<div class="form-floating mb-3">
@@ -433,7 +409,7 @@
 										<button id="joinGame" type="submit" class="btn btn-primary">
 											Join
 										</button>
-										
+
 										<button id="newGame" type="submit" class="btn btn-primary">
 											Create new game
 										</button>
@@ -500,7 +476,13 @@
 		</div>
 
 		<!-- MODAL Confirmation -->
-		<div class="modal fade" id="confirmationModal" style="display: hidden" data-bs-keyboard="false" data-bs-backdrop="static">
+		<div
+			class="modal fade"
+			id="confirmationModal"
+			style="display: hidden"
+			data-bs-keyboard="false"
+			data-bs-backdrop="static"
+		>
 			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -523,9 +505,15 @@
 		</div>
 
 		<!-- MODAL Awaiting other player response -->
-		<div class="modal fade " id="waitingModal" style="display: hidden" data-bs-keyboard="false" data-bs-backdrop="static">
+		<div
+			class="modal fade"
+			id="waitingModal"
+			style="display: hidden"
+			data-bs-keyboard="false"
+			data-bs-backdrop="static"
+		>
 			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content ">
+				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="justify-content-center">
 							Awaiting for other players response...
