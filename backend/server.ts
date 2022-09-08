@@ -177,8 +177,8 @@ class Board {
 	startgame() {
 		this.GenerateEmptyBoard();
 		this.filltilestorage();
-		// this.player1.fillplayershand(this.unusedtilestorage);
-		// this.player2.fillplayershand(this.unusedtilestorage);
+		this.player1.fillplayershand(this.unusedtilestorage);
+		this.player2.fillplayershand(this.unusedtilestorage);
 	}
 	public ChangeStatusTo3(IndexI, IndexJ)
 	{
@@ -211,6 +211,7 @@ class Board {
 				score += this.gameboard[IndexI][IndexJ].value;
 				this.ChangeStatusTo3(IndexI,IndexJ);
 				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),0)[0], player);
+				break;
 			}
 			if(conHorizontal || this.gameboard[IndexI][IndexJ].status == 3 )//only vertical
 			{
@@ -228,81 +229,12 @@ class Board {
 				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),0)[0], player);				
 				IndexI += 1;
 			}
-			if(word.length > 1){
+			
+		}
+		if(word.length > 1){
 			player.score += score;
 			player.wordlist.push(word);
 			}
-
-
-
-		}
-
-
-
-
-		// while(true)
-		// {
-		// 	if(conVertical) //no way to move
-		// 	{
-		// 		word += this.gameboard[IndexI][IndexJ].type;
-		// 		score += this.gameboard[IndexI][IndexJ].value;
-		// 		break;
-		// 	}
-		// 	else
-		// 	{
-		// 		word += this.gameboard[IndexI][IndexJ].type;
-		// 		score += this.gameboard[IndexI][IndexJ].value;
-		// 		IndexI +=1;
-		// 	}
-		// 	if(word.length > 1){
-		// 	player.score += score;
-		// 	player.wordlist.push(word);
-		// 	}
-
-		// }
-
-
-
-		// let IndexI:number = x.x;
-		// let IndexJ:number = x.y;	
-		// let score: number = 0;
-		// let word: string = "";	
-		// var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
-		// var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
-		// while(true)
-		// {
-		// 	if(conVertical && (conHorizontal || (IndexI == x.x && IndexJ == x.y))) //no way to move
-		// 	{
-		// 		word += this.gameboard[IndexI][IndexJ].type;
-		// 		score += this.gameboard[IndexI][IndexJ].value;
-		// 		break;
-		// 	}			
-		// 	if(conVertical || this.gameboard[IndexI][IndexJ].status == 2 && IndexI != x.x && IndexJ != x.y)//only horizontal
-		// 	{
-		// 		word += this.gameboard[IndexI][IndexJ].type;
-		// 		score += this.gameboard[IndexI][IndexJ].value;
-		// 		this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),0)[0], player);
-		// 	}
-		// 	if(conHorizontal || this.gameboard[IndexI][IndexJ].status == 3 )//only vertical
-		// 	{
-		// 		word += this.gameboard[IndexI][IndexJ].type;
-		// 		score += this.gameboard[IndexI][IndexJ].value;
-		// 		IndexI += 1;
-		// 		break;
-		// 	}
-		// 	else //horizontal and vertical
-		// 	{
-		// 		word += this.gameboard[IndexI][IndexJ].type;
-		// 		score += this.gameboard[IndexI][IndexJ].value;
-		// 		this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),0)[0], player);
-		// 		IndexI += 1;
-		// 	}
-		// 	if(word.length > 1){
-		// 	player.score += score;
-		// 	player.wordlist.push(word);
-		// 	}
-
-		// }
 	}
 	public CheckForWord(x:coordiantes, player: Player)
 	 //checks for words starting from given coordinates
@@ -319,21 +251,21 @@ class Board {
 			{
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				
+				console.log(word);				
 				break;
 			}			
 			if(conVertical || this.gameboard[IndexI][IndexJ].status == 3)//only horizontal
 			{
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				
+				console.log(word)
 				IndexJ += 1;
 			}
-			if(conHorizontal || this.gameboard[IndexI][IndexJ].status == 2)//only vertical
+			if(conHorizontal && this.gameboard[IndexI][IndexJ].status == 2)//only vertical
 			{
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				
+				console.log(word)
 				this.CheckForWordVertical(new coordiantes(IndexI,IndexJ), player)				
 				break;
 			}
@@ -341,16 +273,17 @@ class Board {
 			{
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				
+				console.log(word)
 				this.CheckForWordVertical(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),2)[0], player)			
 				IndexJ += 1;
 			}
-			if(word.length > 1){
+			
+
+		}
+		if(word.length > 1){
 			player.score += score;
 			player.wordlist.push(word);
 			}
-
-		}
 
 	}
 	public CheckForFirstLetterIndex(x:coordiantes, direction:number) :coordiantes[] 
