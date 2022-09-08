@@ -180,14 +180,14 @@ li {
 .modal-footer {
 	display: flex;
 	justify-content: space-evenly;
-	align-items:center;
+	align-items: center;
 }
 
 .modal-footer button {
 	width: 100%;
 }
 
-.login-left{
+.login-left {
 	border-radius: 10%;
 	padding: 2rem;
 	margin-right: -23px;
@@ -197,13 +197,13 @@ li {
 	left: 18%;
 }
 
-.login-right{
+.login-right {
 	display: flex;
 	padding-left: 2rem;
 	padding-top: 1rem;
 	/* justify-content: space-evenly;
 	align-items: center; */
-	background-color:#0d6efd;
+	background-color: #0d6efd;
 	color: white;
 	border-radius: 0 10% 10% 0;
 	z-index: 1;
@@ -211,10 +211,10 @@ li {
 	left: -15%;
 }
 
- .showRooms{
+.showRooms {
 	position: relative;
 	left: 17%;
- }
+}
 
 /* BOARD */
 
@@ -300,6 +300,16 @@ li {
 	border: #fe704d 1px dashed;
 	width: 50px;
 	height: 50px;
+	position: relative;
+
+	/* display: flex;
+	background: #e8d280;
+	box-shadow: inset 0 1px 5px -2px rgba(0, 0, 0, 0.2),
+		inset 1px -2px 4px -1px rgba(0, 0, 0, 0.2);
+	border-top: 3px solid rgb(207, 174, 123);
+	border-left: 3px solid rgb(207, 174, 123);
+	border-right: 3px solid #887a61;
+	border-bottom: 3px solid #887a61; */
 }
 
 /*/////////////////// Tiles //////////////////////*/

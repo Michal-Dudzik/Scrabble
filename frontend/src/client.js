@@ -8,14 +8,13 @@ var initialScreen = new bootstrap.Modal(
 initialScreen.toggle();
 
 //on click show list of open rooms and hide it when clicked again
-document.getElementById('roomList').addEventListener('click', () => {
-	if(document.getElementById('roomList').classList.contains('showRooms')){
-		document.getElementById('roomList').classList.remove('showRooms');
+document.getElementById("roomList").addEventListener("click", () => {
+	if (document.getElementById("roomList").classList.contains("showRooms")) {
+		document.getElementById("roomList").classList.remove("showRooms");
+	} else {
+		document.getElementById("roomList").classList.add("showRooms");
 	}
-	else{
-		document.getElementById('roomList').classList.add('showRooms');
-	}
-  }); 
+});
 
 // Help modal //
 var helpModal = new bootstrap.Modal(document.getElementById("helpModal"), {});
@@ -47,8 +46,8 @@ const onConfirm = (socket) => (e) => {
 			thisplayer = localboard.player2.id;
 			otherplayer = localboard.player1.id;
 		}
-		
-		socket.emit("acceptedWord", localboard, thisplayer ,otherplayer );
+
+		socket.emit("acceptedWord", localboard, thisplayer, otherplayer);
 	});
 };
 
@@ -70,50 +69,53 @@ var waitingModal = new bootstrap.Modal(
 );
 
 // Dragging tiles //
-const tile = document.querySelectorAll(".tile");
-const dropzone = document.querySelectorAll(".dropzone");
+function drag() {
+	const tile = document.querySelectorAll(".tile");
+	console.log(tile);
+	const dropzone = document.querySelectorAll(".dropzone");
 
-let draggedItem = null;
+	let draggedItem = null;
 
-for (let i = 0; i < tile.length; i++) {
-	const item = tile[i];
+	for (let i = 0; i < tile.length; i++) {
+		const item = tile[i];
 
-	item.addEventListener("dragstart", function () {
-		draggedItem = item;
-		setTimeout(function () {
-			item.style.display = "none";
-		}, 0);
-	});
-
-	item.addEventListener("dragend", function () {
-		//get id of dropzone
-		const dropzoneId = item.parentNode.id;
-		console.log("dropzoneId: " + dropzoneId);
-		//get id of letter inside tile
-		const tileId = item.getAttribute("LetterInside");
-		console.log("tileId: " + tileId);
-
-		setTimeout(function () {
-			draggedItem.style.display = "flex";
-			draggedItem = null;
-		}, 0);
-	});
-
-	for (let j = 0; j < dropzone.length; j++) {
-		const list = dropzone[j];
-
-		list.addEventListener("dragover", function (e) {
-			e.preventDefault();
+		item.addEventListener("dragstart", function () {
+			draggedItem = item;
+			setTimeout(function () {
+				item.style.display = "none";
+			}, 0);
 		});
 
-		list.addEventListener("dragenter", function (e) {
-			e.preventDefault();
-			this.dropzone;
+		item.addEventListener("dragend", function () {
+			//get id of dropzone
+			const dropzoneId = item.parentNode.id;
+			console.log("dropzoneId: " + dropzoneId);
+			//get id of letter inside tile
+			const tileId = item.getAttribute("letterInside");
+			console.log("tileId: " + tileId);
+
+			setTimeout(function () {
+				draggedItem.style.display = "flex";
+				draggedItem = null;
+			}, 0);
 		});
 
-		list.addEventListener("drop", function (e) {
-			if (list.textContent.trim() === "") this.append(draggedItem);
-		});
+		for (let j = 0; j < dropzone.length; j++) {
+			const list = dropzone[j];
+
+			list.addEventListener("dragover", function (e) {
+				e.preventDefault();
+			});
+
+			list.addEventListener("dragenter", function (e) {
+				e.preventDefault();
+				this.dropzone;
+			});
+
+			list.addEventListener("drop", function (e) {
+				if (list.textContent.trim() === "") this.append(draggedItem);
+			});
+		}
 	}
 }
 
@@ -152,58 +154,97 @@ function updateboard(localgameboard) {
 		}
 	}
 }
+//generating all of the necessary html for tiles
+function generateTile(playerhand) {
+	for (var i = 0; i < playerhand.length; i++) {
+		const tileBlock = document.createElement("div");
+		tileBlock.id = "movedTile_" + i;
+		tileBlock.className = "tile";
+		tileBlock.setAttribute("letterInside", "");
+		tileBlock.setAttribute("draggable", true);
+
+		const letterInBlock = document.createElement("span");
+		letterInBlock.id = "letter_" + i;
+		letterInBlock.className = "letter";
+
+		const letterScoreInBlock = document.createElement("span");
+		letterScoreInBlock.id = "letter_score_" + i;
+		letterScoreInBlock.className = "letter_weight";
+
+		document.getElementById("tile_" + i).appendChild(tileBlock);
+		document.getElementById("movedTile_" + i).appendChild(letterInBlock);
+		document.getElementById("movedTile_" + i).appendChild(letterScoreInBlock);
+	}
+}
 //update player's hand
 function updatehand(playerhand) {
-	
-	for (var i = 0; i < playerhand.length ; i++) {
-		
-		if(document.getElementById("letter_" + i).innerHTML !== null){
+	generateTile(playerhand);
+
+	for (var i = 0; i < playerhand.length; i++) {
 		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
 
 		document.getElementById("letter_score_" + i).innerHTML =
 			playerhand[i].value;
 
 		document
-			.getElementById("tile_" + i)
-			.setAttribute("LetterInside", playerhand[i].id);
-	}}
+			.getElementById("movedTile_" + i)
+			.setAttribute("letterInside", playerhand[i].id);
+	}
+	drag();
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
 	for (var i = 0; i < roomlist.length; i++) {
 		// document.getElementById("roomList").innerHTML = roomlist[i].id;
-		console.log(roomlist[i].id);
+		// console.log(roomlist[i].id);
 	}
 }
 //read data from client and save it in localboard.gameboard
-function readfromhtml(socket)
-{
+function readfromhtml(socket) {
 	for (var i = 0; i < 15; i++) {
-		for (var j = 0; j < 15; j++) {			
-			if (document.getElementById(i + "-" + j).innerHTML !== " ") {								
-				if(socket.id == localboard.player1.id)
-				{											 		
-					let newtile = localboard.player1.playerhand.find(x => x.id == document.getElementById(i + "-" + j).childNodes[1].getAttribute("letterinside"));
-					localboard.player1.playerhand.splice(localboard.player1.playerhand.indexOf(newtile), 1)
+		for (var j = 0; j < 15; j++) {
+			if (document.getElementById(i + "-" + j).innerHTML !== " ") {
+				if (
+					socket.id == localboard.player1.id &&
+					localboard.gameboard[i][j].status != 3
+				) {
+					let newtile = localboard.player1.playerhand.find(
+						(x) =>
+							x.id ==
+							document
+								.getElementById(i + "-" + j)
+								.childNodes[1].getAttribute("letterinside")
+					);
+					localboard.player1.playerhand.splice(
+						localboard.player1.playerhand.indexOf(newtile),
+						1
+					);
 					newtile.status = 2;
 					localboard.gameboard[i][j] = newtile;
-					
+				} else if (
+					socket.id == localboard.player2.id &&
+					localboard.gameboard[i][j].status != 3
+				) {
+					let newtile = localboard.player2.playerhand.find(
+						(x) =>
+							x.id ==
+							document
+								.getElementById(i + "-" + j)
+								.childNodes[1].getAttribute("letterinside")
+					);
+					localboard.player2.playerhand.splice(
+						localboard.player2.playerhand.indexOf(newtile),
+						1
+					);
+					newtile.status = 2;
+					localboard.gameboard[i][j] = newtile;
 				}
-				else if(socket.id == localboard.player2.id )
-				{									
-					let newtile = localboard.player2.playerhand.find(x => x.id == document.getElementById(i + "-" + j).childNodes[1].getAttribute("letterinside"));
-					localboard.player2.playerhand.splice(localboard.player2.playerhand.indexOf(newtile), 1)
-					newtile.status = 2;
-					localboard.gameboard[i][j] = newtile;
-					
-				}								
-			} 
+			}
 		}
 	}
 }
 //print letter for the player
-function PrintHand(hand)
-{
+function PrintHand(hand) {
 	for (var i = 0; i < hand.length; i++) {
 		console.log(hand[i]);
 	}
@@ -264,7 +305,6 @@ const onCreateGame = (socket) => (e) => {
 
 	initialScreen.toggle();
 };
-
 //for test use, ps will stay here
 const onEmitbtn = (socket) => (e) => {
 	e.preventDefault();
@@ -272,7 +312,7 @@ const onEmitbtn = (socket) => (e) => {
 	var thisplayer;
 	var otherplayer;
 	var hand1 = localboard.player1.playerhand;
-	var hand2 = localboard.player2.playerhand
+	var hand2 = localboard.player2.playerhand;
 	if (localboard.player1.id == socket.id) {
 		thisplayer = localboard.player1.id;
 		otherplayer = localboard.player2.id;
@@ -280,22 +320,29 @@ const onEmitbtn = (socket) => (e) => {
 		thisplayer = localboard.player2.id;
 		otherplayer = localboard.player1.id;
 	}
-	socket.emit("checkboard", localboard.gameboard,hand1,hand2, thisplayer, otherplayer);
+	socket.emit(
+		"checkboard",
+		localboard.gameboard,
+		hand1,
+		hand2,
+		thisplayer,
+		otherplayer
+	);
 };
 
 (() => {
-	const newGameButton = document.getElementById("newGame"); 
-	const joinGameButton = document.getElementById("joinGame"); 
-	const roomName = document.getElementById("roomName"); 
-	const Player1 = document.getElementById("Player1"); 
+	const newGameButton = document.getElementById("newGame");
+	const joinGameButton = document.getElementById("joinGame");
+	const roomName = document.getElementById("roomName");
+	const Player1 = document.getElementById("Player1");
 	const Player2 = document.getElementById("Player2");
 	const shufflebtn = document.getElementById("shuffle");
-	const skip = document.getElementById("skip"); 
-	const exit = document.getElementById("exit"); 
+	const skip = document.getElementById("skip");
+	const exit = document.getElementById("exit");
 	const emitbtn = document.getElementById("emitbtn");
 
 	//connect to server
-	const socket = io(); 
+	const socket = io();
 
 	//nie działa tak jak byśmy chcieli, trzeba przerobić jak się łączy z serwerem
 	socket.on("roomlist", function (boardnames) {
@@ -309,9 +356,9 @@ const onEmitbtn = (socket) => (e) => {
 	socket.on("moveresponse", function (board) {
 		localboard = board;
 		console.log("hand1");
-		PrintHand(localboard.player1.playerhand)
+		PrintHand(localboard.player1.playerhand);
 		console.log("hand2");
-		PrintHand(localboard.player2.playerhand)
+		PrintHand(localboard.player2.playerhand);
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		curentRoom.innerHTML = board.id;
@@ -325,7 +372,7 @@ const onEmitbtn = (socket) => (e) => {
 			updatehand(board.player2.playerhand);
 		}
 	});
-	socket.on("check", () => {		
+	socket.on("check", () => {
 		confirmationModal.toggle();
 	});
 	socket.on("waiting", () => {
@@ -336,9 +383,8 @@ const onEmitbtn = (socket) => (e) => {
 	});
 	socket.on("startgame", () => {
 		socket.emit("start");
-
 		//TODO wyemituj wiadomość że turę zaczyna dany gracz i podaj jego nick
-	}); 
+	});
 
 	joinGameButton.addEventListener("click", onJoinGame(socket));
 
