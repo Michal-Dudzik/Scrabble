@@ -135,6 +135,7 @@ io.on("connection", function (socket) {
 		serverboards[roomID] = tempboards[roomID];
 		console.log("acceptedWord");
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
+		serverboards[roomID].PrintBoard()
 		io.to(otherplayer).emit("stopWaiting");
 		
 	});
