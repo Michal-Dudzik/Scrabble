@@ -16,6 +16,7 @@ let clientNo = 0;
 let roomID;
 let serverplayers: Player[] = [];
 let serverboards: Board[] = [];
+let tempboards: Board[] = [];
 let boardnames: string[] = [];
 io.on("connection", function (socket) {
 	var socc = socket;
@@ -93,34 +94,36 @@ io.on("connection", function (socket) {
 	socket.on("checkboard", function (localgameboard,hand1, hand2, thisplayer, otherplayer) {
 		io.to(thisplayer).emit("waiting");
 		io.to(otherplayer).emit("check");
-		let tempboard: Board = serverboards[roomID];	
-		tempboard.gameboard = localgameboard;
-		tempboard.player1.playerhand = hand1;
-		tempboard.player2.playerhand = hand2;
-		tempboard.player1.fillplayershand(serverboards[roomID].unusedtilestorage);
-		tempboard.player2.fillplayershand(serverboards[roomID].unusedtilestorage);
-		let firsttile : any = tempboard.CheckForNewLetterIndex();
+		console.log("im here")
+		tempboards[roomID] = serverboards[roomID];	
+		tempboards[roomID].gameboard = localgameboard;
+		tempboards[roomID].player1.playerhand = hand1;
+		tempboards[roomID].player2.playerhand = hand2;
+		tempboards[roomID].player1.fillplayershand(tempboards[roomID].unusedtilestorage);
+		tempboards[roomID].player2.fillplayershand(tempboards[roomID].unusedtilestorage);
+		let firsttile : any = tempboards[roomID].CheckForNewLetterIndex();
+		console.log("im here2")
+		tempboards[roomID].PrintBoard()
 		if(firsttile)
 		{
 			console.log("first tile= " + firsttile.x + firsttile.y);
-			let indexes: coordiantes[] = tempboard.CheckForFirstLetterIndex(firsttile, 1)
+			//3 bcs we dont know direction it needs to go 
+			let indexes: coordiantes[] = tempboards[roomID].CheckForFirstLetterIndex(firsttile, 3) //TU SIĘ WYWALA PRZY 2 RUNDZIE
 			console.log("indexes= " + indexes[0].x + indexes[0].y)
-			// if(indexes.length > 1)
-			// {
-				
-			// }
-			if(thisplayer == tempboard.player1.id)
+			
+			if(thisplayer == tempboards[roomID].player1.id)
 			{
-			tempboard.CheckForWord(indexes[0], tempboard.player1);	
-			console.log(tempboard.player1.wordlist);
+				tempboards[roomID].CheckForWord(indexes[0], tempboards[roomID].player1);	
+			console.log(tempboards[roomID].player1.wordlist);
 			}
-			if(thisplayer == tempboard.player2.id)
+			if(thisplayer == tempboards[roomID].player2.id)
 			{
-			tempboard.CheckForWord(indexes[0], tempboard.player2);	
-			console.log(tempboard.player2.wordlist);
+				tempboards[roomID].CheckForWord(indexes[0], tempboards[roomID].player2);	
+			console.log(tempboards[roomID].player2.wordlist);
 			}
+			tempboards[roomID].SaveLettersInBoard();
 		}
-		io.to(roomID).emit("moveresponse", tempboard);		
+		io.to(roomID).emit("moveresponse", tempboards[roomID]);		
 	});
 
 	socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
@@ -130,8 +133,9 @@ io.on("connection", function (socket) {
 		//kolejna tura
 		//wyłącz waiting modal
 		//zaaktualizuj board na sv
+		serverboards[roomID] = tempboards[roomID];
 		console.log("acceptedWord");
-		io.to(roomID).emit("moveresponse", gameboard);
+		io.to(roomID).emit("moveresponse", serverboards[roomID]);		
 		io.to(otherplayer).emit("stopWaiting");
 		
 	});
@@ -292,7 +296,7 @@ class Board {
 		
 		var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status == 4;
 		var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status == 4;	
-		
+			
 			while(true)
 			{
 				if(conVertical && conHorizontal)
@@ -311,18 +315,19 @@ class Board {
 					{
 						direction = 0;
 					}
+					console.log("Direction= " + direction)
 				}
 				if(direction == 0) //only horizontal
 				{
 					if(conHorizontal) //no way way to move
 						break;	
-
+						
 					IndexJ -= 1;				
 				}			
 				
 				if(direction == 1) //horizontal and vertical
 				{
-					var horizontaloutput = this.CheckForFirstLetterIndex(x, 0);
+					var horizontaloutput = this.CheckForFirstLetterIndex(x, 0);					
 					var verticaloutput = this.CheckForFirstLetterIndex(x, 2);
 					return([horizontaloutput[0], verticaloutput[0]]);
 				}
