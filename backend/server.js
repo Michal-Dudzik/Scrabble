@@ -87,6 +87,7 @@ io.on("connection", function (socket) {
         tempboards[roomID].player2.fillplayershand(tempboards[roomID].unusedtilestorage);
         var firsttile = tempboards[roomID].CheckForNewLetterIndex();
         console.log("im here2");
+        tempboards[roomID].PrintBoard();
         if (firsttile) {
             console.log("first tile= " + firsttile.x + firsttile.y);
             //3 bcs we dont know direction it needs to go 
@@ -114,7 +115,6 @@ io.on("connection", function (socket) {
         serverboards[roomID] = tempboards[roomID];
         console.log("acceptedWord");
         io.to(roomID).emit("moveresponse", serverboards[roomID]);
-        serverboards[roomID].PrintBoard();
         io.to(otherplayer).emit("stopWaiting");
     });
     socket.on("exit", function (roomName, username) {
