@@ -105,13 +105,23 @@ io.on("connection", function (socket) {
 		let firsttile : any = tempboard.CheckForNewLetterIndex();
 		if(firsttile)
 		{
+			console.log("first tile= " + firsttile.x + firsttile.y);
 			let indexes: coordiantes[] = tempboard.CheckForFirstLetterIndex(firsttile, 1)
+			console.log("indexes= " + indexes[0].x + indexes[0].y)
 			// if(indexes.length > 1)
 			// {
 				
 			// }
-			tempboard.CheckForWord(indexes[0], thisplayer);
-			console.log(thisplayer.wordlist);
+			if(thisplayer == tempboard.player1.id)
+			{
+			tempboard.CheckForWord(indexes[0], tempboard.player1);	
+			console.log(tempboard.player1.wordlist);
+			}
+			if(thisplayer == tempboard.player2.id)
+			{
+			tempboard.CheckForWord(indexes[0], tempboard.player2);	
+			console.log(tempboard.player2.wordlist);
+			}
 		}
 		io.to(roomID).emit("moveresponse", tempboard);		
 	});
@@ -658,7 +668,7 @@ class Player {
 	nickname: string; //can be set by player but doesnt serve any bigger reason
 	playerhand: LetterTile[] = []; //array storing letters currently held by player
 	score: number;
-	wordlist: string[]; //contains list of accepted words
+	wordlist: string[] = []; //contains list of accepted words
 	constructor(
 		socketid: string //TO DO
 	) {
