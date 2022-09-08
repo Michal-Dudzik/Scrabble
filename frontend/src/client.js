@@ -67,6 +67,34 @@ var waitingModal = new bootstrap.Modal(
 	document.getElementById("waitingModal"),
 	{}
 );
+//generating all of the necessary html for tiles
+function generateTile(i) {
+	const tileBlock = document.createElement("div");
+	tileBlock.id = "movedTile_" + i;
+	tileBlock.className = "tile";
+	tileBlock.setAttribute("letterInside", "");
+	tileBlock.setAttribute("draggable", true);
+
+	const letterInBlock = document.createElement("span");
+	letterInBlock.id = "letter_" + i;
+	letterInBlock.className = "letter";
+
+	const letterScoreInBlock = document.createElement("span");
+	letterScoreInBlock.id = "letter_score_" + i;
+	letterScoreInBlock.className = "letter_weight";
+
+	document.getElementById("tile_" + i).appendChild(tileBlock)
+	.appendChild(letterInBlock);
+	
+	setTimeout(function () {
+		document.getElementById("tile_" + i).appendChild(tileBlock)
+		.appendChild(letterScoreInBlock);
+	}, 0);
+	
+
+}
+
+var movedTile = 0;
 
 // Dragging tiles //
 function drag() {
@@ -81,9 +109,11 @@ function drag() {
 
 		item.addEventListener("dragstart", function () {
 			draggedItem = item;
+			movedTile = item.parentNode.id.slice(-1);
 			setTimeout(function () {
 				item.style.display = "none";
 			}, 0);
+			
 		});
 
 		item.addEventListener("dragend", function () {
@@ -94,10 +124,12 @@ function drag() {
 			const tileId = item.getAttribute("letterInside");
 			console.log("tileId: " + tileId);
 
+			
 			setTimeout(function () {
 				draggedItem.style.display = "flex";
 				draggedItem = null;
 			}, 0);
+			generateTile(movedTile);
 		});
 
 		for (let j = 0; j < dropzone.length; j++) {
@@ -118,7 +150,7 @@ function drag() {
 		}
 	}
 }
-
+drag();
 // Chat //
 const log = (text) => {
 	//log to console
@@ -154,32 +186,8 @@ function updateboard(localgameboard) {
 		}
 	}
 }
-//generating all of the necessary html for tiles
-function generateTile(playerhand) {
-	for (var i = 0; i < playerhand.length; i++) {
-		const tileBlock = document.createElement("div");
-		tileBlock.id = "movedTile_" + i;
-		tileBlock.className = "tile";
-		tileBlock.setAttribute("letterInside", "");
-		tileBlock.setAttribute("draggable", true);
-
-		const letterInBlock = document.createElement("span");
-		letterInBlock.id = "letter_" + i;
-		letterInBlock.className = "letter";
-
-		const letterScoreInBlock = document.createElement("span");
-		letterScoreInBlock.id = "letter_score_" + i;
-		letterScoreInBlock.className = "letter_weight";
-
-		document.getElementById("tile_" + i).appendChild(tileBlock);
-		document.getElementById("movedTile_" + i).appendChild(letterInBlock);
-		document.getElementById("movedTile_" + i).appendChild(letterScoreInBlock);
-	}
-}
 //update player's hand
 function updatehand(playerhand) {
-	generateTile(playerhand);
-
 	for (var i = 0; i < playerhand.length; i++) {
 		document.getElementById("letter_" + i).innerHTML = playerhand[i].type;
 
@@ -189,8 +197,8 @@ function updatehand(playerhand) {
 		document
 			.getElementById("movedTile_" + i)
 			.setAttribute("letterInside", playerhand[i].id);
-	}
-	drag();
+		}
+	// drag();
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
