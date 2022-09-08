@@ -74,9 +74,6 @@ io.on("connection", function (socket) {
 				roomID
 		);
 		serverboards[roomID].startgame();
-		serverboards[roomID].player1.printplayershand(); //prints players hand (just for test)
-		serverboards[roomID].player2.printplayershand(); //prints players hand (just for test)
-		serverboards[roomID].howmanytilesinstorage(); //prints how many tiles are left in storage
 		console.log("jebać ulane kurwy");
 		if (
 			serverboards[roomID].player2.nickname != "aezkami" &&
@@ -180,8 +177,8 @@ class Board {
 	startgame() {
 		this.GenerateEmptyBoard();
 		this.filltilestorage();
-		this.player1.fillplayershand(this.unusedtilestorage);
-		this.player2.fillplayershand(this.unusedtilestorage);
+		// this.player1.fillplayershand(this.unusedtilestorage);
+		// this.player2.fillplayershand(this.unusedtilestorage);
 	}
 	public ChangeStatusTo3(IndexI, IndexJ)
 	{
