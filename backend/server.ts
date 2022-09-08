@@ -245,45 +245,39 @@ class Board {
 		let word: string = "";	
 		var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
 		var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
-		while(true)
-		{
-			if(conVertical && conHorizontal) //no way to move
-			{
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);				
-				break;
-			}			
-			if(conVertical || this.gameboard[IndexI][IndexJ].status == 3)//only horizontal
-			{
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word)
-				IndexJ += 1;
-			}
-			if(conHorizontal && this.gameboard[IndexI][IndexJ].status == 2)//only vertical
-			{
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word)
-				this.CheckForWordVertical(new coordiantes(IndexI,IndexJ), player)				
-				break;
-			}
-			else //horizontal and vertical
-			{
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word)
-				this.CheckForWordVertical(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),2)[0], player)			
-				IndexJ += 1;
-			}
-			
+		
+        while (true) {
 
-		}
-		if(word.length > 1){
-			player.score += score;
-			player.wordlist.push(word);
-			}
+            if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) //only horizontal
+             {
+                word += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                console.log(word);
+                IndexJ += 1;
+            }
+            else if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) //only vertical
+            {
+                word += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                console.log(word);
+                IndexI += 1;
+            }
+            else if (!conHorizontal && !conVertical)//horizontal and vertical
+            {
+                word += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                console.log(word);
+                this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0], player);
+                IndexJ += 1;
+            }
+            else {
+                break;
+            }
+        }
+        if (word.length > 1) {
+            player.score += score;
+            player.wordlist.push(word);
+        }
 
 	}
 	public CheckForFirstLetterIndex(x:coordiantes, direction:number) :coordiantes[] 
@@ -342,28 +336,6 @@ class Board {
 				}				
 			}
 			return([new coordiantes(IndexI, IndexJ)]);
-			//nie ma nic w górę ani w lewo
-			// //jeśli(o jedną kratkę w lewo nie ma litery lub chcemy układać tylko )
-			// if(this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 || IndexJ == 0 )
-			// {
-			// 	break;
-			// }	
-			// //nie ma nic w górę ale jest w lewo
-			// else if(this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status != 4 && IndexJ != 0)
-			// {
-			// 	IndexJ -= 1;
-			// }
-			// else if(this.gameboard[IndexI - 1][IndexJ].status != 4  && direction == 1 && IndexI != 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 ||  IndexJ == 0)
-			// {
-			// 	IndexI -= 1;
-			// }
-			// else
-			// {
-			// 	IndexI -= 1;
-			// 	start2 = this.CheckForFirstLetterIndex(x = "" + IndexI + IndexJ, 0) //because its second use of this loop that means it goes left but ignores going up
-			// }
-			// }
-			//return(output = ""+ IndexI + ";" + IndexJ + start2);
 	}
 	public CheckForNewLetterIndex()// this method finds index of letter with lowest index that was newly added to board
 	{
