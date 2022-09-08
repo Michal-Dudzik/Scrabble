@@ -86,10 +86,9 @@ io.on("connection", function (socket) {
         tempboard.player2.playerhand = hand2;
         tempboard.player1.fillplayershand(serverboards[roomID].unusedtilestorage);
         tempboard.player2.fillplayershand(serverboards[roomID].unusedtilestorage);
-        var firsttile = tempboard.CheckForNewLetters();
+        var firsttile = tempboard.CheckForNewLetterIndex();
         if (firsttile) {
-            //	for(){}// TO DO
-            console.log(firsttile);
+            console.log(tempboard.CheckForFirstLetterIndex(firsttile, 1));
         }
         io.to(roomID).emit("moveresponse", tempboard);
     });
@@ -135,7 +134,115 @@ var Board = /** @class */ (function () {
         this.player1.fillplayershand(this.unusedtilestorage);
         this.player2.fillplayershand(this.unusedtilestorage);
     };
-    Board.prototype.CheckForNewLetters = function () {
+    Board.prototype.CheckForWordVertical = function (x, player) {
+        var IndexI = Number(x.charAt(0));
+        var IndexJ = Number(x.charAt(1));
+        var output = "";
+        var score = 0;
+        var z = 9;
+        while (z < 10) {
+            //jeśli nie mogęw górę ani w prawo
+            if (this.gameboard[IndexI + 1][IndexJ].status == 4 || this.gameboard[IndexI][IndexJ].status == 3 || IndexI == 0 && this.gameboard[IndexI][IndexJ + 1].status == 4 || IndexJ == 0) {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                break;
+            }
+            //jeśli nie mogę w górę ale mogę w prawo
+            else if (this.gameboard[IndexI + 1][IndexJ].status == 4 || this.gameboard[IndexI][IndexJ].status == 3 || IndexI == 0 && this.gameboard[IndexI][IndexJ + 1].status != 4 && IndexJ != 0) {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                IndexJ + 1;
+            }
+            //jeśli mogę w górę bo 2 i nie mogę w prawo
+            else if (this.gameboard[IndexI + 1][IndexJ].status != 4 && this.gameboard[IndexI][IndexJ].status == 2 && IndexI != 0 && this.gameboard[IndexI][IndexJ + 1].status == 4 || IndexJ == 0) {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                var tempi = IndexI + 1;
+                var temp = "" + tempi + IndexJ;
+                this.CheckForWordVertical(temp, player);
+                break;
+            }
+            //jeśli mogę i w górę i w prawo
+            else {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                var tempi = IndexI + 1;
+                var temp = "" + tempi + IndexJ;
+                this.CheckForWordVertical(temp, player);
+                IndexJ + 1;
+            }
+            player.score += score;
+            player.wordlist.push(output);
+        }
+    };
+    Board.prototype.CheckForWordHorizontal = function (x, player) {
+        var IndexI = Number(x.charAt(0));
+        var IndexJ = Number(x.charAt(1));
+        var output = "";
+        var score = 0;
+        var z = 9;
+        while (z < 10) {
+            //jeśli nie mogęw górę ani w prawo
+            if (this.gameboard[IndexI + 1][IndexJ].status == 4 || this.gameboard[IndexI][IndexJ].status == 3 || IndexI == 0 && this.gameboard[IndexI][IndexJ + 1].status == 4 || IndexJ == 0) {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                break;
+            }
+            //jeśli nie mogę w górę ale mogę w prawo
+            else if (this.gameboard[IndexI + 1][IndexJ].status == 4 || this.gameboard[IndexI][IndexJ].status == 3 || IndexI == 0 && this.gameboard[IndexI][IndexJ + 1].status != 4 && IndexJ != 0) {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                IndexJ + 1;
+            }
+            //jeśli mogę w górę bo 2 i nie mogę w prawo
+            else if (this.gameboard[IndexI + 1][IndexJ].status != 4 && this.gameboard[IndexI][IndexJ].status == 2 && IndexI != 0 && this.gameboard[IndexI][IndexJ + 1].status == 4 || IndexJ == 0) {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                var tempi = IndexI + 1;
+                var temp = "" + tempi + IndexJ;
+                this.CheckForWordVertical(temp, player);
+                break;
+            }
+            //jeśli mogę i w górę i w prawo
+            else {
+                output += this.gameboard[IndexI][IndexJ].type;
+                score += this.gameboard[IndexI][IndexJ].value;
+                var tempi = IndexI + 1;
+                var temp = "" + tempi + IndexJ;
+                this.CheckForWordVertical(this.CheckForFirstLetterIndex(temp, 1), player);
+                IndexJ += 1;
+            }
+            player.score += score;
+            player.wordlist.push(output);
+        }
+    };
+    Board.prototype.CheckForFirstLetterIndex = function (x, direction) {
+        var IndexI = Number(x.charAt(0));
+        var IndexJ = Number(x.charAt(1));
+        var start2 = "";
+        var output = "";
+        var z = 9;
+        while (z < 10) {
+            //nie ma nic w górę ani w lewo
+            //jeśli(o jedną kratkę w lewo nie ma litery lub chcemy układać tylko )
+            if (this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 || IndexJ == 0) {
+                break;
+            }
+            //nie ma nic w górę ale jest w lewo
+            else if (this.gameboard[IndexI - 1][IndexJ].status == 4 || direction == 0 || IndexI == 0 && this.gameboard[IndexI][IndexJ - 1].status != 4 && IndexJ != 0) {
+                IndexJ -= 1;
+            }
+            else if (this.gameboard[IndexI - 1][IndexJ].status != 4 && direction == 1 && IndexI != 0 && this.gameboard[IndexI][IndexJ - 1].status == 4 || IndexJ == 0) {
+                IndexI -= 1;
+            }
+            else {
+                IndexI -= 1;
+                start2 = this.CheckForFirstLetterIndex(x = "" + IndexI + IndexJ, 0); //because its second use of this loop that means it goes left but ignores going up
+            }
+        }
+        return (output = "" + IndexI + ";" + IndexJ + start2);
+    };
+    Board.prototype.CheckForNewLetterIndex = function () {
         for (var i = 0; i < 15; i++) {
             for (var j = 0; j < 15; j++) {
                 if (this.gameboard[i][j].status == 2) {
