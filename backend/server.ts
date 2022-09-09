@@ -94,16 +94,15 @@ io.on("connection", function (socket) {
 	socket.on("checkboard", function (localgameboard,hand1, hand2, thisplayer, otherplayer) {
 		io.to(thisplayer).emit("waiting");
 		io.to(otherplayer).emit("check");
-		console.log("im here")
 		tempboards[roomID] = serverboards[roomID];	
 		tempboards[roomID].gameboard = localgameboard;
 		tempboards[roomID].player1.playerhand = hand1;
 		tempboards[roomID].player2.playerhand = hand2;
 		tempboards[roomID].player1.fillplayershand(tempboards[roomID].unusedtilestorage);
 		tempboards[roomID].player2.fillplayershand(tempboards[roomID].unusedtilestorage);
-		let firsttile : any = tempboards[roomID].CheckForNewLetterIndex();
-		console.log("im here2")
-		tempboards[roomID].PrintBoard()
+		tempboards[roomID].round += 1;
+		let firsttile : any = tempboards[roomID].CheckForNewLetterIndex();	
+				
 		if(firsttile)
 		{
 			console.log("first tile= " + firsttile.x + firsttile.y);
@@ -121,9 +120,12 @@ io.on("connection", function (socket) {
 				tempboards[roomID].CheckForWord(indexes[0], tempboards[roomID].player2);	
 			console.log(tempboards[roomID].player2.wordlist);
 			}
+			console.log("im here")
 			tempboards[roomID].SaveLettersInBoard();
+			console.log("now here")
 		}
-		io.to(roomID).emit("moveresponse", tempboards[roomID]);		
+		io.to(roomID).emit("moveresponse", tempboards[roomID]);
+				
 	});
 
 	socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
@@ -247,11 +249,11 @@ class Board {
 		let IndexJ:number = x.y;	
 		let score: number = 0;
 		let word: string = "";	
-		var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
-		var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
 		
-        while (true) {
-
+		
+        while(true) {
+			var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+			var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
             if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) //only horizontal
              {
                 word += this.gameboard[IndexI][IndexJ].type;
@@ -294,11 +296,12 @@ class Board {
 		let IndexI:number = x.x;
 		let IndexJ:number = x.y;
 		
-		var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status == 4;
-		var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status == 4;	
+		
 			
-			while(true)
+		while(true)
 			{
+				var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status === 4;
+				var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status === 4;	
 				if(conVertical && conHorizontal)
 					break;		
 				if(direction == 3)
@@ -320,8 +323,7 @@ class Board {
 				if(direction == 0) //only horizontal
 				{
 					if(conHorizontal) //no way way to move
-						break;	
-						
+						break;													
 					IndexJ -= 1;				
 				}			
 				
@@ -331,12 +333,12 @@ class Board {
 					var verticaloutput = this.CheckForFirstLetterIndex(x, 2);
 					return([horizontaloutput[0], verticaloutput[0]]);
 				}
-
+				
 				if(direction == 2) //only vertical
 				{
 					if(conVertical)
 						break;
-
+					console.log("cojes= " + IndexI + IndexJ)
 					IndexI -= 1;
 				}				
 			}

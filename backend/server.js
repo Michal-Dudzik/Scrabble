@@ -78,16 +78,14 @@ io.on("connection", function (socket) {
     socket.on("checkboard", function (localgameboard, hand1, hand2, thisplayer, otherplayer) {
         io.to(thisplayer).emit("waiting");
         io.to(otherplayer).emit("check");
-        console.log("im here");
         tempboards[roomID] = serverboards[roomID];
         tempboards[roomID].gameboard = localgameboard;
         tempboards[roomID].player1.playerhand = hand1;
         tempboards[roomID].player2.playerhand = hand2;
         tempboards[roomID].player1.fillplayershand(tempboards[roomID].unusedtilestorage);
         tempboards[roomID].player2.fillplayershand(tempboards[roomID].unusedtilestorage);
+        tempboards[roomID].round += 1;
         var firsttile = tempboards[roomID].CheckForNewLetterIndex();
-        console.log("im here2");
-        tempboards[roomID].PrintBoard();
         if (firsttile) {
             console.log("first tile= " + firsttile.x + firsttile.y);
             //3 bcs we dont know direction it needs to go 
@@ -101,7 +99,9 @@ io.on("connection", function (socket) {
                 tempboards[roomID].CheckForWord(indexes[0], tempboards[roomID].player2);
                 console.log(tempboards[roomID].player2.wordlist);
             }
+            console.log("im here");
             tempboards[roomID].SaveLettersInBoard();
+            console.log("now here");
         }
         io.to(roomID).emit("moveresponse", tempboards[roomID]);
     });
@@ -203,9 +203,9 @@ var Board = /** @class */ (function () {
         var IndexJ = x.y;
         var score = 0;
         var word = "";
-        var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
-        var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
         while (true) {
+            var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+            var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
             if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) //only horizontal
              {
                 word += this.gameboard[IndexI][IndexJ].type;
@@ -240,9 +240,9 @@ var Board = /** @class */ (function () {
     Board.prototype.CheckForFirstLetterIndex = function (x, direction) {
         var IndexI = x.x;
         var IndexJ = x.y;
-        var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status == 4;
-        var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status == 4;
         while (true) {
+            var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status === 4;
+            var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status === 4;
             if (conVertical && conHorizontal)
                 break;
             if (direction == 3) {
@@ -273,6 +273,7 @@ var Board = /** @class */ (function () {
              {
                 if (conVertical)
                     break;
+                console.log("cojes= " + IndexI + IndexJ);
                 IndexI -= 1;
             }
         }
