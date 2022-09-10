@@ -202,6 +202,7 @@ function updatehand(playerhand) {
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
+	document.getElementById("roomList").innerHTML = '';
 	var list = document.createElement("ol");
 	for (var i = 0; i < roomlist.length; i++) 
 	{
@@ -210,6 +211,18 @@ function updateroomlist(roomlist) {
 		list.appendChild(item);
 	}
 	document.getElementById("roomList").appendChild(list);
+}
+function updatewordlist(wordlist, number)
+{
+	document.getElementById("Player" + number + "Words").innerHTML = '';
+	var list = document.createElement("ol");
+	for (var i = 0; i < wordlist.length; i++) 
+	{
+		let item = document.createElement("li");
+		item.innerHTML = wordlist[i];
+		list.appendChild(item);
+	}
+	document.getElementById("Player" + number + "Words").appendChild(list);
 }
 
 //read data from client and save it in localboard.gameboard
@@ -376,13 +389,18 @@ const onEmitbtn = (socket) => (e) => {
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
 		document.querySelector("#Player1Score").innerHTML = board.player1.score;
 		document.querySelector("#Player2Score").innerHTML = board.player2.score
+		updatewordlist(board.player1.wordlist, 1);
+		updatewordlist(board.player2.wordlist, 2);
+		
 		curentRoom.innerHTML = board.id;
 		updateboard(localboard.gameboard);
 		
 		if (board.player1.id == socket.id) {
 			updatehand(board.player1.playerhand);
+			
 		} else if (board.player2.id == socket.id) {
 			updatehand(board.player2.playerhand);
+			
 		}
 	});
 	socket.on("check", () => {
