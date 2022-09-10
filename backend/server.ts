@@ -100,7 +100,7 @@ io.on("connection", function (socket) {
 		tempboards[roomID].player2.playerhand = hand2;
 		tempboards[roomID].player1.fillplayershand(tempboards[roomID].unusedtilestorage);
 		tempboards[roomID].player2.fillplayershand(tempboards[roomID].unusedtilestorage);
-		tempboards[roomID].round += 1;
+		tempboards[roomID].round ++;
 		let firsttile : any = tempboards[roomID].CheckForNewLetterIndex();	
 				
 		if(firsttile)
@@ -119,10 +119,8 @@ io.on("connection", function (socket) {
 			{
 				tempboards[roomID].CheckForWord(indexes[0], tempboards[roomID].player2);	
 			console.log(tempboards[roomID].player2.wordlist);
-			}
-			console.log("im here")
-			tempboards[roomID].SaveLettersInBoard();
-			console.log("now here")
+			}			
+			tempboards[roomID].SaveLettersInBoard();			
 		}
 		io.to(roomID).emit("moveresponse", tempboards[roomID]);
 				
@@ -139,6 +137,7 @@ io.on("connection", function (socket) {
 		console.log("acceptedWord");
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);		
 		io.to(otherplayer).emit("stopWaiting");
+		console.log(serverboards[roomID].round);
 		
 	});
 
@@ -179,6 +178,7 @@ class Board {
 	constructor(serverroomid: string) {
 		this.id = serverroomid;
 		this.gameover = false;
+		this.round = -1;
 	}
 	startgame() {
 		this.GenerateEmptyBoard();
@@ -238,6 +238,7 @@ class Board {
 			
 		}
 		if(word.length > 1){
+			console.log(score)
 			player.score += score;
 			player.wordlist.push(word);
 			}
