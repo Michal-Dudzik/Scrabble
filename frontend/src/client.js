@@ -73,7 +73,7 @@ function generateTile(i) {
 	tileBlock.id = "movedTile_" + i;
 	tileBlock.className = "tile";
 	tileBlock.setAttribute("letterInside", "");
-	tileBlock.setAttribute("draggable", true);
+	tileBlock.setAttribute("draggable", false);
 
 	const letterInBlock = document.createElement("span");
 	letterInBlock.id = "letter_" + i;
@@ -85,7 +85,7 @@ function generateTile(i) {
 
 	document.getElementById("tile_" + i).appendChild(tileBlock)
 	.appendChild(letterInBlock);
-	
+
 	setTimeout(function () {
 		document.getElementById("tile_" + i).appendChild(tileBlock)
 		.appendChild(letterScoreInBlock);
@@ -129,7 +129,9 @@ function drag() {
 				draggedItem.style.display = "flex";
 				draggedItem = null;
 			}, 0);
-			generateTile(movedTile);
+			
+			//checking if place for tile is empty before generating another one
+			if (document.getElementById("tile_" + movedTile).children.length <= 0) generateTile(movedTile);
 		});
 
 		for (let j = 0; j < dropzone.length; j++) {
@@ -150,7 +152,7 @@ function drag() {
 		}
 	}
 }
-drag();
+// drag();
 // Chat //
 const log = (text) => {
 	//log to console
@@ -196,9 +198,12 @@ function updatehand(playerhand) {
 
 		document
 			.getElementById("movedTile_" + i)
-			.setAttribute("letterInside", playerhand[i].id);
+			.setAttribute("letterInside", playerhand[i].id);		
 		}
-	// drag();
+
+		document.getElementById("movedTile_" + i).draggable = true;
+		
+	drag();
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
@@ -309,9 +314,15 @@ const onCreateGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
-	socket.emit("newroom", username, roomName);
-
-	initialScreen.toggle();
+	//if username or roomname is empty, do not emit
+	if (username == "" || roomName == "") {
+		document.getElementById("newGame").style.backgroundColor = "red";
+	}
+	else {
+		socket.emit("createroom", username, roomName);
+		initialScreen.toggle();
+	}
+	
 };
 //for test use, ps will stay here
 const onEmitbtn = (socket) => (e) => {
