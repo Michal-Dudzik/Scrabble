@@ -197,12 +197,18 @@ li {
 	left: 18%;
 }
 
+#titleandbutton {
+	width: fit-content;
+	display: flex;		
+}
 .login-right {
-	display: flex;
-	padding-left: 2rem;
+	/* display: flex; */
+	padding-left: 2.5rem;
+	/* padding-right: 2rem; */
 	padding-top: 1rem;
-	/* justify-content: space-evenly;
-	align-items: center; */
+	padding-bottom: 1rem;
+	justify-content:center;
+	align-items:flex-start;
 	background-color: #0d6efd;
 	color: white;
 	border-radius: 0 10% 10% 0;
@@ -214,6 +220,44 @@ li {
 .showRooms {
 	position: relative;
 	left: 17%;
+}
+
+#openRooms {
+	height: 300px;
+}
+
+#roombtn {
+	border-top-left-radius: 100%;
+	position: relative;
+	left:115px;
+	bottom:-48px;
+}
+#roomsGoHere{
+	height: 300px;
+	border:0px;
+	overflow: hidden;
+}
+
+#roomsGoHere::-webkit-scrollbar {
+	display: none; /* for Chrome, Safari, and Opera */
+}
+
+#roomsGoHere {
+	-ms-overflow-style: none; /* for Internet Explorer, Edge */
+	scrollbar-width: none; /* for Firefox */
+	overflow-y: scroll;
+}
+#roomsGoHere li{
+	display: flex;
+	justify-content: space-between;
+	background-color: #ffffff;
+	color:#656565;
+	width: 89%;
+	border: 0px;
+}
+#roomsGoHere li:hover{
+	background-color: #a2a2a2;
+	color: white;
 }
 
 /* BOARD */

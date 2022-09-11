@@ -8,13 +8,26 @@ var initialScreen = new bootstrap.Modal(
 initialScreen.toggle();
 
 //on click show list of open rooms and hide it when clicked again
-document.getElementById("roomList").addEventListener("click", () => {
+document.getElementById("roombtn").addEventListener("click", () => {
 	if (document.getElementById("roomList").classList.contains("showRooms")) {
 		document.getElementById("roomList").classList.remove("showRooms");
 	} else {
 		document.getElementById("roomList").classList.add("showRooms");
 	}
+	getRoomName();
+
 });
+
+//when clicked on a room in the list of rooms, add this name to roomname field
+function getRoomName(){
+	var room = document.getElementsByClassName("room")
+
+	for (let i = 0; i < room.length; i++) {
+		room[i].addEventListener("click", () => {
+			document.getElementById("roomName").value = room[i].textContent;
+		});
+	};
+}
 
 // Help modal //
 var helpModal = new bootstrap.Modal(document.getElementById("helpModal"), {});
@@ -73,7 +86,7 @@ function generateTile(i) {
 	tileBlock.id = "movedTile_" + i;
 	tileBlock.className = "tile";
 	tileBlock.setAttribute("letterInside", "");
-	tileBlock.setAttribute("draggable", false);
+	tileBlock.setAttribute("draggable", true);
 
 	const letterInBlock = document.createElement("span");
 	letterInBlock.id = "letter_" + i;
@@ -201,35 +214,20 @@ function updatehand(playerhand) {
 			.setAttribute("letterInside", playerhand[i].id);		
 		}
 
-		document.getElementById("movedTile_" + i).draggable = true;
+		
 		
 	drag();
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
-	document.getElementById("roomList").innerHTML = '';
-	var list = document.createElement("ol");
-	for (var i = 0; i < roomlist.length; i++) 
-	{
-		let item = document.createElement("li");
-		item.innerHTML = roomlist[i];
-		list.appendChild(item);
+	for (var i = 0; i < roomlist.length; i++) {
+		var room = document.createElement("li");
+		room.innerHTML = roomlist[i].name;
+		room.id = "room_" + i;
+		room.className = "room";
+		document.getElementById("roomsGoHere").appendChild(room);
 	}
-	document.getElementById("roomList").appendChild(list);
 }
-function updatewordlist(wordlist, number)
-{
-	document.getElementById("Player" + number + "Words").innerHTML = '';
-	var list = document.createElement("ol");
-	for (var i = 0; i < wordlist.length; i++) 
-	{
-		let item = document.createElement("li");
-		item.innerHTML = wordlist[i];
-		list.appendChild(item);
-	}
-	document.getElementById("Player" + number + "Words").appendChild(list);
-}
-
 //read data from client and save it in localboard.gameboard
 function readfromhtml(socket) {
 	for (var i = 0; i < 15; i++) {
@@ -316,9 +314,9 @@ const onJoinGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
-	socket.emit("joinroom", username, roomName);
-
-	initialScreen.toggle();
+		socket.emit("joinroom", username, roomName);
+		initialScreen.toggle();
+	
 };
 //when creating new room turn off initial modal, change displayed usernames and room name, emit this data to server
 const onCreateGame = (socket) => (e) => {
@@ -332,14 +330,9 @@ const onCreateGame = (socket) => (e) => {
 	const roomName = room.value;
 	room.value = "";
 
-	//if username or roomname is empty, do not emit
-	if (username == "" || roomName == "") {
-		document.getElementById("newGame").style.backgroundColor = "red";
-	}
-	else {
-		socket.emit("createroom", username, roomName);
+	
+		socket.emit("newroom", username, roomName);
 		initialScreen.toggle();
-	}
 	
 };
 //for test use, ps will stay here
@@ -377,6 +370,7 @@ const onEmitbtn = (socket) => (e) => {
 	const skip = document.getElementById("skip");
 	const exit = document.getElementById("exit");
 	const emitbtn = document.getElementById("emitbtn");
+	const refreshbtn = document.getElementById("refreshRooms");
 
 	//connect to server
 	const socket = io();
@@ -398,20 +392,15 @@ const onEmitbtn = (socket) => (e) => {
 		PrintHand(localboard.player2.playerhand);
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
-		document.querySelector("#Player1Score").innerHTML = board.player1.score;
-		document.querySelector("#Player2Score").innerHTML = board.player2.score
-		updatewordlist(board.player1.wordlist, 1);
-		updatewordlist(board.player2.wordlist, 2);
-		
 		curentRoom.innerHTML = board.id;
 		updateboard(localboard.gameboard);
-		
+		console.log(board.player1.id);
+		console.log(board.player2.id);
+		console.log(socket.id);
 		if (board.player1.id == socket.id) {
 			updatehand(board.player1.playerhand);
-			
 		} else if (board.player2.id == socket.id) {
 			updatehand(board.player2.playerhand);
-			
 		}
 	});
 	socket.on("check", () => {
@@ -433,6 +422,8 @@ const onEmitbtn = (socket) => (e) => {
 	newGameButton.addEventListener("click", onCreateGame(socket));
 
 	emitbtn.addEventListener("click", onEmitbtn(socket));
+
+	refreshbtn.addEventListener("click", updateroomlist(socket));
 
 	acceptWord.addEventListener("click", onConfirm(socket));
 

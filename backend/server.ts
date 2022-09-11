@@ -430,8 +430,8 @@ class Board {
 	filltilestorage() {
 		//create an array of all letters with their values, state, id
 		this.unusedtilestorage.push(
-			new LetterTile(0, 0, "Blank", 0),
-			new LetterTile(1, 0, "Blank", 0),
+			new LetterTile(0, 0, "-", 0),
+			new LetterTile(1, 0, "-", 0),
 			new LetterTile(2, 1, "A", 0),
 			new LetterTile(3, 1, "A", 0),
 			new LetterTile(4, 1, "A", 0),

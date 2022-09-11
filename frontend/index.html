@@ -423,7 +423,7 @@
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-7 login-left">
-									<form class="needs-validation" novalidate>
+									<form >
 										<div class="form-floating mb-3">
 											<input type="text" class="form-control" id="username"  required/>
 											<label for="username">Username</label>
@@ -446,13 +446,26 @@
 											<button id="newGame" type="submit" class="btn btn-primary">
 												Create new game
 											</button>
+											<span id="roombtn"  class="btn btn-primary">
+												<i class="fa fa-home"></i>
+											</span>
 										</div>
 									</form>
 								</div>
 
-								<div class="col-5 login-right noselect">
-									<h4>Active rooms</h4>
-									<div id="roomList"> </div>
+								<div class="col-5 login-right noselect" id="roomList">
+									<div id="titleandbutton">
+										<h3>Rooms</h3>
+										<button class="btn btn-primary" id="refreshRooms">
+											<i class="fa-solid fa-refresh"></i>
+										</button>
+									</div>
+									
+									<div id="openRooms">
+										<ul id="roomsGoHere">
+											
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
