@@ -423,29 +423,24 @@
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-7 login-left">
-									<form >
-										<div class="form-floating mb-3">
-											<input type="text" class="form-control" id="username"  required/>
+									<form class="needs-validation" novalidate>
+										<div class="form-floating mb-3 has-validation">
+											<input type="text" class="form-control" id="username" required>
 											<label for="username">Username</label>
 											<div class="invalid-feedback">
-												Please choose a username.
+												Please enter a username.
 											  </div>
 										</div>
-										<div class="form-floating mb-3">
-											<input type="text" class="form-control" id="roomName"  required/>
+										<div class="form-floating mb-3 has-validation">
+											<input type="text" class="form-control" id="roomName" required>
 											<label for="roomName">Room</label>
 											<div class="invalid-feedback">
 												Please choose a room.
 											  </div>
 										</div>
 										<div class="modal-footer col-md-12">
-											<button id="joinGame" type="submit" class="btn btn-primary">
-												Join
-											</button>
-
-											<button id="newGame" type="submit" class="btn btn-primary">
-												Create new game
-											</button>
+											<button class="btn btn-primary" id="joinGame">Join game</button>
+											<button class="btn btn-primary" id="newGame">Create new game</button>
 											<span id="roombtn"  class="btn btn-primary">
 												<i class="fa fa-home"></i>
 											</span>

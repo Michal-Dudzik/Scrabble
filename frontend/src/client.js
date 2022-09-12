@@ -1,5 +1,26 @@
 var localboard;
 
+//room username validation
+(function () {
+	'use strict'
+  
+	// Fetch all the forms we want to apply custom Bootstrap validation styles to
+	var forms = document.querySelectorAll('.needs-validation')
+  
+	// Loop over them and prevent submission
+	Array.prototype.slice.call(forms)
+	  .forEach(function (form) {
+		form.addEventListener('submit', function (event) {
+		  if (!form.checkValidity()) {
+			event.preventDefault()
+			event.stopPropagation()
+		  }
+  
+		  form.classList.add('was-validated')
+		}, false)
+	  })
+  })()
+
 // Initial screen modal //
 var initialScreen = new bootstrap.Modal(
 	document.getElementById("initialScreen"),
@@ -308,14 +329,31 @@ const onJoinGame = (socket) => (e) => {
 
 	const user = document.querySelector("#username");
 	const username = user.value;
-	user.value = "";
+	// user.value = "";
 
 	const room = document.querySelector("#roomName");
 	const roomName = room.value;
-	room.value = "";
+	// room.value = "";
 
+	//checking if input fields are empty
+	if (user.value.length == 0 && room.value.length == 0) {
+		user.classList.add("is-invalid");
+		room.classList.add("is-invalid");
+	}
+	 if (user.value.length == 0 && room.value.length > 0) {
+		user.classList.add("is-invalid");
+		room.classList.remove("is-invalid");
+		room.classList.add("is-valid");
+	}
+	else if (user.value.length > 0 && room.value.length == 0) {
+		user.classList.remove("is-invalid");
+		user.classList.add("is-valid");
+		room.classList.add("is-invalid");
+	}
+	else if (user.value.length > 0 && room.value.length > 0) {	
 		socket.emit("joinroom", username, roomName);
 		initialScreen.toggle();
+	}
 	
 };
 //when creating new room turn off initial modal, change displayed usernames and room name, emit this data to server
@@ -324,15 +362,32 @@ const onCreateGame = (socket) => (e) => {
 
 	const user = document.querySelector("#username");
 	const username = user.value;
-	user.value = "";
+	// user.value = "";
 
 	const room = document.querySelector("#roomName");
 	const roomName = room.value;
-	room.value = "";
+	// room.value = "";
 
-	
+	//checking if input fields are empty
+	if (user.value.length == 0 && room.value.length == 0) {
+		user.classList.add("is-invalid");
+		room.classList.add("is-invalid");
+	}
+	 if (user.value.length == 0 && room.value.length > 0) {
+		user.classList.add("is-invalid");
+		room.classList.remove("is-invalid");
+		room.classList.add("is-valid");
+	}
+	else if (user.value.length > 0 && room.value.length == 0) {
+		user.classList.remove("is-invalid");
+		user.classList.add("is-valid");
+		room.classList.add("is-invalid");
+	}
+	else if (user.value.length > 0 && room.value.length > 0) {	
 		socket.emit("newroom", username, roomName);
 		initialScreen.toggle();
+	}
+
 	
 };
 //for test use, ps will stay here

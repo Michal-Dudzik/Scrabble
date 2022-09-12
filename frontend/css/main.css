@@ -120,6 +120,13 @@ li {
 	transform: skewX(-10deg);
 }
 
+.s_bode h3 {
+	color: white;
+	font-size: 1.5rem;
+	font-weight: 500;
+	margin: 0;
+}
+
 .left_section {
 	flex-grow: 2;
 	display: flex;
