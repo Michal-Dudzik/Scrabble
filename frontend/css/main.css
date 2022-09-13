@@ -21,7 +21,7 @@ input {
 	padding: 0 5px;
 }
 
-ul {
+.controls-wrapper ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -29,7 +29,7 @@ ul {
 	overflow-y: scroll;
 }
 
-li {
+.controls-wrapper li {
 	padding: 10px 10px 10px 10px;
 	margin: 8px;
 	width: fit-content;
@@ -87,9 +87,6 @@ li {
 	border-radius: 20px;
 	overflow: hidden;
 	border: 1px solid lightgrey;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
-	overflow-y: scroll;
 }
 
 .s_bode::-webkit-scrollbar {
@@ -120,9 +117,31 @@ li {
 	transform: skewX(-10deg);
 }
 
-.s_bode h3 {
+.words li {
+	margin: 8px;
+	width: fit-content;
+	font-weight: bolder;
+	color: #ffffff;
+}
+
+.words ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.words {
+	-ms-overflow-style: none; /* for Internet Explorer, Edge */
+	scrollbar-width: none; /* for Firefox */
+	overflow-y: scroll;
+}
+
+.words::-webkit-scrollbar {
+	display: none;
+}
+
+.s_bode h1 {
 	color: white;
-	font-size: 1.5rem;
 	font-weight: 500;
 	margin: 0;
 }
@@ -206,7 +225,7 @@ li {
 
 #titleandbutton {
 	width: fit-content;
-	display: flex;		
+	display: flex;
 }
 .login-right {
 	/* display: flex; */
@@ -214,8 +233,8 @@ li {
 	/* padding-right: 2rem; */
 	padding-top: 1rem;
 	padding-bottom: 1rem;
-	justify-content:center;
-	align-items:flex-start;
+	justify-content: center;
+	align-items: flex-start;
 	background-color: #0d6efd;
 	color: white;
 	border-radius: 0 10% 10% 0;
@@ -236,12 +255,12 @@ li {
 #roombtn {
 	border-top-left-radius: 100%;
 	position: relative;
-	left:115px;
-	bottom:-48px;
+	left: 115px;
+	bottom: -48px;
 }
-#roomsGoHere{
+#roomsGoHere {
 	height: 300px;
-	border:0px;
+	border: 0px;
 	overflow: hidden;
 }
 
@@ -254,15 +273,15 @@ li {
 	scrollbar-width: none; /* for Firefox */
 	overflow-y: scroll;
 }
-#roomsGoHere li{
+#roomsGoHere li {
 	display: flex;
 	justify-content: space-between;
 	background-color: #ffffff;
-	color:#656565;
+	color: #656565;
 	width: 89%;
 	border: 0px;
 }
-#roomsGoHere li:hover{
+#roomsGoHere li:hover {
 	background-color: #a2a2a2;
 	color: white;
 }

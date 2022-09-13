@@ -2,24 +2,27 @@ var localboard;
 
 //room username validation
 (function () {
-	'use strict'
-  
+	"use strict";
+
 	// Fetch all the forms we want to apply custom Bootstrap validation styles to
-	var forms = document.querySelectorAll('.needs-validation')
-  
+	var forms = document.querySelectorAll(".needs-validation");
+
 	// Loop over them and prevent submission
-	Array.prototype.slice.call(forms)
-	  .forEach(function (form) {
-		form.addEventListener('submit', function (event) {
-		  if (!form.checkValidity()) {
-			event.preventDefault()
-			event.stopPropagation()
-		  }
-  
-		  form.classList.add('was-validated')
-		}, false)
-	  })
-  })()
+	Array.prototype.slice.call(forms).forEach(function (form) {
+		form.addEventListener(
+			"submit",
+			function (event) {
+				if (!form.checkValidity()) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+
+				form.classList.add("was-validated");
+			},
+			false
+		);
+	});
+})();
 
 // Initial screen modal //
 var initialScreen = new bootstrap.Modal(
@@ -36,18 +39,17 @@ document.getElementById("roombtn").addEventListener("click", () => {
 		document.getElementById("roomList").classList.add("showRooms");
 	}
 	getRoomName();
-
 });
 
 //when clicked on a room in the list of rooms, add this name to roomname field
-function getRoomName(){
-	var room = document.getElementsByClassName("room")
+function getRoomName() {
+	var room = document.getElementsByClassName("room");
 
 	for (let i = 0; i < room.length; i++) {
 		room[i].addEventListener("click", () => {
 			document.getElementById("roomName").value = room[i].textContent;
 		});
-	};
+	}
 }
 
 // Help modal //
@@ -117,15 +119,17 @@ function generateTile(i) {
 	letterScoreInBlock.id = "letter_score_" + i;
 	letterScoreInBlock.className = "letter_weight";
 
-	document.getElementById("tile_" + i).appendChild(tileBlock)
-	.appendChild(letterInBlock);
+	document
+		.getElementById("tile_" + i)
+		.appendChild(tileBlock)
+		.appendChild(letterInBlock);
 
 	setTimeout(function () {
-		document.getElementById("tile_" + i).appendChild(tileBlock)
-		.appendChild(letterScoreInBlock);
+		document
+			.getElementById("tile_" + i)
+			.appendChild(tileBlock)
+			.appendChild(letterScoreInBlock);
 	}, 0);
-	
-
 }
 
 var movedTile = 0;
@@ -147,7 +151,6 @@ function drag() {
 			setTimeout(function () {
 				item.style.display = "none";
 			}, 0);
-			
 		});
 
 		item.addEventListener("dragend", function () {
@@ -158,14 +161,14 @@ function drag() {
 			const tileId = item.getAttribute("letterInside");
 			console.log("tileId: " + tileId);
 
-			
 			setTimeout(function () {
 				draggedItem.style.display = "flex";
 				draggedItem = null;
 			}, 0);
-			
-			//checking if place for tile is empty before generating another one
-			if (document.getElementById("tile_" + movedTile).children.length <= 0) generateTile(movedTile);
+
+			// //checking if place for tile is empty before generating another one
+			// if (document.getElementById("tile_" + movedTile).children.length <= 0)
+			// 	generateTile(movedTile);
 		});
 
 		for (let j = 0; j < dropzone.length; j++) {
@@ -218,6 +221,19 @@ function updateboard(localgameboard) {
 			} else {
 				document.getElementById(i + "-" + j).innerHTML =
 					localgameboard[i][j].type;
+
+				// const tileBlock = document.createElement("div");
+				// tileBlock.className = "tile";
+				// tileBlock.setAttribute("draggable", false);
+
+				// const letterInBlock = document.createElement("span");
+				// letterInBlock.className = "letter";
+				// letterInBlock.innerHTML = localgameboard[i][j].type;
+
+				// document
+				// 	.getElementById(i + "-" + j)
+				// 	.appendChild(tileBlock)
+				// 	.appendChild(letterInBlock);
 			}
 		}
 	}
@@ -232,22 +248,31 @@ function updatehand(playerhand) {
 
 		document
 			.getElementById("movedTile_" + i)
-			.setAttribute("letterInside", playerhand[i].id);		
-		}
+			.setAttribute("letterInside", playerhand[i].id);
+	}
 
-		
-		
 	drag();
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
 	for (var i = 0; i < roomlist.length; i++) {
 		var room = document.createElement("li");
-		room.innerHTML = roomlist[i].name;
+		room.innerHTML = roomlist[i];
 		room.id = "room_" + i;
 		room.className = "room";
 		document.getElementById("roomsGoHere").appendChild(room);
 	}
+}
+//show words used by the players
+function updatewordlist(wordlist, number) {
+	document.getElementById("Player" + number + "Words").innerHTML = "";
+	var list = document.createElement("ul");
+	for (var i = 0; i < wordlist.length; i++) {
+		let item = document.createElement("li");
+		item.innerHTML = wordlist[i];
+		list.appendChild(item);
+	}
+	document.getElementById("Player" + number + "Words").appendChild(list);
 }
 //read data from client and save it in localboard.gameboard
 function readfromhtml(socket) {
@@ -340,21 +365,18 @@ const onJoinGame = (socket) => (e) => {
 		user.classList.add("is-invalid");
 		room.classList.add("is-invalid");
 	}
-	 if (user.value.length == 0 && room.value.length > 0) {
+	if (user.value.length == 0 && room.value.length > 0) {
 		user.classList.add("is-invalid");
 		room.classList.remove("is-invalid");
 		room.classList.add("is-valid");
-	}
-	else if (user.value.length > 0 && room.value.length == 0) {
+	} else if (user.value.length > 0 && room.value.length == 0) {
 		user.classList.remove("is-invalid");
 		user.classList.add("is-valid");
 		room.classList.add("is-invalid");
-	}
-	else if (user.value.length > 0 && room.value.length > 0) {	
+	} else if (user.value.length > 0 && room.value.length > 0) {
 		socket.emit("joinroom", username, roomName);
 		initialScreen.toggle();
 	}
-	
 };
 //when creating new room turn off initial modal, change displayed usernames and room name, emit this data to server
 const onCreateGame = (socket) => (e) => {
@@ -373,22 +395,18 @@ const onCreateGame = (socket) => (e) => {
 		user.classList.add("is-invalid");
 		room.classList.add("is-invalid");
 	}
-	 if (user.value.length == 0 && room.value.length > 0) {
+	if (user.value.length == 0 && room.value.length > 0) {
 		user.classList.add("is-invalid");
 		room.classList.remove("is-invalid");
 		room.classList.add("is-valid");
-	}
-	else if (user.value.length > 0 && room.value.length == 0) {
+	} else if (user.value.length > 0 && room.value.length == 0) {
 		user.classList.remove("is-invalid");
 		user.classList.add("is-valid");
 		room.classList.add("is-invalid");
-	}
-	else if (user.value.length > 0 && room.value.length > 0) {	
+	} else if (user.value.length > 0 && room.value.length > 0) {
 		socket.emit("newroom", username, roomName);
 		initialScreen.toggle();
 	}
-
-	
 };
 //for test use, ps will stay here
 const onEmitbtn = (socket) => (e) => {
@@ -447,11 +465,12 @@ const onEmitbtn = (socket) => (e) => {
 		PrintHand(localboard.player2.playerhand);
 		document.querySelector("#Player1").innerHTML = board.player1.nickname;
 		document.querySelector("#Player2").innerHTML = board.player2.nickname;
+		document.querySelector("#Player1Score").innerHTML = board.player1.score;
+		document.querySelector("#Player2Score").innerHTML = board.player2.score;
+		updatewordlist(board.player1.wordlist, 1);
+		updatewordlist(board.player2.wordlist, 2);
 		curentRoom.innerHTML = board.id;
 		updateboard(localboard.gameboard);
-		console.log(board.player1.id);
-		console.log(board.player2.id);
-		console.log(socket.id);
 		if (board.player1.id == socket.id) {
 			updatehand(board.player1.playerhand);
 		} else if (board.player2.id == socket.id) {

@@ -48,16 +48,19 @@
 						Room
 					</h2>
 					<div class="left_section">
-						<h3 id="Player1Score">0</h3>
+						<h1 id="Player1Score">0</h1>
 						<h2 id="Player1">Player 1</h2>
-						<div id="Player1Words"></div>
+						<div id="Player1Words" class="words">
+							<ul></ul>
+						</div>
 					</div>
-					
 
 					<div class="right_section">
-						<h3 id="Player2Score">0</h3>
+						<h1 id="Player2Score">0</h1>
 						<h2 id="Player2">Player 2</h2>
-						<div id="Player2Words"></div>
+						<div id="Player2Words" class="words">
+							<ul></ul>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -425,23 +428,35 @@
 								<div class="col-7 login-left">
 									<form class="needs-validation" novalidate>
 										<div class="form-floating mb-3 has-validation">
-											<input type="text" class="form-control" id="username" required>
+											<input
+												type="text"
+												class="form-control"
+												id="username"
+												required
+											/>
 											<label for="username">Username</label>
 											<div class="invalid-feedback">
 												Please enter a username.
-											  </div>
+											</div>
 										</div>
 										<div class="form-floating mb-3 has-validation">
-											<input type="text" class="form-control" id="roomName" required>
+											<input
+												type="text"
+												class="form-control"
+												id="roomName"
+												required
+											/>
 											<label for="roomName">Room</label>
-											<div class="invalid-feedback">
-												Please choose a room.
-											  </div>
+											<div class="invalid-feedback">Please choose a room.</div>
 										</div>
 										<div class="modal-footer col-md-12">
-											<button class="btn btn-primary" id="joinGame">Join game</button>
-											<button class="btn btn-primary" id="newGame">Create new game</button>
-											<span id="roombtn"  class="btn btn-primary">
+											<button class="btn btn-primary" id="joinGame">
+												Join game
+											</button>
+											<button class="btn btn-primary" id="newGame">
+												Create new game
+											</button>
+											<span id="roombtn" class="btn btn-primary">
 												<i class="fa fa-home"></i>
 											</span>
 										</div>
@@ -455,11 +470,9 @@
 											<i class="fa-solid fa-refresh"></i>
 										</button>
 									</div>
-									
+
 									<div id="openRooms">
-										<ul id="roomsGoHere">
-											
-										</ul>
+										<ul id="roomsGoHere"></ul>
 									</div>
 								</div>
 							</div>
