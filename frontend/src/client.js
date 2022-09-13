@@ -260,6 +260,7 @@ function updateroomlist(roomlist) {
 		room.innerHTML = roomlist[i];
 		room.id = "room_" + i;
 		room.className = "room";
+
 		document.getElementById("roomsGoHere").appendChild(room);
 	}
 }
@@ -497,7 +498,11 @@ const onEmitbtn = (socket) => (e) => {
 
 	emitbtn.addEventListener("click", onEmitbtn(socket));
 
-	refreshbtn.addEventListener("click", updateroomlist(socket));
+	refreshbtn.addEventListener("click", () => {
+		const existingRooms = document.getElementById("roomsGoHere");
+		existingRooms.innerHTML = "";
+		socket.emit("refreshRooms");
+	});
 
 	acceptWord.addEventListener("click", onConfirm(socket));
 

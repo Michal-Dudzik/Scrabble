@@ -10,9 +10,6 @@ const io = socketio(server);
 
 // ======== SERVER STUFF ========
 
-// potrzbne to?
-let clientNo = 0;
-
 let roomID;
 let serverplayers: Player[] = [];
 let serverboards: Board[] = [];
@@ -147,6 +144,11 @@ io.on("connection", function (socket) {
 		console.log(serverboards[roomID].round);
 	});
 
+	//sent current room list to client
+	socket.on("refreshRooms", function () {
+		io.emit("roomlist", boardnames);
+	});
+
 	socket.on("exit", function (roomName, username) {
 		console.log("Current players: " + serverplayers);
 		serverboards.filter(function (e) {
@@ -258,9 +260,8 @@ class Board {
 	}
 	public CheckForWord(
 		x: coordiantes,
-		player: Player
-	) //checks for words starting from given coordinates
-	{
+		player: Player //checks for words starting from given coordinates
+	) {
 		let IndexI: number = x.x;
 		let IndexJ: number = x.y;
 		let score: number = 0;
@@ -305,12 +306,8 @@ class Board {
 	public CheckForFirstLetterIndex(
 		x: coordiantes,
 		direction: number
-	): coordiantes[] //this function finds index of firstletter of word (or two words than output contains 2 coordinates )
-	// initialize with 0 to find only horizontal words
-	// initialize with 1 that means its first use of this function and it will check if leters are in vertical and horizontal alignment
-	// initialize with 2 to find only vertical words
-	// initialize with 3 when we dont know directions
-	{
+	): coordiantes[] {
+		// initialize with 3 when we dont know directions // initialize with 2 to find only vertical words // initialize with 1 that means its first use of this function and it will check if leters are in vertical and horizontal alignment // initialize with 0 to find only horizontal words //this function finds index of firstletter of word (or two words than output contains 2 coordinates )
 		let IndexI: number = x.x;
 		let IndexJ: number = x.y;
 
@@ -354,7 +351,8 @@ class Board {
 		}
 		return [new coordiantes(IndexI, IndexJ)];
 	}
-	public CheckForNewLetterIndex() { // this method finds index of letter with lowest index that was newly added to board
+	public CheckForNewLetterIndex() {
+		// this method finds index of letter with lowest index that was newly added to board
 		for (var i = 0; i < 15; i++) {
 			for (var j = 0; j < 15; j++) {
 				if (this.gameboard[i][j].status == 2) {
@@ -363,7 +361,8 @@ class Board {
 			}
 		}
 	}
-	public SaveLettersInBoard() { //changes status of new letters to 3
+	public SaveLettersInBoard() {
+		//changes status of new letters to 3
 		for (var i = 0; i < 15; i++) {
 			for (var j = 0; j < 15; j++) {
 				if (this.gameboard[i][j].status == 2) {
