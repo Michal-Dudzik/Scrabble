@@ -20,9 +20,7 @@ let tempboards: Board[] = [];
 let boardnames: string[] = [];
 io.on("connection", function (socket) {
 	var socc = socket;
-	
 
-	
 	io.emit("roomlist", boardnames);
 	socket.emit("message", "Welcome to the game!");
 	var playerid = socket.id;
@@ -33,7 +31,6 @@ io.on("connection", function (socket) {
 		return io.emit("message", text);
 	});
 
-	
 	//creating new room
 	socket.on("newroom", function (username, roomName) {
 		if (serverboards.some((e) => e.id === roomName)) {
@@ -46,7 +43,7 @@ io.on("connection", function (socket) {
 			console.log(username + " joined room: " + roomID);
 			(serverboards[roomID] = new Board(roomID)),
 				//add player to list of players & board
-			(serverplayers[socc.id] = new Player(socc.id));
+				(serverplayers[socc.id] = new Player(socc.id));
 			serverboards[roomID].player1 = serverplayers[socc.id];
 			serverboards[roomID].player1.nickname = username;
 			boardnames.push(roomID);
@@ -75,7 +72,6 @@ io.on("connection", function (socket) {
 				roomID
 		);
 		serverboards[roomID].startgame();
-		console.log("jebać ulane kurwy");
 		if (
 			serverboards[roomID].player2.nickname != "aezkami" &&
 			serverboards[roomID].player1.nickname != "aezkami"
@@ -91,40 +87,51 @@ io.on("connection", function (socket) {
 		serverboards[roomID].round++;
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 	});
-	socket.on("checkboard", function (localgameboard,hand1, hand2, thisplayer, otherplayer) {
-		io.to(thisplayer).emit("waiting");
-		io.to(otherplayer).emit("check");
-		tempboards[roomID] = serverboards[roomID];	
-		tempboards[roomID].gameboard = localgameboard;
-		tempboards[roomID].player1.playerhand = hand1;
-		tempboards[roomID].player2.playerhand = hand2;
-		tempboards[roomID].player1.fillplayershand(tempboards[roomID].unusedtilestorage);
-		tempboards[roomID].player2.fillplayershand(tempboards[roomID].unusedtilestorage);
-		tempboards[roomID].round ++;
-		let firsttile : any = tempboards[roomID].CheckForNewLetterIndex();	
-				
-		if(firsttile)
-		{
-			console.log("first tile= " + firsttile.x + firsttile.y);
-			//3 bcs we dont know direction it needs to go 
-			let indexes: coordiantes[] = tempboards[roomID].CheckForFirstLetterIndex(firsttile, 3) //TU SIĘ WYWALA PRZY 2 RUNDZIE
-			console.log("indexes= " + indexes[0].x + indexes[0].y)
-			
-			if(thisplayer == tempboards[roomID].player1.id)
-			{
-				tempboards[roomID].CheckForWord(indexes[0], tempboards[roomID].player1);	
-			console.log(tempboards[roomID].player1.wordlist);
+	socket.on(
+		"checkboard",
+		function (localgameboard, hand1, hand2, thisplayer, otherplayer) {
+			io.to(thisplayer).emit("waiting");
+			io.to(otherplayer).emit("check");
+			tempboards[roomID] = serverboards[roomID];
+			tempboards[roomID].gameboard = localgameboard;
+			tempboards[roomID].player1.playerhand = hand1;
+			tempboards[roomID].player2.playerhand = hand2;
+			tempboards[roomID].player1.fillplayershand(
+				tempboards[roomID].unusedtilestorage
+			);
+			tempboards[roomID].player2.fillplayershand(
+				tempboards[roomID].unusedtilestorage
+			);
+			tempboards[roomID].round++;
+			let firsttile: any = tempboards[roomID].CheckForNewLetterIndex();
+
+			if (firsttile) {
+				console.log("first tile= " + firsttile.x + firsttile.y);
+				//3 bcs we dont know direction it needs to go
+				let indexes: coordiantes[] = tempboards[
+					roomID
+				].CheckForFirstLetterIndex(firsttile, 3); //TU SIĘ WYWALA PRZY 2 RUNDZIE
+				console.log("indexes= " + indexes[0].x + indexes[0].y);
+
+				if (thisplayer == tempboards[roomID].player1.id) {
+					tempboards[roomID].CheckForWord(
+						indexes[0],
+						tempboards[roomID].player1
+					);
+					console.log(tempboards[roomID].player1.wordlist);
+				}
+				if (thisplayer == tempboards[roomID].player2.id) {
+					tempboards[roomID].CheckForWord(
+						indexes[0],
+						tempboards[roomID].player2
+					);
+					console.log(tempboards[roomID].player2.wordlist);
+				}
+				tempboards[roomID].SaveLettersInBoard();
 			}
-			if(thisplayer == tempboards[roomID].player2.id)
-			{
-				tempboards[roomID].CheckForWord(indexes[0], tempboards[roomID].player2);	
-			console.log(tempboards[roomID].player2.wordlist);
-			}			
-			tempboards[roomID].SaveLettersInBoard();			
+			io.to(roomID).emit("moveresponse", tempboards[roomID]);
 		}
-		io.to(roomID).emit("moveresponse", tempboards[roomID]);
-				
-	});
+	);
 
 	socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
 		//odczytaj słowo
@@ -135,10 +142,9 @@ io.on("connection", function (socket) {
 		//zaaktualizuj board na sv
 		serverboards[roomID] = tempboards[roomID];
 		console.log("acceptedWord");
-		io.to(roomID).emit("moveresponse", serverboards[roomID]);		
+		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 		io.to(otherplayer).emit("stopWaiting");
 		console.log(serverboards[roomID].round);
-		
 	});
 
 	socket.on("exit", function (roomName, username) {
@@ -161,10 +167,7 @@ server.listen(8080, function () {
 	console.log("Server is running on port 8080");
 });
 
-
-
 //======== Game Models ========
-
 
 class Board {
 	//this class may be split in to few different classes but only if we have time for that
@@ -186,193 +189,190 @@ class Board {
 		this.player1.fillplayershand(this.unusedtilestorage);
 		this.player2.fillplayershand(this.unusedtilestorage);
 	}
-	public ChangeStatusTo3(IndexI, IndexJ)
-	{
+	public ChangeStatusTo3(IndexI, IndexJ) {
 		let newtile: any = this.gameboard[IndexI][IndexJ];
-		newtile.status = 3;	
+		newtile.status = 3;
 		this.gameboard[IndexI][IndexJ] = newtile;
 	}
-	public CheckForWordVertical(x:coordiantes, player: Player) //TO DO
-	{		
-
-		let IndexI:number = x.x;
-		let IndexJ:number = x.y;	
+	public CheckForWordVertical(
+		x: coordiantes,
+		player: Player //TO DO
+	) {
+		let IndexI: number = x.x;
+		let IndexJ: number = x.y;
 		let score: number = 0;
-		let word: string = "";	
-		var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
-		var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
+		let word: string = "";
+		var conVertical =
+			IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+		var conHorizontal =
+			IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
 
-		while(true)
-		{
-			if(conVertical && (conHorizontal || (IndexI == x.x && IndexJ == x.y))) //no way to move
-			{
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;							
-				this.ChangeStatusTo3(IndexI,IndexJ);
-				break;
-			}			
-			if(conVertical || this.gameboard[IndexI][IndexJ].status == 2 && IndexI != x.x && IndexJ != x.y)//only horizontal
-			{
+		while (true) {
+			if (conVertical && (conHorizontal || (IndexI == x.x && IndexJ == x.y))) {
+				//no way to move
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				this.ChangeStatusTo3(IndexI,IndexJ);
-				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),0)[0], player);
+				this.ChangeStatusTo3(IndexI, IndexJ);
 				break;
 			}
-			if(conHorizontal || this.gameboard[IndexI][IndexJ].status == 3 )//only vertical
-			{
+			if (
+				conVertical ||
+				(this.gameboard[IndexI][IndexJ].status == 2 &&
+					IndexI != x.x &&
+					IndexJ != x.y)
+			) {
+				//only horizontal
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				this.ChangeStatusTo3(IndexI,IndexJ);
+				this.ChangeStatusTo3(IndexI, IndexJ);
+				this.CheckForWord(
+					this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 0)[0],
+					player
+				);
+				break;
+			}
+			if (conHorizontal || this.gameboard[IndexI][IndexJ].status == 3) {
+				//only vertical
+				word += this.gameboard[IndexI][IndexJ].type;
+				score += this.gameboard[IndexI][IndexJ].value;
+				this.ChangeStatusTo3(IndexI, IndexJ);
 				IndexI += 1;
 				break;
-			}
-			else //horizontal and vertical
-			{
+			} //horizontal and vertical
+			else {
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
-				this.ChangeStatusTo3(IndexI,IndexJ);
-				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI,IndexJ),0)[0], player);				
+				this.ChangeStatusTo3(IndexI, IndexJ);
+				this.CheckForWord(
+					this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 0)[0],
+					player
+				);
 				IndexI += 1;
 			}
-			
 		}
-		if(word.length > 1){
-			console.log(score)
+		if (word.length > 1) {
+			console.log(score);
 			player.score += score;
 			player.wordlist.push(word);
-			}
+		}
 	}
-	public CheckForWord(x:coordiantes, player: Player)
-	 //checks for words starting from given coordinates
-	{	
-		let IndexI:number = x.x;
-		let IndexJ:number = x.y;	
+	public CheckForWord(
+		x: coordiantes,
+		player: Player
+	) //checks for words starting from given coordinates
+	{
+		let IndexI: number = x.x;
+		let IndexJ: number = x.y;
 		let score: number = 0;
-		let word: string = "";	
-		
-		
-        while(true) {
-			var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
-			var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
-            if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) //only horizontal
-             {
-                word += this.gameboard[IndexI][IndexJ].type;
-                score += this.gameboard[IndexI][IndexJ].value;
-                console.log(word);
-                IndexJ += 1;
-            }
-            else if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) //only vertical
-            {
-                word += this.gameboard[IndexI][IndexJ].type;
-                score += this.gameboard[IndexI][IndexJ].value;
-                console.log(word);
-                IndexI += 1;
-            }
-            else if (!conHorizontal && !conVertical)//horizontal and vertical
-            {
-                word += this.gameboard[IndexI][IndexJ].type;
-                score += this.gameboard[IndexI][IndexJ].value;
-                console.log(word);
-                this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0], player);
-                IndexJ += 1;
-            }
-            else {
-                break;
-            }
-        }
-        if (word.length > 1) {
-            player.score += score;
-            player.wordlist.push(word);
-        }
+		let word: string = "";
 
+		while (true) {
+			var conVertical =
+				IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+			var conHorizontal =
+				IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
+			if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) {
+				//only horizontal
+				word += this.gameboard[IndexI][IndexJ].type;
+				score += this.gameboard[IndexI][IndexJ].value;
+				console.log(word);
+				IndexJ += 1;
+			} else if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
+				//only vertical
+				word += this.gameboard[IndexI][IndexJ].type;
+				score += this.gameboard[IndexI][IndexJ].value;
+				console.log(word);
+				IndexI += 1;
+			} else if (!conHorizontal && !conVertical) {
+				//horizontal and vertical
+				word += this.gameboard[IndexI][IndexJ].type;
+				score += this.gameboard[IndexI][IndexJ].value;
+				console.log(word);
+				this.CheckForWord(
+					this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],
+					player
+				);
+				IndexJ += 1;
+			} else {
+				break;
+			}
+		}
+		if (word.length > 1) {
+			player.score += score;
+			player.wordlist.push(word);
+		}
 	}
-	public CheckForFirstLetterIndex(x:coordiantes, direction:number) :coordiantes[] 
-	//this function finds index of firstletter of word (or two words than output contains 2 coordinates )
+	public CheckForFirstLetterIndex(
+		x: coordiantes,
+		direction: number
+	): coordiantes[] //this function finds index of firstletter of word (or two words than output contains 2 coordinates )
 	// initialize with 0 to find only horizontal words
-	// initialize with 1 that means its first use of this function and it will check if leters are in vertical and horizontal alignment 
+	// initialize with 1 that means its first use of this function and it will check if leters are in vertical and horizontal alignment
 	// initialize with 2 to find only vertical words
 	// initialize with 3 when we dont know directions
-	{		
-		let IndexI:number = x.x;
-		let IndexJ:number = x.y;
-		
-		
-			
-		while(true)
-			{
-				var conVertical = IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status === 4;
-				var conHorizontal = IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status === 4;	
-				if(conVertical && conHorizontal)
-					break;		
-				if(direction == 3)
-				{
-					if(!conVertical && !conHorizontal)
-					{
-						direction = 1;
-					}
-					else if(!conVertical)
-					{
-						direction = 2;
-					}
-					else
-					{
-						direction = 0;
-					}
-					console.log("Direction= " + direction)
-				}
-				if(direction == 0) //only horizontal
-				{
-					if(conHorizontal) //no way way to move
-						break;													
-					IndexJ -= 1;				
-				}			
-				
-				if(direction == 1) //horizontal and vertical
-				{
-					var horizontaloutput = this.CheckForFirstLetterIndex(x, 0);					
-					var verticaloutput = this.CheckForFirstLetterIndex(x, 2);
-					return([horizontaloutput[0], verticaloutput[0]]);
-				}
-				
-				if(direction == 2) //only vertical
-				{
-					if(conVertical)
-						break;
-					console.log("cojes= " + IndexI + IndexJ)
-					IndexI -= 1;
-				}				
-			}
-			return([new coordiantes(IndexI, IndexJ)]);
-	}
-	public CheckForNewLetterIndex()// this method finds index of letter with lowest index that was newly added to board
 	{
-		for (var i = 0; i < 15; i++) {
-			for (var j = 0; j < 15; j++) {			
-												
-					if(this.gameboard[i][j].status == 2)
-					{											 		
-																						
-						return(new coordiantes(i,j));						
-					}												
-				} 
+		let IndexI: number = x.x;
+		let IndexJ: number = x.y;
+
+		while (true) {
+			var conVertical =
+				IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status === 4;
+			var conHorizontal =
+				IndexJ == 0 || this.gameboard[IndexI][IndexJ - 1].status === 4;
+			if (conVertical && conHorizontal) break;
+			if (direction == 3) {
+				if (!conVertical && !conHorizontal) {
+					direction = 1;
+				} else if (!conVertical) {
+					direction = 2;
+				} else {
+					direction = 0;
+				}
+				console.log("Direction= " + direction);
 			}
-			
+			if (direction == 0) {
+				//only horizontal
+				if (conHorizontal)
+					//no way way to move
+					break;
+				IndexJ -= 1;
+			}
+
+			if (direction == 1) {
+				//horizontal and vertical
+				var horizontaloutput = this.CheckForFirstLetterIndex(x, 0);
+				var verticaloutput = this.CheckForFirstLetterIndex(x, 2);
+				return [horizontaloutput[0], verticaloutput[0]];
+			}
+
+			if (direction == 2) {
+				//only vertical
+				if (conVertical) break;
+				console.log("cojes= " + IndexI + IndexJ);
+				IndexI -= 1;
+			}
+		}
+		return [new coordiantes(IndexI, IndexJ)];
 	}
-	public SaveLettersInBoard() //changes status of new letters to 3
-	{
+	public CheckForNewLetterIndex() { // this method finds index of letter with lowest index that was newly added to board
 		for (var i = 0; i < 15; i++) {
-			for (var j = 0; j < 15; j++) {			
-												
-					if(this.gameboard[i][j].status == 2)
-					{											 		
-						let newtile: any = this.gameboard[i][j];
-						newtile.status = 3;						
-						this.gameboard[i][j] = newtile;
-						
-					}												
-				} 
+			for (var j = 0; j < 15; j++) {
+				if (this.gameboard[i][j].status == 2) {
+					return new coordiantes(i, j);
+				}
 			}
+		}
+	}
+	public SaveLettersInBoard() { //changes status of new letters to 3
+		for (var i = 0; i < 15; i++) {
+			for (var j = 0; j < 15; j++) {
+				if (this.gameboard[i][j].status == 2) {
+					let newtile: any = this.gameboard[i][j];
+					newtile.status = 3;
+					this.gameboard[i][j] = newtile;
+				}
+			}
+		}
 	}
 	public GenerateEmptyBoard() {
 		//method generating board and filling it with empty tiles
@@ -535,7 +535,6 @@ class Board {
 }
 
 interface ITile {
-
 	readonly type: string; // 0 = empty else its letter (A = 1, B = 2...)
 	readonly value: number;
 	readonly status: number; // 0 = tile in storage / 1 = tile is in player's hand / 2 = tile is on gameboard during acceptance phase / 3 = tile is placed on board / 4 if its empty tile
@@ -596,8 +595,7 @@ class Player {
 	}
 	fillplayershand(
 		unusedtilestorage: Board["unusedtilestorage"] //used at start of game to give player tiles to play with
-	) {		
-
+	) {
 		for (
 			var i: number = this.playerhand.length;
 			i < 7;
@@ -609,8 +607,6 @@ class Player {
 			newtile.status = 1; //because it lands in players hand
 			this.playerhand.push(newtile);
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
-
-			
 		}
 		console.log("Player's hand has been filled");
 	}
@@ -642,12 +638,10 @@ class Player {
 		console.log("TIle {0} has been added to players hand", newtile.value);
 	}
 }
-class coordiantes
-{
+class coordiantes {
 	x: number;
 	y: number;
-	constructor(x:number, y:number)
-	{
+	constructor(x: number, y: number) {
 		this.x = x;
 		this.y = y;
 	}
