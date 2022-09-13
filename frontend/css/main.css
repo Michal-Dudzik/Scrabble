@@ -275,11 +275,13 @@ input {
 }
 #roomsGoHere li {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	background-color: #ffffff;
 	color: #656565;
-	width: 89%;
-	border: 0px;
+	width: 100px;
+	border-radius: 10px;
+	margin-top: 10px;
+	padding: 10px 10px 10px 10px;
 }
 #roomsGoHere li:hover {
 	background-color: #a2a2a2;
