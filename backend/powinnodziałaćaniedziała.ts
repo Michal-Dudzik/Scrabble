@@ -105,9 +105,7 @@ io.on("connection", function (socket) {
 			if (firsttile) {
 				console.log("first tile= " + firsttile.x + firsttile.y);
 				//3 bcs we dont know direction it needs to go
-				let indexes: coordiantes[] = tempboards[
-					roomID
-				].CheckForFirstLetterIndex(firsttile, 3); //TU SIĘ WYWALA PRZY 2 RUNDZIE
+				let indexes: coordiantes[] = tempboards[roomID].CheckForFirstLetterIndex(firsttile, 3); 
 				console.log("indexes= " + indexes[0].x + indexes[0].y);
 
 				if (thisplayer == tempboards[roomID].player1.id) {
@@ -115,14 +113,14 @@ io.on("connection", function (socket) {
 						indexes[0],
 						tempboards[roomID].player1
 					);
-					console.log(tempboards[roomID].player1.wordlist);
+				//	console.log(tempboards[roomID].player1.wordlist);
 				}
 				if (thisplayer == tempboards[roomID].player2.id) {
-					tempboards[roomID].CheckForWord(
+					tempboards[roomID].CheckForWordHorizontal(
 						indexes[0],
 						tempboards[roomID].player2
 					);
-					console.log(tempboards[roomID].player2.wordlist);
+				//	console.log(tempboards[roomID].player2.wordlist);
 				}
 				tempboards[roomID].SaveLettersInBoard();
 			}
@@ -196,7 +194,19 @@ class Board {
 		newtile.status = 3;
 		this.gameboard[IndexI][IndexJ] = newtile;
 	}
-	public CheckForWordVerical(x: coordiantes,player: Player) //checks for words starting from given coordinates
+	public CheckForWord(x:coordiantes, player:Player)
+	{
+		console.log(x.dir);
+		if(x.dir == 0)
+		{
+			this.CheckForWordHorizontal(x, player)
+		}
+		if(x.dir == 2)
+		{
+			this.CheckForWordVertical(x, player)
+		}
+	}
+	public CheckVerical(x: coordiantes,player: Player) //checks for words starting from given coordinates
 	{
 		let IndexI: number = x.x;
 		let IndexJ: number = x.y;
@@ -214,14 +224,14 @@ class Board {
 				console.log(word);
 				this.ChangeStatusTo3(IndexI, IndexJ);
 				IndexI += 1;
-			} else if (!conHorizontal && !conVertical) {
-				//horizontal and vertical
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);
-				this.ChangeStatusTo3(IndexI, IndexJ);
-				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
-				IndexJ += 1;
+			// } else if (!conHorizontal && !conVertical) {
+			// 	//horizontal and vertical
+			// 	word += this.gameboard[IndexI][IndexJ].type;
+			// 	score += this.gameboard[IndexI][IndexJ].value;
+			// 	console.log(word);
+			// 	this.ChangeStatusTo3(IndexI, IndexJ);
+			// 	this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
+			// 	IndexJ += 1;
 			} else {
 				break;
 			}
@@ -233,7 +243,7 @@ class Board {
 	}
 
 	
-	public CheckForWord(x: coordiantes,player: Player) //checks for words starting from given coordinates
+	public CheckForWordHorizontal(x: coordiantes,player: Player) //checks for words starting from given coordinates
 	{
 		let IndexI: number = x.x;
 		let IndexJ: number = x.y;
@@ -252,18 +262,26 @@ class Board {
 				IndexJ += 1;
 			} else if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
 				//only vertical
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);
-				this.ChangeStatusTo3(IndexI, IndexJ);
-				IndexI += 1;
+				// word += this.gameboard[IndexI][IndexJ].type;
+				// score += this.gameboard[IndexI][IndexJ].value;
+				// console.log(word);
+				if(this.gameboard[IndexI][IndexJ].status == 2)
+				{
+				this.CheckVerical(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
+				}
+				// this.ChangeStatusTo3(IndexI, IndexJ);
+				break;
 			} else if (!conHorizontal && !conVertical) {
 				//horizontal and vertical
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;
 				console.log(word);
+				if(this.gameboard[IndexI][IndexJ].status == 2)
+				{
+				this.CheckVerical(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
+				}
 				this.ChangeStatusTo3(IndexI, IndexJ);
-				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
+				
 				IndexJ += 1;
 			} else {
 				break;
@@ -274,14 +292,88 @@ class Board {
 			player.wordlist.push(word);
 		}
 	}
-	public CheckForFirstLetterIndex(
-		x: coordiantes,
-		direction: number
-	): coordiantes[] {
-		// initialize with 3 when we dont know directions // initialize with 2 to find only vertical words // initialize with 1 that means its first use of this function and it will check if leters are in vertical and horizontal alignment // initialize with 0 to find only horizontal words //this function finds index of firstletter of word (or two words than output contains 2 coordinates )
+	public CheckHorizontal(x: coordiantes,player: Player)
+	{
 		let IndexI: number = x.x;
 		let IndexJ: number = x.y;
+		let score: number = 0;
+		let word: string = "";
 
+		while (true) {
+			var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+			var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
+			
+			if(conVertical && this.gameboard[IndexI][IndexJ].status < 4) {
+				//only horizontal
+				word += this.gameboard[IndexI][IndexJ].type;
+				score += this.gameboard[IndexI][IndexJ].value;
+				console.log(word);
+				this.ChangeStatusTo3(IndexI, IndexJ);
+				IndexJ += 1;
+			
+			} else {
+				break;
+			}
+		}
+		if (word.length > 1) {
+			player.score += score;
+			player.wordlist.push(word);
+		}
+	}
+	public CheckForWordVertical(x: coordiantes,player: Player)
+	{
+		let IndexI: number = x.x;
+		let IndexJ: number = x.y;
+		let score: number = 0;
+		let word: string = "";
+
+		while (true) {
+			var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+			var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
+			if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) {
+				//only horizontal
+				if(this.gameboard[IndexI][IndexJ].status == 2)
+				{
+				this.CheckHorizontal(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
+				break;
+				}
+			} else if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
+				//only vertical
+				word += this.gameboard[IndexI][IndexJ].type;
+				score += this.gameboard[IndexI][IndexJ].value;
+				console.log(word);				
+				this.ChangeStatusTo3(IndexI, IndexJ);
+				IndexI += 1;
+				
+			} else if (!conHorizontal && !conVertical) {
+				//horizontal and vertical
+				word += this.gameboard[IndexI][IndexJ].type;
+				score += this.gameboard[IndexI][IndexJ].value;
+				console.log(word);
+				if(this.gameboard[IndexI][IndexJ].status == 2)
+				{
+				this.CheckHorizontal(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
+				}
+				this.ChangeStatusTo3(IndexI, IndexJ);				
+				IndexI += 1;
+			} else {
+				break;
+			}
+		}
+		if (word.length > 1) {
+			player.score += score;
+			player.wordlist.push(word);
+		}
+	}
+	public CheckForFirstLetterIndex(x: coordiantes,direction: number): coordiantes[] {
+		// initialize with 3 when we dont know directions 
+		// initialize with 2 to find only vertical words 
+		// initialize with 1 that means its first use of this function and it will check if leters are in vertical and horizontal alignment 
+		// initialize with 0 to find only horizontal words 
+		//this function finds index of firstletter of word (or two words than output contains 2 coordinates )
+		let IndexI: number = x.x;
+		let IndexJ: number = x.y;
+		console.log("Direction1= " + direction);
 		while (true) {
 			var conVertical =
 				IndexI == 0 || this.gameboard[IndexI - 1][IndexJ].status === 4;
@@ -296,8 +388,9 @@ class Board {
 				} else {
 					direction = 0;
 				}
-				console.log("Direction= " + direction);
+				
 			}
+			console.log("Direction2= " + direction);
 			if (direction == 0) {
 				//only horizontal
 				if (conHorizontal)
@@ -319,8 +412,10 @@ class Board {
 				console.log("cojes= " + IndexI + IndexJ);
 				IndexI -= 1;
 			}
+			
 		}
-		return [new coordiantes(IndexI, IndexJ)];
+		console.log("Direction3= " + direction);
+		return [new coordiantes(IndexI, IndexJ, direction)];
 	}
 	public CheckForNewLetterIndex() {
 		// this method finds index of letter with lowest index that was newly added to board
@@ -611,8 +706,13 @@ class Player {
 class coordiantes {
 	x: number;
 	y: number;
-	constructor(x: number, y: number) {
+	dir: number;
+	constructor(x: number, y: number, dir?: number) {
 		this.x = x;
 		this.y = y;
+		if(dir)
+		{
+			this.dir = dir;
+		}
 	}
 }
