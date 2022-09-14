@@ -71,7 +71,6 @@ const onConfirm = (socket) => (e) => {
 	var acceptWord = document.getElementById("acceptWord");
 	acceptWord.addEventListener("click", () => {
 		confirmationModal.toggle();
-		//once implemented add sending word to server for scoring
 		console.log("approved");
 		var thisplayer;
 		var otherplayer;
@@ -107,7 +106,7 @@ var waitingModal = new bootstrap.Modal(
 function generateTile(i) {
 	const tileBlock = document.createElement("div");
 	tileBlock.id = "movedTile_" + i;
-	tileBlock.className = "tile";
+	tileBlock.className = "tile toBeMoved";
 	tileBlock.setAttribute("letterInside", "");
 	tileBlock.setAttribute("draggable", true);
 
@@ -121,22 +120,16 @@ function generateTile(i) {
 
 	document
 		.getElementById("tile_" + i)
-		.appendChild(tileBlock)
-		.appendChild(letterInBlock);
-
-	setTimeout(function () {
-		document
-			.getElementById("tile_" + i)
-			.appendChild(tileBlock)
-			.appendChild(letterScoreInBlock);
-	}, 0);
+		.insertAdjacentElement("afterbegin", tileBlock)
+		.insertAdjacentElement("afterbegin", letterInBlock)
+		.insertAdjacentElement("afterend", letterScoreInBlock);
 }
 
 var movedTile = 0;
 
 // Dragging tiles //
 function drag() {
-	const tile = document.querySelectorAll(".tile");
+	const tile = document.querySelectorAll(".toBeMoved");
 	console.log(tile);
 	const dropzone = document.querySelectorAll(".dropzone");
 
@@ -148,9 +141,6 @@ function drag() {
 		item.addEventListener("dragstart", function () {
 			draggedItem = item;
 			movedTile = item.parentNode.id.slice(-1);
-			setTimeout(function () {
-				item.style.display = "none";
-			}, 0);
 		});
 
 		item.addEventListener("dragend", function () {
@@ -161,14 +151,9 @@ function drag() {
 			const tileId = item.getAttribute("letterInside");
 			console.log("tileId: " + tileId);
 
-			setTimeout(function () {
-				draggedItem.style.display = "flex";
-				draggedItem = null;
-			}, 0);
-
-			// //checking if place for tile is empty before generating another one
-			// if (document.getElementById("tile_" + movedTile).children.length <= 0)
-			// 	generateTile(movedTile);
+			//checking if place for tile is empty before generating another one
+			if (document.getElementById("tile_" + movedTile).children.length == 0)
+				generateTile(movedTile);
 		});
 
 		for (let j = 0; j < dropzone.length; j++) {
@@ -189,7 +174,7 @@ function drag() {
 		}
 	}
 }
-// drag();
+
 // Chat //
 const log = (text) => {
 	//log to console
@@ -217,23 +202,26 @@ function updateboard(localgameboard) {
 	for (var i = 0; i < 15; i++) {
 		for (var j = 0; j < 15; j++) {
 			if (localgameboard[i][j].type == "Empty") {
-				document.getElementById(i + "-" + j).innerHTML = " ";
+				document.getElementById(i + "-" + j).innerHTML = "";
 			} else {
-				document.getElementById(i + "-" + j).innerHTML =
-					localgameboard[i][j].type;
+				const tileBlock = document.createElement("div");
+				tileBlock.className = "tile";
 
-				// const tileBlock = document.createElement("div");
-				// tileBlock.className = "tile";
-				// tileBlock.setAttribute("draggable", false);
+				const letterInBlock = document.createElement("span");
+				letterInBlock.className = "letter";
+				letterInBlock.innerHTML = localgameboard[i][j].type;
 
-				// const letterInBlock = document.createElement("span");
-				// letterInBlock.className = "letter";
-				// letterInBlock.innerHTML = localgameboard[i][j].type;
+				const letterScoreInBlock = document.createElement("span");
+				letterScoreInBlock.className = "letter_weight";
+				letterScoreInBlock.innerHTML = localgameboard[i][j].value;
 
-				// document
-				// 	.getElementById(i + "-" + j)
-				// 	.appendChild(tileBlock)
-				// 	.appendChild(letterInBlock);
+				if (document.getElementById(i + "-" + j).children.length == 0) {
+					document
+						.getElementById(i + "-" + j)
+						.insertAdjacentElement("afterbegin", tileBlock)
+						.insertAdjacentElement("afterbegin", letterInBlock)
+						.insertAdjacentElement("afterend", letterScoreInBlock);
+				}
 			}
 		}
 	}
@@ -262,11 +250,12 @@ function updateroomlist(roomlist) {
 		room.className = "room";
 
 		document.getElementById("roomsGoHere").appendChild(room);
+		getRoomName();
 	}
 }
 //show words used by the players
 function updatewordlist(wordlist, number) {
-	document.getElementById("Player" + number + "Words").innerHTML = "";
+	document.getElementById("Player" + number + "Words").textContent = "";
 	var list = document.createElement("ul");
 	for (var i = 0; i < wordlist.length; i++) {
 		let item = document.createElement("li");
@@ -279,7 +268,7 @@ function updatewordlist(wordlist, number) {
 function readfromhtml(socket) {
 	for (var i = 0; i < 15; i++) {
 		for (var j = 0; j < 15; j++) {
-			if (document.getElementById(i + "-" + j).innerHTML !== " ") {
+			if (document.getElementById(i + "-" + j).innerHTML !== "") {
 				if (
 					socket.id == localboard.player1.id &&
 					localboard.gameboard[i][j].status != 3
@@ -289,7 +278,7 @@ function readfromhtml(socket) {
 							x.id ==
 							document
 								.getElementById(i + "-" + j)
-								.childNodes[1].getAttribute("letterinside")
+								.childNodes[0].getAttribute("letterinside")
 					);
 					localboard.player1.playerhand.splice(
 						localboard.player1.playerhand.indexOf(newtile),
@@ -297,6 +286,7 @@ function readfromhtml(socket) {
 					);
 					newtile.status = 2;
 					localboard.gameboard[i][j] = newtile;
+					document.getElementById(i + "-" + j).replaceChildren();
 				} else if (
 					socket.id == localboard.player2.id &&
 					localboard.gameboard[i][j].status != 3
@@ -306,7 +296,7 @@ function readfromhtml(socket) {
 							x.id ==
 							document
 								.getElementById(i + "-" + j)
-								.childNodes[1].getAttribute("letterinside")
+								.childNodes[0].getAttribute("letterinside")
 					);
 					localboard.player2.playerhand.splice(
 						localboard.player2.playerhand.indexOf(newtile),
@@ -314,6 +304,7 @@ function readfromhtml(socket) {
 					);
 					newtile.status = 2;
 					localboard.gameboard[i][j] = newtile;
+					document.getElementById(i + "-" + j).replaceChildren();
 				}
 			}
 		}
@@ -479,6 +470,7 @@ const onEmitbtn = (socket) => (e) => {
 		}
 	});
 	socket.on("check", () => {
+		//TODO pokaż jakie słówko potwierdzasz
 		confirmationModal.toggle();
 	});
 	socket.on("waiting", () => {
