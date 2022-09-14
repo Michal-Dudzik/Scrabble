@@ -207,7 +207,7 @@ class Board {
 			var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
 			var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
 			
-			  if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
+			if(conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
 				//only vertical
 				word += this.gameboard[IndexI][IndexJ].type;
 				score += this.gameboard[IndexI][IndexJ].value;

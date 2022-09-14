@@ -115,7 +115,7 @@ io.on("connection", function (socket) {
     });
     //sent current room list to client
     socket.on("refreshRooms", function () {
-        io.emit("roomlist", boardnames, roomID);
+        io.emit("roomlist", boardnames);
     });
     socket.on("exit", function (roomName, username) {
         console.log("Current players: " + serverplayers);
@@ -154,8 +154,7 @@ var Board = /** @class */ (function () {
         newtile.status = 3;
         this.gameboard[IndexI][IndexJ] = newtile;
     };
-    Board.prototype.CheckForWordVerical = function (x, player //TO DO
-    ) {
+    Board.prototype.CheckForWordVerical = function (x, player) {
         var IndexI = x.x;
         var IndexJ = x.y;
         var score = 0;
@@ -167,14 +166,12 @@ var Board = /** @class */ (function () {
                 //only vertical
                 word += this.gameboard[IndexI][IndexJ].type;
                 score += this.gameboard[IndexI][IndexJ].value;
+                console.log(word);
                 this.ChangeStatusTo3(IndexI, IndexJ);
                 IndexI += 1;
             }
-            if (conVertical ||
-                (this.gameboard[IndexI][IndexJ].status == 2 &&
-                    IndexI != x.x &&
-                    IndexJ != x.y)) {
-                //only horizontal
+            else if (!conHorizontal && !conVertical) {
+                //horizontal and vertical
                 word += this.gameboard[IndexI][IndexJ].type;
                 score += this.gameboard[IndexI][IndexJ].value;
                 console.log(word);
@@ -182,20 +179,8 @@ var Board = /** @class */ (function () {
                 this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0], player);
                 IndexJ += 1;
             }
-            if (conHorizontal || this.gameboard[IndexI][IndexJ].status == 3) {
-                //only vertical
-                word += this.gameboard[IndexI][IndexJ].type;
-                score += this.gameboard[IndexI][IndexJ].value;
-                this.ChangeStatusTo3(IndexI, IndexJ);
-                IndexI += 1;
-                break;
-            } //horizontal and vertical
             else {
-                word += this.gameboard[IndexI][IndexJ].type;
-                score += this.gameboard[IndexI][IndexJ].value;
-                this.ChangeStatusTo3(IndexI, IndexJ);
-                this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 0)[0], player);
-                IndexI += 1;
+                break;
             }
         }
         if (word.length > 1) {
@@ -203,8 +188,7 @@ var Board = /** @class */ (function () {
             player.wordlist.push(word);
         }
     };
-    Board.prototype.CheckForWord = function (x, player //checks for words starting from given coordinates
-    ) {
+    Board.prototype.CheckForWord = function (x, player) {
         var IndexI = x.x;
         var IndexJ = x.y;
         var score = 0;
