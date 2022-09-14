@@ -203,6 +203,10 @@ input {
 	height: 50px;
 }
 
+.modal-header {
+	justify-content: center;
+}
+
 .modal-footer {
 	display: flex;
 	justify-content: space-evenly;
