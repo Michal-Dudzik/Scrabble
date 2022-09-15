@@ -91,9 +91,18 @@ const onDecline = (socket) => (e) => {
 
 	var declineWord = document.getElementById("declineWord");
 	declineWord.addEventListener("click", () => {
+		var thisplayer;
+		var otherplayer;
+		if (localboard.player1.id == socket.id) {
+			thisplayer = localboard.player1.id;
+			otherplayer = localboard.player2.id;
+		} else if (localboard.player2.id == socket.id) {
+			thisplayer = localboard.player2.id;
+			otherplayer = localboard.player1.id;
+		}
 		confirmationModal.toggle();
 		console.log("declined");
-		socket.emit("declinedWord");
+		socket.emit("declinedWord", otherplayer);
 	});
 };
 
