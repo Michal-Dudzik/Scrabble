@@ -130,7 +130,7 @@ io.on("connection", function (socket) {
 		}
 	);
 
-	socket.on("acceptedWord", function (gameboard, thisplayer, otherplayer) {
+	socket.on("acceptedWord", function (otherplayer) {
 		//odczytaj słowo
 		//zlicz punkty
 		//dodaj słowo i punkty do scoreboarda
@@ -143,6 +143,12 @@ io.on("connection", function (socket) {
 		io.to(otherplayer).emit("stopWaiting");
 		console.log(serverboards[roomID].round);
 	});
+	socket.on("declinedWord", function(otherplayer){
+		tempboards[roomID] = serverboards[roomID];
+		console.log("declinedWord");
+		io.to(roomID).emit("moveresponse", serverboards[roomID]);
+		io.to(otherplayer).emit("stopWaiting");
+	})
 
 	//sent current room list to client
 	socket.on("refreshRooms", function () {
@@ -196,84 +202,105 @@ class Board {
 		newtile.status = 3;
 		this.gameboard[IndexI][IndexJ] = newtile;
 	}
-	public CheckForWordVerical(x: coordiantes,player: Player) //checks for words starting from given coordinates
-	{
-		let IndexI: number = x.x;
-		let IndexJ: number = x.y;
-		let score: number = 0;
-		let word: string = "";
+	public CheckForWord(x:coordiantes, player: Player)
+	//checks for words starting from given coordinates
+   {	
+	   let IndexI:number = x.x;
+	   let IndexJ:number = x.y;	
+		   var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+		   var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
+		   if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) //only horizontal
+			{
+			   this.CheckHorizontal(new coordiantes(IndexI, IndexJ), player);
+			   
+		   }
+		   else if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) //only vertical
+		   {
+			   this.CheckVerical(new coordiantes(IndexI, IndexJ), player);
+		   }
+		   else if (!conHorizontal && !conVertical)//horizontal and vertical
+		   {
+			   this.CheckHorizontal(new coordiantes(IndexI, IndexJ), player);
+			   this.CheckVerical(new coordiantes(IndexI, IndexJ), player);
+		   }
+		   
+	  
 
-		while (true) {
-			var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
-			var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
-			
-			if(conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
-				//only vertical
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);
-				this.ChangeStatusTo3(IndexI, IndexJ);
-				IndexI += 1;
-			} else if (!conHorizontal && !conVertical) {
-				//horizontal and vertical
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);
-				this.ChangeStatusTo3(IndexI, IndexJ);
-				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
-				IndexJ += 1;
-			} else {
-				break;
-			}
-		}
-		if (word.length > 1) {
-			player.score += score;
-			player.wordlist.push(word);
-		}
-	}
+   }
+   public CheckVerical(x: coordiantes,player: Player) //checks for words starting from given coordinates
+   {
+	   let IndexI: number = x.x;
+	   let IndexJ: number = x.y;
+	   let score: number = 0;
+	   let word: string = "";
 
-	
-	public CheckForWord(x: coordiantes,player: Player) //checks for words starting from given coordinates
-	{
-		let IndexI: number = x.x;
-		let IndexJ: number = x.y;
-		let score: number = 0;
-		let word: string = "";
+	   while (true) {
+		   var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+		   var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4 ;
+		   
+		if (!conHorizontal && !conVertical) {
+		   //horizontal and vertical
+		   word += this.gameboard[IndexI][IndexJ].type;
+		   score += this.gameboard[IndexI][IndexJ].value;
+		   console.log(word);
+		   if(this.gameboard[IndexI][IndexJ].status == 2){
+			   this.CheckHorizontal(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 0)[0],player);
+		   }
+		   this.ChangeStatusTo3(IndexI, IndexJ);
+		   IndexI += 1;
+	   } else if(conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
+			   //only vertical
+			   word += this.gameboard[IndexI][IndexJ].type;
+			   score += this.gameboard[IndexI][IndexJ].value;
+			   console.log(word);
+			   this.ChangeStatusTo3(IndexI, IndexJ);
+			   IndexI += 1;
+	   }else {
+			   break;
+		   }
+	   }
+	   if (word.length > 1) {
+		   player.score += score;
+		   player.wordlist.push(word);
+	   }
+   }
+   public CheckHorizontal(x: coordiantes,player: Player) //checks for words starting from given coordinates
+   {
+	   let IndexI: number = x.x;
+	   let IndexJ: number = x.y;
+	   let score: number = 0;
+	   let word: string = "";
 
-		while (true) {
-			var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
-			var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4;
-			if (conVertical && this.gameboard[IndexI][IndexJ].status < 4) {
-				//only horizontal
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);
-				this.ChangeStatusTo3(IndexI, IndexJ);
-				IndexJ += 1;
-			} else if (conHorizontal && this.gameboard[IndexI][IndexJ].status < 4) {
-				//only vertical
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);
-				this.ChangeStatusTo3(IndexI, IndexJ);
-				IndexI += 1;
-			} else if (!conHorizontal && !conVertical) {
-				//horizontal and vertical
-				word += this.gameboard[IndexI][IndexJ].type;
-				score += this.gameboard[IndexI][IndexJ].value;
-				console.log(word);
-				this.ChangeStatusTo3(IndexI, IndexJ);
-				this.CheckForWord(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
-				IndexJ += 1;
-			} else {
-				break;
-			}
-		}
-		if (word.length > 1) {
-			player.score += score;
-			player.wordlist.push(word);
-		}
-	}
+	   while (true) {
+		   var conVertical = IndexI == 15 || this.gameboard[IndexI + 1][IndexJ].status == 4;
+		   var conHorizontal = IndexJ == 15 || this.gameboard[IndexI][IndexJ + 1].status == 4 ;
+		   if (!conHorizontal && !conVertical) {
+			   //horizontal and vertical
+			   word += this.gameboard[IndexI][IndexJ].type;
+			   score += this.gameboard[IndexI][IndexJ].value;
+			   console.log(word);			
+			   if(this.gameboard[IndexI][IndexJ].status == 2){
+			   this.CheckVerical(this.CheckForFirstLetterIndex(new coordiantes(IndexI, IndexJ), 2)[0],player);
+			   }
+			   this.ChangeStatusTo3(IndexI, IndexJ);
+			   IndexJ += 1;
+		   }
+		   else if(conVertical && this.gameboard[IndexI][IndexJ].status < 4) {
+			   //only horizontal
+			   word += this.gameboard[IndexI][IndexJ].type;
+			   score += this.gameboard[IndexI][IndexJ].value;
+			   console.log(word);
+			   this.ChangeStatusTo3(IndexI, IndexJ);
+			   IndexJ += 1;
+		   }  else {
+			   break;
+		   }
+	   }
+	   if (word.length > 1) {
+		   player.score += score;
+		   player.wordlist.push(word);
+	   }
+   }
 	public CheckForFirstLetterIndex(
 		x: coordiantes,
 		direction: number
@@ -316,7 +343,6 @@ class Board {
 			if (direction == 2) {
 				//only vertical
 				if (conVertical) break;
-				console.log("cojes= " + IndexI + IndexJ);
 				IndexI -= 1;
 			}
 		}
