@@ -1,3 +1,5 @@
+// const { list } = require("wordnet");
+
 var localboard;
 
 //room username validation
@@ -130,10 +132,9 @@ var movedTile = 0;
 // Dragging tiles //
 function drag() {
 	const tile = document.querySelectorAll(".toBeMoved");
-	console.log(tile);
 	const dropzone = document.querySelectorAll(".dropzone");
 
-	let draggedItem = null;
+	let draggedItem
 
 	for (let i = 0; i < tile.length; i++) {
 		const item = tile[i];
@@ -153,7 +154,8 @@ function drag() {
 
 			//checking if place for tile is empty before generating another one
 			if (document.getElementById("tile_" + movedTile).children.length == 0)
-				generateTile(movedTile);
+					generateTile(movedTile);
+			
 		});
 
 		for (let j = 0; j < dropzone.length; j++) {
@@ -175,6 +177,57 @@ function drag() {
 	}
 }
 
+//drag redone - testing
+	const tile = document.querySelectorAll(".toBeMoved");
+	const dropzone = document.querySelectorAll(".dropzone");
+
+	let dragItem = null;
+
+	tile.forEach(item => {
+		item.addEventListener('dragstart', dragStart)
+    	item.addEventListener('dragend', dragEnd)
+	});
+
+	dropzone.forEach(list => {
+		list.addEventListener('dragover', dragOver);
+		list.addEventListener('dragenter', dragEnter);
+		list.addEventListener('dragleave', dragLeave);
+		list.addEventListener('drop', dragDrop);
+	});
+
+	function dragStart() {
+		dragItem = this;
+		movedTile = dragItem.parentNode.id.slice(-1);
+    	setTimeout(() => this.className = 'invisible', 0)
+	}
+	function dragOver(e) {
+		e.preventDefault()
+	}
+	function dragEnter() {
+	}
+	function dragLeave() {
+	}
+	function dragEnd() {
+		//get id of dropzone
+		const dropzoneId = dragItem.parentNode.id;
+		console.log("dropzoneId: " + dropzoneId);
+		//get id of letter inside tile
+		const tileId = dragItem.getAttribute("letterInside");
+		console.log("tileId: " + tileId);
+
+		//checking if place for tile is empty before generating another one
+		if (document.getElementById("tile_" + movedTile).children.length == 0)
+				generateTile(movedTile);
+				
+  		this.className = 'tile'
+  		dragItem = null;
+	}
+	function dragDrop() {
+		if (this.textContent.trim() === "") this.append(dragItem);
+	}
+
+
+// drag2();
 // Chat //
 const log = (text) => {
 	//log to console
@@ -239,7 +292,7 @@ function updatehand(playerhand) {
 			.setAttribute("letterInside", playerhand[i].id);
 	}
 
-	drag();
+	
 }
 // create list of game rooms "servers" that player can join
 function updateroomlist(roomlist) {
@@ -423,6 +476,8 @@ const onEmitbtn = (socket) => (e) => {
 		thisplayer,
 		otherplayer
 	);
+
+	// drag2();
 };
 
 (() => {
