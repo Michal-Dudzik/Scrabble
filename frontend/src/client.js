@@ -486,15 +486,7 @@ const onEmitbtn = (socket) => (e) => {
 		thisplayer,
 		otherplayer
 	);
-<<<<<<< HEAD
-	//}
-	//else{
-		//show popup "its not your turn"
-	//}
-=======
 
-	// drag2();
->>>>>>> db9b54be2efb2aa66614a45af076fcf41a0ce2c3
 };
 const onSkipbtn = (socket) => (e) => {
 	//if(locked == false){
