@@ -107,21 +107,15 @@ io.on("connection", function (socket) {
 				//3 bcs we dont know direction it needs to go
 				let indexes: coordiantes[] = tempboards[
 					roomID
-				].CheckForFirstLetterIndex(firsttile, 3); //TU SIĘ WYWALA PRZY 2 RUNDZIE
-				console.log("indexes= " + indexes[0].x + indexes[0].y);
-
+				].CheckForFirstLetterIndex(firsttile, 3); 
+				
+				let dir:number = tempboards[roomID].GetDirection(indexes, firsttile);
 				if (thisplayer == tempboards[roomID].player1.id) {
-					tempboards[roomID].CheckForWord(
-						indexes[0],
-						tempboards[roomID].player1
-					);
+					tempboards[roomID].CheckForWord(indexes[0],tempboards[roomID].player1, dir);
 					console.log(tempboards[roomID].player1.wordlist);
 				}
 				if (thisplayer == tempboards[roomID].player2.id) {
-					tempboards[roomID].CheckForWord(
-						indexes[0],
-						tempboards[roomID].player2
-					);
+					tempboards[roomID].CheckForWord(indexes[0],tempboards[roomID].player2, dir);
 					console.log(tempboards[roomID].player2.wordlist);
 				}
 				tempboards[roomID].SaveLettersInBoard();
@@ -148,6 +142,10 @@ io.on("connection", function (socket) {
 		console.log("declinedWord");
 		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 		io.to(otherplayer).emit("stopWaiting");
+	})
+	socket.on("skipturn",function(){
+		serverboards[roomID].round += 1;
+		io.to(roomID).emit("moveresponse", serverboards[roomID]);
 	})
 
 	//sent current room list to client
@@ -202,7 +200,24 @@ class Board {
 		newtile.status = 3;
 		this.gameboard[IndexI][IndexJ] = newtile;
 	}
-	public CheckForWord(x:coordiantes, player: Player)
+	public GetDirection(indexes: coordiantes[], newtile: coordiantes):number
+	{
+		var dir:number;
+		if(indexes[0].x == newtile.x && indexes[0].y == newtile.y)//oba
+		{
+			dir = 1;
+		}
+		else if(indexes[0].x > newtile.x)//vertival
+		{
+			dir = 2;
+		}
+		else//horizontal
+		{
+			dir = 0;
+		}
+		return(dir);
+	}
+	public CheckForWord(x:coordiantes, player: Player, dir: number)
 	//checks for words starting from given coordinates
    {	
 	   let IndexI:number = x.x;
@@ -220,8 +235,15 @@ class Board {
 		   }
 		   else if (!conHorizontal && !conVertical)//horizontal and vertical
 		   {
-			   this.CheckHorizontal(new coordiantes(IndexI, IndexJ), player);
-			   this.CheckVerical(new coordiantes(IndexI, IndexJ), player);
+				this.ChangeStatusTo3(IndexI, IndexJ);
+			   if(dir == 0){this.CheckHorizontal(new coordiantes(IndexI, IndexJ), player);}
+			   if(dir == 1)
+			   {
+				this.CheckVerical(new coordiantes(IndexI, IndexJ), player);
+				this.CheckHorizontal(new coordiantes(IndexI, IndexJ), player)			
+			   }
+			   if(dir == 2){this.CheckVerical(new coordiantes(IndexI, IndexJ), player);}
+			   
 		   }
 		   
 	  
@@ -597,12 +619,17 @@ class Player {
 			i < 7;
 			i++ //draws few tiles to fill players hand
 		) {
+			if(unusedtilestorage.length > 0){
 			const newtile: LetterTile =
 				unusedtilestorage[Math.floor(Math.random() * unusedtilestorage.length)]; //find random tile from unusedtilestorage
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
 			newtile.status = 1; //because it lands in players hand
 			this.playerhand.push(newtile);
 			unusedtilestorage.splice(unusedtilestorage.indexOf(newtile), 1); //remove tile from unusedtilestorage
+			}
+			else{
+				console.log("no more tiles in storage");
+			}
 		}
 		console.log("Player's hand has been filled");
 	}

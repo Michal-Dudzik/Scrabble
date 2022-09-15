@@ -1,5 +1,5 @@
 var localboard;
-
+//var locked;
 //room username validation
 (function () {
 	"use strict";
@@ -82,7 +82,7 @@ const onConfirm = (socket) => (e) => {
 			otherplayer = localboard.player1.id;
 		}
 
-		socket.emit("acceptedWord", localboard, thisplayer, otherplayer);
+		socket.emit("acceptedWord", otherplayer);
 	});
 };
 
@@ -411,6 +411,7 @@ const onCreateGame = (socket) => (e) => {
 };
 //for test use, ps will stay here
 const onEmitbtn = (socket) => (e) => {
+	//if(locked = false){
 	e.preventDefault();
 	readfromhtml(socket);
 	var thisplayer;
@@ -432,7 +433,20 @@ const onEmitbtn = (socket) => (e) => {
 		thisplayer,
 		otherplayer
 	);
+	//}
+	//else{
+		//show popup "its not your turn"
+	//}
 };
+const onSkipbtn = (socket) => (e) => {
+	//if(locked == false){
+	e.preventDefault();
+	readfromhtml(socket);
+	socket.emit("skipturn");
+	//}else{
+		//show popup "its not your turn"
+	//}
+}
 
 (() => {
 	const newGameButton = document.getElementById("newGame");
@@ -441,7 +455,7 @@ const onEmitbtn = (socket) => (e) => {
 	const Player1 = document.getElementById("Player1");
 	const Player2 = document.getElementById("Player2");
 	const shufflebtn = document.getElementById("shuffle");
-	const skip = document.getElementById("skip");
+	const skipbtn = document.getElementById("skipbtn");
 	const exit = document.getElementById("exit");
 	const emitbtn = document.getElementById("emitbtn");
 	const refreshbtn = document.getElementById("refreshRooms");
@@ -449,7 +463,6 @@ const onEmitbtn = (socket) => (e) => {
 	//connect to server
 	const socket = io();
 
-	//nie działa tak jak byśmy chcieli, trzeba przerobić jak się łączy z serwerem
 	socket.on("roomlist", function (boardnames) {
 		updateroomlist(boardnames);
 	});
@@ -477,6 +490,28 @@ const onEmitbtn = (socket) => (e) => {
 		} else if (board.player2.id == socket.id) {
 			updatehand(board.player2.playerhand);
 		}
+		// if(board.round % 2 == 0)
+		// {
+		// 	if(board.player1.id == socket.id)
+		// 	{
+		// 		locked = false;
+		// 	}
+		// 	else
+		// 	{
+		// 		locked = true;
+		// 	}
+		// }
+		// else
+		// {
+		// 	if(board.player1.id == socket.id)
+		// 	{
+		// 		locked = true;
+		// 	}
+		// 	else
+		// 	{
+		// 		locked = false;
+		// 	}
+		// }
 	});
 	socket.on("check", () => {
 		//TODO pokaż jakie słówko potwierdzasz
@@ -486,6 +521,7 @@ const onEmitbtn = (socket) => (e) => {
 		waitingModal.toggle();
 	});
 	socket.on("stopWaiting", () => {
+		console.log("halp")
 		waitingModal.toggle();
 	});
 	socket.on("startgame", () => {
@@ -498,6 +534,7 @@ const onEmitbtn = (socket) => (e) => {
 	newGameButton.addEventListener("click", onCreateGame(socket));
 
 	emitbtn.addEventListener("click", onEmitbtn(socket));
+	skipbtn.addEventListener("click", onSkipbtn(socket))
 
 	refreshbtn.addEventListener("click", () => {
 		const existingRooms = document.getElementById("roomsGoHere");
