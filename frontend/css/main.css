@@ -414,3 +414,7 @@ input {
 	right: 5px;
 	font-size: 15px;
 }
+
+.invisible {
+	display: none;
+}
